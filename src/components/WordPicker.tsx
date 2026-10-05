@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import type { TermKind } from '../data/definitions'
 import { ASSISTANT_HELP } from '../data/assistant'
 import AddEntry from './AddEntry'
@@ -54,6 +54,8 @@ export default function WordPicker({
   onRemoveCustom,
 }: Props) {
   const [filter, setFilter] = useState('')
+  const filterId = useId()
+  const hintId = `${filterId}-hint`
   const chosen = new Set(selected)
   const full = limit !== undefined && selected.length >= limit
   const query = filter.trim().toLowerCase()
@@ -62,6 +64,9 @@ export default function WordPicker({
     .map((c) => ({ ...c, words: c.words.filter((w) => w.toLowerCase().includes(query)) }))
     .filter((c) => c.words.length > 0)
 
+  const total = categories.reduce((n, c) => n + c.words.length, 0) + custom.length
+  const shown = visible.reduce((n, c) => n + c.words.length, 0)
+
   return (
     <section aria-labelledby={headingId}>
       <h2 id={headingId}>{heading}</h2>
@@ -69,14 +74,28 @@ export default function WordPicker({
       {ASSISTANT_HELP[kind] && <AssistantLink {...ASSISTANT_HELP[kind]} />}
       <SelectionHelp limit={limit} unit={kind === 'values' ? 'values' : 'skills'} />
 
-      <input
-        type="search"
-        className="filter"
-        placeholder={`Filter ${noun}`}
-        aria-label={filterLabel}
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-      />
+      <div className="filter-block">
+        <label htmlFor={filterId} className="filter-label">
+          {filterLabel}
+        </label>
+        <p id={hintId} className="filter-hint">
+          Type part of a word to show only the {noun} that match. Your selections are kept.
+        </p>
+        <input
+          id={filterId}
+          type="search"
+          className="filter"
+          placeholder="Type to filter…"
+          aria-describedby={hintId}
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        />
+        {query && (
+          <p className="filter-count" aria-live="polite">
+            Showing {shown} of {total} {noun}.
+          </p>
+        )}
+      </div>
 
       {visible.length === 0 && <p className="hint">No {noun} match your filter.</p>}
 

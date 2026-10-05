@@ -83,3 +83,37 @@ describe('grouped values', () => {
     expect(word('Mindfulness')).toHaveAttribute('aria-pressed', 'false')
   })
 })
+
+describe('filter box guidance', () => {
+  it('has a visible label and guidance linked to the input', () => {
+    render(<App />)
+    const input = screen.getByLabelText('Filter values')
+    expect(screen.getByText('Filter values', { selector: 'label' })).toBeVisible()
+    const hint = screen.getByText(/Type part of a word to show only the values that match/)
+    expect(hint).toHaveTextContent('Your selections are kept.')
+    expect(input).toHaveAttribute('aria-describedby', hint.id)
+    expect(input).toHaveAttribute('placeholder', 'Type to filter…')
+  })
+
+  it('shows how many match while filtering, and nothing when empty', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    expect(screen.queryByText(/^Showing /)).not.toBeInTheDocument()
+    await user.type(screen.getByLabelText('Filter values'), 'res')
+    const total = VALUE_CATEGORIES.reduce((n, c) => n + c.values.length, 0)
+    const shown = VALUE_CATEGORIES.flatMap((c) => c.values).filter((v) => v.toLowerCase().includes('res')).length
+    expect(screen.getByText(`Showing ${shown} of ${total} values.`)).toBeInTheDocument()
+    await user.clear(screen.getByLabelText('Filter values'))
+    expect(screen.queryByText(/^Showing /)).not.toBeInTheDocument()
+  })
+
+  it('also guides on skill pages', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(word('Integrity'))
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    expect(screen.getByLabelText('Filter skills')).toHaveAccessibleDescription(
+      /Type part of a word to show only the technical development skills that match/,
+    )
+  })
+})
