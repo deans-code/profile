@@ -36,4 +36,4 @@
 ## 8. Hosting
 
 - [x] 8.1 Set the Vite `base` for GitHub Pages and add a GitHub Actions workflow that runs tests, builds and deploys `dist/` to Pages on push to `main`; verify `npm run build` followed by `npm run preview` serves the app correctly under the base path
-- [ ] 8.2 Enable Pages (GitHub Actions source) in the repo settings, push, and document the deploy process and live URL in the README; verify the deployed site loads and the workflow run succeeds
+- [x] 8.2 Enable Pages (GitHub Actions source) in the repo settings, push, and document the deploy process and live URL in the README; verify the deployed site loads and the workflow run succeeds

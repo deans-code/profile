@@ -20,7 +20,7 @@ The software runs entirely in the browser. No data leaves the user's device, unl
 - [x] Offer a link to ChatGPT, with a ready-made prompt, on the values and interpersonal pages to help discover more.
 - [x] Load a previously downloaded JSON profile and continue editing it.
 - [x] Provide a GitHub Actions workflow for deployment to GitHub Pages.
-- [ ] Deploy to GitHub Pages and confirm the live site.
+- [x] Deploy to GitHub Pages and confirm the live site.
 
 ## :telescope: Future Gazing
 
