@@ -1,7 +1,8 @@
 import { useState, type Dispatch } from 'react'
 import { CATALOGS, SECTION_LABELS, type Section } from '../data/skills'
-import type { Action, ProfileState } from '../state/profile'
+import { isFull, type Action, type ProfileState } from '../state/profile'
 import AddEntry from './AddEntry'
+import SelectionStatus from './SelectionStatus'
 import SelectionHelp from './SelectionHelp'
 import TermButton from './TermButton'
 
@@ -14,6 +15,7 @@ interface Props {
 export default function SkillStep({ section, state, dispatch }: Props) {
   const [filter, setFilter] = useState('')
   const selected = new Set(state.selectedSkills[section])
+  const full = isFull(state, section)
   const custom = state.customSkills[section]
   const query = filter.trim().toLowerCase()
   const matches = (name: string) => name.toLowerCase().includes(query)
@@ -55,6 +57,7 @@ export default function SkillStep({ section, state, dispatch }: Props) {
                       name={name}
                       className={`chip${isCustom ? ' custom' : ''}`}
                       selected={selected.has(name)}
+                      unavailable={full && !selected.has(name)}
                       onToggle={() => dispatch({ type: 'toggleSkill', section, name })}
                     />
                     {isCustom && (
@@ -78,11 +81,10 @@ export default function SkillStep({ section, state, dispatch }: Props) {
       <AddEntry
         label={`Add your own ${label.toLowerCase()} skill`}
         placeholder="Add your own skill"
+        full={full}
         onAdd={(text) => dispatch({ type: 'addCustomSkill', section, text })}
       />
-      <p className="count" aria-live="polite">
-        {selected.size} selected
-      </p>
+      <SelectionStatus count={selected.size} />
     </section>
   )
 }

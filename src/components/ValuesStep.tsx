@@ -1,7 +1,8 @@
 import type { Dispatch } from 'react'
 import { COMMON_VALUES } from '../data/values'
-import type { Action, ProfileState } from '../state/profile'
+import { isFull, type Action, type ProfileState } from '../state/profile'
 import AddEntry from './AddEntry'
+import SelectionStatus from './SelectionStatus'
 import SelectionHelp from './SelectionHelp'
 import TermButton from './TermButton'
 
@@ -12,6 +13,7 @@ interface Props {
 
 export default function ValuesStep({ state, dispatch }: Props) {
   const selected = new Set(state.selectedValues)
+  const full = isFull(state, 'values')
 
   return (
     <section aria-labelledby="values-heading">
@@ -26,6 +28,7 @@ export default function ValuesStep({ state, dispatch }: Props) {
               kind="values"
               name={v.name}
               selected={selected.has(v.name)}
+              unavailable={full && !selected.has(v.name)}
               onToggle={() => dispatch({ type: 'toggleValue', name: v.name })}
             />
           </li>
@@ -37,6 +40,7 @@ export default function ValuesStep({ state, dispatch }: Props) {
               name={name}
               className="chip custom"
               selected={selected.has(name)}
+              unavailable={full && !selected.has(name)}
               onToggle={() => dispatch({ type: 'toggleValue', name })}
             />
             <button
@@ -54,11 +58,10 @@ export default function ValuesStep({ state, dispatch }: Props) {
       <AddEntry
         label="Add your own value"
         placeholder="Add your own value"
+        full={full}
         onAdd={(text) => dispatch({ type: 'addCustomValue', text })}
       />
-      <p className="count" aria-live="polite">
-        {state.selectedValues.length} selected
-      </p>
+      <SelectionStatus count={state.selectedValues.length} />
     </section>
   )
 }

@@ -1,7 +1,10 @@
 import { useReducer, useRef } from 'react'
-import { SECTION_LABELS } from './data/skills'
-import { STEPS, initialState, reducer, stepBlockedReason, type Step } from './state/profile'
+import { SECTIONS, SECTION_LABELS } from './data/skills'
+import type { Profile } from './export'
+import { STEPS, initialState, loadLanding, reducer, stepBlockedReason, type Step } from './state/profile'
+import { profileToState } from './load'
 import { DefinitionProvider } from './components/DefinitionPanel'
+import LoadProfile from './components/LoadProfile'
 import ProfileCard from './components/ProfileCard'
 import ScoringStep from './components/ScoringStep'
 import SkillStep from './components/SkillStep'
@@ -24,14 +27,27 @@ export default function App() {
   const next = STEPS[index + 1]
   const nextBlocked = next ? stepBlockedReason(state, next) : null
   const contentRef = useRef<HTMLElement>(null)
-  const { navigate, motion } = useStepNavigation(state, dispatch, contentRef)
+  const { navigate, motion, setMotionFor } = useStepNavigation(state, dispatch, contentRef)
+
+  const hasProgress = state.selectedValues.length > 0 || SECTIONS.some((s) => state.selectedSkills[s].length > 0)
+
+  function loadProfile(profile: Profile): string | null {
+    const next = profileToState(profile)
+    const landing = loadLanding(next)
+    setMotionFor(landing.step)
+    dispatch({ type: 'loadProfile', profile: next })
+    return landing.notice
+  }
 
   return (
     <div className="app-root" data-section={state.step}>
-      <DefinitionProvider>
+      <DefinitionProvider resetKey={state.step}>
         <div className="app">
           <header>
-            <h1>Profile Builder</h1>
+            <div className="header-row">
+              <h1>Profile Builder</h1>
+              <LoadProfile hasProgress={hasProgress} onLoad={loadProfile} />
+            </div>
             <nav aria-label="Steps">
               <ol className="stepper">
                 {STEPS.map((step) => {

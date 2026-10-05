@@ -53,5 +53,11 @@ export function useStepNavigation(
     }
   }, [state.step, contentRef])
 
-  return { navigate, motion }
+  /** Records the direction of travel for a change of step made outside `navigate` (such as loading a profile). */
+  const setMotionFor = useCallback(
+    (step: Step) => setMotion(STEPS.indexOf(step) >= STEPS.indexOf(state.step) ? 'forward' : 'backward'),
+    [state.step],
+  )
+
+  return { navigate, motion, setMotionFor }
 }

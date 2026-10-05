@@ -16,6 +16,8 @@ The software runs entirely in the browser. No data leaves the user's device.
 - [x] Present a profile card with downloads as JSON and Markdown.
 - [x] Provide definitions for the built-in values and skills, opened by right-click (with keyboard and touch alternatives).
 - [x] Use a wide, uniform layout with a distinct colour per section and animated changes between sections.
+- [x] Limit selection to 10 words on each page.
+- [x] Load a previously downloaded JSON profile and continue editing it.
 - [x] Provide a GitHub Actions workflow for deployment to GitHub Pages.
 - [ ] Deploy to GitHub Pages and confirm the live site.
 
@@ -89,7 +91,9 @@ npm run preview
 
 - Around 60 common values, with custom values, all shown at the same size in a grid that uses the full width of the screen.
 - Technical development, engineering and interpersonal skill catalogs, grouped by category into cards, with filtering and custom skills.
+- A limit of 10 selections on each page (values, and each skill section), with a running count.
 - A short definition for every built-in value and skill (custom entries have none).
+- Loading of a saved JSON profile, validated before it replaces the current profile.
 - A distinct colour for each section, with accessible contrast in light and dark themes.
 - Scroll-to-top and an animated change of section when moving between steps (skipped when the system asks for reduced motion).
 - Guided steps that require at least one value and at least one skill in each section before scoring.
@@ -103,6 +107,20 @@ npm run preview
 2. Select skills in each of the technical development, engineering and interpersonal sections. Use the filter to find skills, or add your own.
 3. Score each selected skill using the sliders (1 is a beginner, 10 is an expert).
 4. Review your profile card, then use **Download JSON** or **Download Markdown**. Use **Edit** to go back and make changes.
+
+### Selection limit
+
+Each page (values, technical development, engineering and interpersonal) allows up to 10 selected words, including your own. At the limit the remaining words are dimmed and a message explains how to free a slot: deselect a word, then choose another. Definitions still open for dimmed words.
+
+### Loading a saved profile
+
+Use **Load saved profile** (top right, on any page) and choose a JSON file previously saved with **Download JSON**. The profile card opens, and **Edit** takes you back through the steps with everything selected and scored as saved.
+
+- The file is read in your browser only; nothing is uploaded.
+- If you already have selections you are asked to confirm before they are replaced.
+- Files that are not valid profiles (not JSON, wrong structure, scores outside 1 to 10, over 1 MB) are rejected with a message, and your current profile is left unchanged.
+- A saved profile with more than 10 words on a page (for example, one edited by hand) is loaded in full. That page opens, and you must deselect down to 10 before you can continue.
+- Markdown downloads cannot be loaded.
 
 ### Definitions
 
@@ -140,6 +158,7 @@ The build output is host-agnostic. For Cloudflare Pages, Netlify or similar, use
 - **Catalogs as data** (`src/data`), separate from the components, so the lists can be edited without touching the UI.
 - **Definitions as data** (`src/data/definitions`), one map per list, with a test that fails if any built-in value or skill is missing a definition. One panel (`DefinitionPanel`) is shared by every word, and `TermButton` handles right-click, keyboard and long-press.
 - **Section colours** are CSS custom properties set per `data-section`, with tests that check their contrast in both themes.
+- **Limits and loading**: the 10-word limit is enforced in the reducer (`MAX_SELECTION`), and `src/load.ts` is the validated inverse of the JSON export. A loaded profile replaces the state in one `loadProfile` action.
 - **Section changes** go through `useStepNavigation`, which scrolls to the top, sets the animation direction, moves focus to the new heading and ignores repeat requests while the change settles.
 - **Export as pure functions** (`src/export.ts`), producing the JSON and Markdown (with Markdown escaping of user text) before a local download.
 

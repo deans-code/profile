@@ -19,7 +19,7 @@ describe('values step', () => {
     render(<App />)
     await user.click(chip('Integrity'))
     expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText('1 selected')).toBeInTheDocument()
+    expect(screen.getByText('1 of 10 selected')).toBeInTheDocument()
     await user.click(chip('Integrity'))
     expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'false')
 

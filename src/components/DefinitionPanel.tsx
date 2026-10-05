@@ -20,7 +20,12 @@ interface OpenTerm {
 interface DefinitionsApi {
   open: (kind: TermKind, name: string, anchor: HTMLElement) => void
   close: (returnFocus?: boolean) => void
+  /** The term whose panel is open, if any. */
+  current: { kind: TermKind; name: string } | null
 }
+
+/** Id of the (single) open panel, referenced by the word it describes. */
+export const DEFINITION_PANEL_ID = 'definition-panel'
 
 const DefinitionsContext = createContext<DefinitionsApi | null>(null)
 
@@ -32,13 +37,21 @@ export function useDefinitions(): DefinitionsApi {
 
 const MARGIN = 8
 
-export function DefinitionProvider({ children }: { children: ReactNode }) {
+interface ProviderProps {
+  children: ReactNode
+  /** When this value changes (for example the current section), any open panel is closed. */
+  resetKey?: unknown
+}
+
+export function DefinitionProvider({ children, resetKey }: ProviderProps) {
   const [current, setCurrent] = useState<OpenTerm | null>(null)
   const currentRef = useRef<OpenTerm | null>(null)
   currentRef.current = current
 
   const open = useCallback((kind: TermKind, name: string, anchor: HTMLElement) => {
-    setCurrent((prev) => (prev && prev.kind === kind && prev.name === name && prev.anchor === anchor ? prev : { kind, name, anchor }))
+    setCurrent((prev) =>
+      prev && prev.kind === kind && prev.name === name && prev.anchor === anchor ? prev : { kind, name, anchor },
+    )
   }, [])
 
   const close = useCallback((returnFocus = false) => {
@@ -47,7 +60,18 @@ export function DefinitionProvider({ children }: { children: ReactNode }) {
     if (returnFocus && prev?.anchor.isConnected) prev.anchor.focus()
   }, [])
 
-  const api = useMemo(() => ({ open, close }), [open, close])
+  // A different section means the word the panel describes is no longer shown.
+  useEffect(() => {
+    setCurrent(null)
+  }, [resetKey])
+
+  const term = current ? { kind: current.kind, name: current.name } : null
+  const termKind = term?.kind
+  const termName = term?.name
+  const api = useMemo<DefinitionsApi>(
+    () => ({ open, close, current: termKind && termName ? { kind: termKind, name: termName } : null }),
+    [open, close, termKind, termName],
+  )
 
   return (
     <DefinitionsContext.Provider value={api}>
@@ -63,19 +87,30 @@ function Panel({ term, onClose }: { term: OpenTerm; onClose: (returnFocus?: bool
   const definition = getDefinition(term.kind, term.name)
 
   // Place below the word, flip above when there is no room, and clamp to the viewport.
-  useLayoutEffect(() => {
+  // Closes instead when the word has left the page or is completely off screen.
+  const reposition = useCallback(() => {
     const panel = ref.current
     if (!panel) return
+    if (!term.anchor.isConnected) {
+      onClose(false)
+      return
+    }
     const a = term.anchor.getBoundingClientRect()
-    const { offsetWidth: w, offsetHeight: h } = panel
     const vw = document.documentElement.clientWidth
     const vh = window.innerHeight
+    if (vw > 0 && vh > 0 && (a.bottom < 0 || a.top > vh || a.right < 0 || a.left > vw)) {
+      onClose(false)
+      return
+    }
+    const { offsetWidth: w, offsetHeight: h } = panel
     let top = a.bottom + MARGIN
     if (top + h > vh - MARGIN) top = a.top - h - MARGIN
     top = Math.max(MARGIN, Math.min(top, vh - h - MARGIN))
     const left = Math.max(MARGIN, Math.min(a.left, vw - w - MARGIN))
     setPos({ top, left })
-  }, [term])
+  }, [term, onClose])
+
+  useLayoutEffect(reposition, [reposition])
 
   useEffect(() => {
     ref.current?.focus({ preventScroll: true })
@@ -91,22 +126,30 @@ function Panel({ term, onClose }: { term: OpenTerm; onClose: (returnFocus?: bool
     function onPointerDown(e: PointerEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) onClose(false)
     }
-    const dismiss = () => onClose(false)
+    // Resizes (such as a mobile address bar showing or hiding) and scrolls keep the panel attached to its word.
+    const observer = new MutationObserver(() => {
+      if (!term.anchor.isConnected) onClose(false)
+    })
+    observer.observe(document.body, { childList: true, subtree: true })
     document.addEventListener('keydown', onKey)
     document.addEventListener('pointerdown', onPointerDown)
-    window.addEventListener('scroll', dismiss, { passive: true })
-    window.addEventListener('resize', dismiss)
+    window.addEventListener('scroll', reposition, { passive: true })
+    window.addEventListener('resize', reposition)
+    window.visualViewport?.addEventListener('resize', reposition)
     return () => {
+      observer.disconnect()
       document.removeEventListener('keydown', onKey)
       document.removeEventListener('pointerdown', onPointerDown)
-      window.removeEventListener('scroll', dismiss)
-      window.removeEventListener('resize', dismiss)
+      window.removeEventListener('scroll', reposition)
+      window.removeEventListener('resize', reposition)
+      window.visualViewport?.removeEventListener('resize', reposition)
     }
-  }, [onClose])
+  }, [onClose, reposition, term.anchor])
 
   return (
     <div
       ref={ref}
+      id={DEFINITION_PANEL_ID}
       className="definition"
       role="dialog"
       aria-label={`Definition of ${term.name}`}

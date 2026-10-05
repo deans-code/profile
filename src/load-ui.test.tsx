@@ -1,0 +1,266 @@
+import { render, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import App from './App'
+import { MAX_FILE_BYTES } from './load'
+
+const word = (name: string) => screen.getByRole('button', { name })
+const next = () => screen.getByRole('button', { name: /continue|finish/i })
+const picker = () => screen.getByLabelText('Choose a saved profile file') as HTMLInputElement
+const card = () => screen.getByRole('article', { name: 'Profile card' })
+
+const profileJson = (overrides: Record<string, unknown> = {}) =>
+  JSON.stringify({
+    exportedAt: '2026-01-02T03:04:05.000Z',
+    values: ['Integrity', 'Grit'],
+    skills: {
+      technical: [
+        { name: 'Python', score: 9 },
+        { name: 'Zig', score: 3 },
+      ],
+      engineering: [{ name: 'Scrum', score: 6 }],
+      interpersonal: [{ name: 'Teamwork', score: 7 }],
+    },
+    ...overrides,
+  })
+
+const upload = (user: ReturnType<typeof userEvent.setup>, text: string, name = 'profile.json') =>
+  user.upload(picker(), new File([text], name, { type: 'application/json' }))
+
+describe('Load saved profile', () => {
+  it('is available on every page', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    expect(screen.getByRole('button', { name: 'Load saved profile' })).toBeInTheDocument()
+    await user.click(word('Integrity'))
+    await user.click(next())
+    expect(screen.getByRole('button', { name: 'Load saved profile' })).toBeInTheDocument()
+  })
+
+  it('restores a valid file and shows the profile card', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await upload(user, profileJson())
+    expect(await screen.findByRole('heading', { name: 'Your profile' })).toBeInTheDocument()
+    expect(within(card()).getByText('Integrity')).toBeInTheDocument()
+    expect(within(card()).getByText('Grit')).toBeInTheDocument()
+    expect(within(card()).getByText('Python')).toBeInTheDocument()
+    expect(within(card()).getByText('9/10')).toBeInTheDocument()
+    expect(within(card()).getByText('Zig')).toBeInTheDocument()
+    expect(screen.getByText(/Loaded profile\.json/)).toBeInTheDocument()
+  })
+
+  it('lets the user edit the loaded profile through every step', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await upload(user, profileJson())
+    await screen.findByRole('heading', { name: 'Your profile' })
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
+
+    // Values: loaded values selected, custom restored.
+    expect(word('Integrity')).toHaveAttribute('aria-pressed', 'true')
+    expect(word('Grit')).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText(/^2 of 10 selected/)).toBeInTheDocument()
+    await user.click(word('Trust'))
+    await user.click(next())
+
+    // Technical: loaded skills selected (built-in and custom).
+    expect(word('Python')).toHaveAttribute('aria-pressed', 'true')
+    expect(word('Zig')).toHaveAttribute('aria-pressed', 'true')
+    await user.click(word('Go'))
+    await user.click(next())
+    expect(word('Scrum')).toHaveAttribute('aria-pressed', 'true')
+    await user.click(next())
+    expect(word('Teamwork')).toHaveAttribute('aria-pressed', 'true')
+    await user.click(next())
+
+    // Scoring: loaded scores kept, new skill at the default.
+    expect(screen.getByRole('slider', { name: 'Python' })).toHaveValue('9')
+    expect(screen.getByRole('slider', { name: 'Zig' })).toHaveValue('3')
+    expect(screen.getByRole('slider', { name: 'Scrum' })).toHaveValue('6')
+    expect(screen.getByRole('slider', { name: 'Go' })).toHaveValue('5')
+    await user.click(next())
+    expect(within(card()).getByText('Trust')).toBeInTheDocument()
+    expect(within(card()).getByText('Go')).toBeInTheDocument()
+  })
+
+  it('matches built-in entries ignoring case and restores others as custom', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await upload(user, profileJson({ values: ['integrity'] }))
+    await screen.findByRole('heading', { name: 'Your profile' })
+    expect(within(card()).getByText('Integrity')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
+    expect(screen.getAllByRole('button', { name: /^integrity$/i })).toHaveLength(1)
+  })
+
+  describe('rejections leave the current profile unchanged', () => {
+    it.each([
+      ['not JSON', 'hello', /not valid JSON/],
+      ['wrong structure', JSON.stringify({ values: ['a'] }), /not a profile downloaded from this app/],
+      [
+        'a bad score',
+        profileJson({ skills: { technical: [{ name: 'Python', score: 11 }], engineering: [], interpersonal: [] } }),
+        /score for "Python" must be a whole number/,
+      ],
+    ])('%s', async (_name, text, message) => {
+      const user = userEvent.setup()
+      render(<App />)
+      await upload(user, text as string)
+      expect(await screen.findByText(message as RegExp)).toBeInTheDocument()
+      expect(screen.getByText(/Your profile is unchanged/)).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
+      expect(screen.queryByRole('heading', { name: 'Your profile' })).not.toBeInTheDocument()
+    })
+
+    it('an oversized file', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await upload(user, 'x'.repeat(MAX_FILE_BYTES + 1))
+      expect(await screen.findByText(/larger than 1 MB/)).toBeInTheDocument()
+    })
+
+    it('keeps existing selections after a rejected file', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await user.click(word('Integrity'))
+      await upload(user, 'nope')
+      await screen.findByText(/not valid JSON/)
+      expect(word('Integrity')).toHaveAttribute('aria-pressed', 'true')
+      expect(screen.queryByRole('group', { name: /confirm/i })).not.toBeInTheDocument()
+    })
+  })
+
+  describe('replacing existing progress', () => {
+    it('asks to confirm, and Replace loads the file', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await user.click(word('Trust'))
+      await upload(user, profileJson())
+      const confirm = await screen.findByRole('group', { name: 'Confirm loading a profile' })
+      expect(confirm).toHaveTextContent('Replace your current profile with profile.json?')
+      expect(screen.getByRole('button', { name: 'Replace' })).toHaveFocus()
+      expect(screen.queryByRole('heading', { name: 'Your profile' })).not.toBeInTheDocument()
+
+      await user.click(screen.getByRole('button', { name: 'Replace' }))
+      expect(await screen.findByRole('heading', { name: 'Your profile' })).toBeInTheDocument()
+      expect(within(card()).queryByText('Trust')).not.toBeInTheDocument()
+      expect(within(card()).getByText('Integrity')).toBeInTheDocument()
+    })
+
+    it('Cancel leaves the profile and page unchanged', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await user.click(word('Trust'))
+      await upload(user, profileJson())
+      await user.click(await screen.findByRole('button', { name: 'Cancel' }))
+      expect(screen.getByText(/Load cancelled/)).toBeInTheDocument()
+      expect(word('Trust')).toHaveAttribute('aria-pressed', 'true')
+      expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
+    })
+
+    it('loads without a prompt when there are no selections', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await upload(user, profileJson())
+      await screen.findByRole('heading', { name: 'Your profile' })
+      expect(screen.queryByRole('group', { name: /confirm/i })).not.toBeInTheDocument()
+    })
+  })
+
+  it('processes the same file twice', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    const file = new File([profileJson()], 'profile.json', { type: 'application/json' })
+    await user.upload(picker(), file)
+    await screen.findByRole('heading', { name: 'Your profile' })
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
+    await user.click(word('Trust'))
+    await user.upload(picker(), file)
+    await user.click(await screen.findByRole('button', { name: 'Replace' }))
+    await screen.findByRole('heading', { name: 'Your profile' })
+    expect(within(card()).queryByText('Trust')).not.toBeInTheDocument()
+  })
+
+  describe('over-limit and incomplete files', () => {
+    it('loads all 12 values, opens the values page and says how many to deselect', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      const values = Array.from({ length: 12 }, (_, i) => `Custom value ${i}`)
+      await upload(user, profileJson({ values }))
+      expect(await screen.findByText(/Loaded profile\.json\. Deselect 2 words on the values page/)).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
+      expect(screen.getByText(/^12 of 10 selected/)).toHaveTextContent(/deselect 2 words/i)
+      expect(next()).toBeDisabled()
+
+      await user.click(word('Custom value 0'))
+      await user.click(word('Custom value 1'))
+      expect(screen.getByText(/^10 of 10 selected/)).toBeInTheDocument()
+      expect(next()).toBeEnabled()
+    })
+
+    it('opens the first page that needs attention for an incomplete file', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await upload(
+        user,
+        profileJson({ skills: { technical: [{ name: 'Python', score: 5 }], engineering: [], interpersonal: [] } }),
+      )
+      expect(await screen.findByText(/Select at least one skill in: engineering, interpersonal/)).toBeInTheDocument()
+      await waitFor(() => expect(screen.getByRole('heading', { name: /engineering skills/i })).toBeInTheDocument())
+    })
+  })
+})
+
+describe('end to end: build, download, load, edit, download', () => {
+  it('round-trips a profile built in the UI', async () => {
+    const user = userEvent.setup()
+    const blobs: Blob[] = []
+    URL.createObjectURL = vi.fn((b: Blob | MediaSource) => {
+      blobs.push(b as Blob)
+      return 'blob:mock'
+    })
+    URL.revokeObjectURL = vi.fn()
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
+
+    const first = render(<App />)
+    await user.click(word('Integrity'))
+    await user.type(screen.getByLabelText('Add your own value'), 'Grit')
+    await user.click(screen.getByRole('button', { name: 'Add' }))
+    await user.click(next())
+    await user.click(word('Python'))
+    await user.click(next())
+    await user.click(word('Scrum'))
+    await user.click(next())
+    await user.click(word('Teamwork'))
+    await user.click(next())
+    const slider = screen.getByRole('slider', { name: 'Python' })
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
+    setter.call(slider, '8')
+    slider.dispatchEvent(new Event('input', { bubbles: true }))
+    await user.click(next())
+    await user.click(screen.getByRole('button', { name: 'Download JSON' }))
+    const original = await blobs[0].text()
+    first.unmount()
+
+    // A fresh session: load the downloaded file, edit, and download again.
+    render(<App />)
+    await upload(user, original, 'my-profile.json')
+    await screen.findByRole('heading', { name: 'Your profile' })
+    await user.click(screen.getByRole('button', { name: 'Download JSON' }))
+    const reloaded = await blobs[1].text()
+    const strip = (t: string) => ({ ...JSON.parse(t), exportedAt: undefined })
+    expect(strip(reloaded)).toEqual(strip(original))
+
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
+    await user.click(word('Trust'))
+    await user.click(next())
+    await user.click(next())
+    await user.click(next())
+    await user.click(next())
+    await user.click(next())
+    await user.click(screen.getByRole('button', { name: 'Download JSON' }))
+    const edited = JSON.parse(await blobs[2].text())
+    expect(edited.values).toEqual(['Grit', 'Integrity', 'Trust'])
+    expect(edited.skills.technical).toEqual([{ name: 'Python', score: 8 }])
+  })
+})

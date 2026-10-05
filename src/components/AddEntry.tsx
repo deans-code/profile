@@ -4,14 +4,16 @@ interface Props {
   label: string
   placeholder: string
   onAdd: (text: string) => void
+  /** When true the Add button is disabled and typed text is kept. */
+  full?: boolean
 }
 
-export default function AddEntry({ label, placeholder, onAdd }: Props) {
+export default function AddEntry({ label, placeholder, onAdd, full = false }: Props) {
   const [text, setText] = useState('')
 
   function submit(e: FormEvent) {
     e.preventDefault()
-    if (!text.trim()) return
+    if (!text.trim() || full) return
     onAdd(text)
     setText('')
   }
@@ -28,7 +30,7 @@ export default function AddEntry({ label, placeholder, onAdd }: Props) {
           onChange={(e) => setText(e.target.value)}
         />
       </label>
-      <button type="submit" disabled={!text.trim()}>
+      <button type="submit" disabled={!text.trim() || full}>
         Add
       </button>
     </form>
