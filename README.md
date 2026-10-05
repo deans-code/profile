@@ -183,7 +183,7 @@ npm run build        # type-check and build
 
 ## :wave: Contributing
 
-This repository was created primarily for my own exploration of the technologies involved.
+This tool was built to aid the management of a software engineering team and is a personal project at this stage.
 
 ## :gift: License
 
