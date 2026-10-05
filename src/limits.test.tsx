@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import { COMMON_VALUES } from './data/values'
+import { MAX_SELECTION as LIMIT } from './state/profile'
 
 const word = (name: string) => screen.getByRole('button', { name })
 const next = () => screen.getByRole('button', { name: /continue|finish/i })
@@ -12,23 +13,23 @@ async function selectValues(user: ReturnType<typeof userEvent.setup>, n: number)
 }
 
 describe('selection limit UI', () => {
-  it('shows "n of 10 selected"', async () => {
+  it('shows "n of 20 selected"', async () => {
     const user = userEvent.setup()
     render(<App />)
-    expect(screen.getByText('0 of 10 selected')).toBeInTheDocument()
+    expect(screen.getByText(`0 of ${LIMIT} selected`)).toBeInTheDocument()
     await selectValues(user, 7)
-    expect(screen.getByText(/^7 of 10 selected/)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(`^7 of ${LIMIT} selected`))).toBeInTheDocument()
   })
 
   it('announces the limit and marks unselected words unavailable but focusable', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await selectValues(user, 10)
-    const status = screen.getByText(/^10 of 10 selected/)
+    await selectValues(user, LIMIT)
+    const status = screen.getByText(new RegExp(`^${LIMIT} of ${LIMIT} selected`))
     expect(status).toHaveAttribute('aria-live', 'polite')
     expect(status).toHaveTextContent(/limit reached.*deselect a word to choose another/i)
 
-    const extra = word(values[10])
+    const extra = word(values[LIMIT])
     expect(extra).toHaveAttribute('aria-disabled', 'true')
     expect(extra).not.toBeDisabled()
     extra.focus()
@@ -37,24 +38,24 @@ describe('selection limit UI', () => {
 
     await user.click(extra)
     expect(extra).toHaveAttribute('aria-pressed', 'false')
-    expect(screen.getByText(/^10 of 10 selected/)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(`^${LIMIT} of ${LIMIT} selected`))).toBeInTheDocument()
   })
 
   it('frees a slot when a word is deselected', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await selectValues(user, 10)
+    await selectValues(user, LIMIT)
     await user.click(word(values[0]))
-    expect(word(values[10])).not.toHaveAttribute('aria-disabled')
-    await user.click(word(values[10]))
-    expect(word(values[10])).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText(/^10 of 10 selected/)).toBeInTheDocument()
+    expect(word(values[LIMIT])).not.toHaveAttribute('aria-disabled')
+    await user.click(word(values[LIMIT]))
+    expect(word(values[LIMIT])).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText(new RegExp(`^${LIMIT} of ${LIMIT} selected`))).toBeInTheDocument()
   })
 
   it('disables Add at the limit but keeps the typed text', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await selectValues(user, 9)
+    await selectValues(user, LIMIT - 1)
     const input = screen.getByLabelText('Add your own value')
     await user.type(input, 'Grit')
     await user.click(screen.getByRole('button', { name: 'Add' }))
@@ -71,17 +72,17 @@ describe('selection limit UI', () => {
   it('still opens definitions for unavailable words and leaves the selection unchanged', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await selectValues(user, 10)
-    await user.pointer({ keys: '[MouseRight]', target: word(values[10]) })
-    expect(screen.getByRole('dialog')).toHaveAccessibleName(`Description of ${values[10]}`)
-    expect(word(values[10])).toHaveAttribute('aria-pressed', 'false')
-    expect(screen.getByText(/^10 of 10 selected/)).toBeInTheDocument()
+    await selectValues(user, LIMIT)
+    await user.pointer({ keys: '[MouseRight]', target: word(values[LIMIT]) })
+    expect(screen.getByRole('dialog')).toHaveAccessibleName(`Description of ${values[LIMIT]}`)
+    expect(word(values[LIMIT])).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByText(new RegExp(`^${LIMIT} of ${LIMIT} selected`))).toBeInTheDocument()
   })
 
   it('does not limit skills: 12 selected shows a plain count, nothing dimmed, Add enabled', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await selectValues(user, 10)
+    await selectValues(user, LIMIT)
     await user.click(next())
     const skills = within(screen.getByRole('main'))
       .getAllByRole('button')
@@ -89,7 +90,7 @@ describe('selection limit UI', () => {
     expect(screen.getByText('0 selected')).toBeInTheDocument()
     for (const b of skills.slice(0, 12)) await user.click(b)
     const status = screen.getByText('12 selected')
-    expect(status).not.toHaveTextContent(/limit|of 10/i)
+    expect(status).not.toHaveTextContent(/limit|of \d+/i)
     expect(skills.slice(0, 12).every((b) => b.getAttribute('aria-pressed') === 'true')).toBe(true)
     expect(skills.some((b) => b.hasAttribute('aria-disabled'))).toBe(false)
 
@@ -103,9 +104,9 @@ describe('selection limit UI', () => {
   it('keeps the values limit while skills are unlimited', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await selectValues(user, 10)
-    expect(screen.getByText(/^10 of 10 selected/)).toBeInTheDocument()
+    await selectValues(user, LIMIT)
+    expect(screen.getByText(new RegExp(`^${LIMIT} of ${LIMIT} selected`))).toBeInTheDocument()
     await user.click(next())
-    expect(screen.queryByText(/of 10 selected/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/of \d+ selected/)).not.toBeInTheDocument()
   })
 })

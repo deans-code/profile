@@ -4,9 +4,9 @@
 
 A tool to help capture an individual's profile: what they value, and where their technical development, engineering and interpersonal skills stand.
 
-Users pick up to 10 values from grouped, common choices, build skill lists from curated catalogs, score each skill from 1 to 10, and finish with a profile card that can be downloaded as JSON or Markdown.
+Users pick up to 20 values from grouped, common choices, build skill lists from curated catalogs, score each skill from 1 to 10, and finish with a profile card that can be downloaded as JSON or Markdown.
 
-The software runs entirely in the browser. No data leaves the user's device.
+The software runs entirely in the browser. No data leaves the user's device, unless the user chooses to follow the optional ChatGPT link (see below), which sends only a generic prompt.
 
 ## :white_check_mark: Scope
 
@@ -16,7 +16,8 @@ The software runs entirely in the browser. No data leaves the user's device.
 - [x] Present a profile card with downloads as JSON and Markdown.
 - [x] Provide a description for every built-in value and skill, opened by right-click (with keyboard and touch alternatives).
 - [x] Use a wide, uniform layout with a distinct colour per section and animated changes between sections.
-- [x] Limit values to 10 selections; skills are unlimited.
+- [x] Limit values to 20 selections; skills are unlimited.
+- [x] Offer a link to ChatGPT, with a ready-made prompt, on the values and interpersonal pages to help discover more.
 - [x] Load a previously downloaded JSON profile and continue editing it.
 - [x] Provide a GitHub Actions workflow for deployment to GitHub Pages.
 - [ ] Deploy to GitHub Pages and confirm the live site.
@@ -91,7 +92,7 @@ npm run preview
 
 - Over 100 common values in nine categories (for example Character and integrity, Learning and growth, Society and the world), with a filter and custom values, all shown at the same size in cards that use the full width of the screen.
 - Technical development, engineering and interpersonal skill catalogs, grouped by category into cards, with filtering and custom skills.
-- A limit of 10 selected values, with a running count. Skills have no limit.
+- A limit of 20 selected values, with a running count. Skills have no limit.
 - A short description for every built-in value and skill (custom entries have none).
 - Loading of a saved JSON profile, validated before it replaces the current profile.
 - A distinct colour for each section, with accessible contrast in light and dark themes.
@@ -110,9 +111,15 @@ npm run preview
 
 ### Selection limit
 
-The values page allows up to 10 selected values, including your own. At the limit the remaining values are dimmed and a message explains how to free a slot: deselect a value, then choose another. Descriptions still open for dimmed values.
+The values page allows up to 20 selected values, including your own. At the limit the remaining values are dimmed and a message explains how to free a slot: deselect a value, then choose another. Descriptions still open for dimmed values.
 
 The technical development, engineering and interpersonal pages have no limit: select as many skills as apply. The scoring page and profile card list every selected skill.
+
+### Discovering more with ChatGPT
+
+The values and interpersonal pages begin with a link to ChatGPT. It opens ChatGPT in a new tab with a prompt already written that explains what you are trying to capture (your values, or your interpersonal skills) and asks for suggestions. Pick the suggestions you like and add them with **Add your own**.
+
+The prompt is the same for everyone: it does not include anything you have selected or typed. Nothing is sent anywhere unless you click the link. The prompts are in `src/data/assistant.ts`.
 
 ### Loading a saved profile
 
@@ -121,7 +128,7 @@ Use **Load saved profile** (top right, on any page) and choose a JSON file previ
 - The file is read in your browser only; nothing is uploaded.
 - If you already have selections you are asked to confirm before they are replaced.
 - Files that are not valid profiles (not JSON, wrong structure, scores outside 1 to 10, over 1 MB) are rejected with a message, and your current profile is left unchanged.
-- A saved profile with more than 10 values (for example, one edited by hand) is loaded in full. The values page opens, and you must deselect down to 10 before you can continue. Any number of skills loads normally.
+- A saved profile with more than 20 values (for example, one edited by hand) is loaded in full. The values page opens, and you must deselect down to 20 before you can continue. Any number of skills loads normally.
 - Markdown downloads cannot be loaded.
 
 ### Descriptions

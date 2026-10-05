@@ -20,7 +20,7 @@ describe('values step', () => {
     render(<App />)
     await user.click(chip('Integrity'))
     expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText('1 of 10 selected')).toBeInTheDocument()
+    expect(screen.getByText('1 of 20 selected')).toBeInTheDocument()
     await user.click(chip('Integrity'))
     expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'false')
 
@@ -224,16 +224,18 @@ describe('instructions', () => {
     expect(lines[0]).toHaveTextContent(
       'Click a word to select or deselect it. Right-click a word to read its description.',
     )
-    expect(lines[1]).toHaveTextContent('Select up to 10 values.')
+    expect(lines[1]).toHaveTextContent('Select up to 20 values.')
     expect(lines[2]).toHaveClass('help-alt')
-    expect(lines[2]).toHaveTextContent('Keyboard: focus a word and press ? or Shift+F10. Touch: press and hold.')
+    expect(lines[2]).toHaveTextContent(
+      'Mouse: right-click a word. Keyboard: focus a word and press ? or Shift+F10. Touch: press and hold.',
+    )
     expect(help()).not.toHaveTextContent(/definition/i)
   })
 
-  it('states the limit of 10 on the values page only; skill pages say as many as apply', async () => {
+  it('states the values limit on the values page only; skill pages say as many as apply', async () => {
     const user = userEvent.setup()
     render(<App />)
-    expect(help()).toHaveTextContent(/up to 10 values/i)
+    expect(help()).toHaveTextContent(/up to 20 values/i)
     await user.click(chip('Integrity'))
     for (const [section, word] of [
       ['technical', 'Python'],
@@ -247,7 +249,7 @@ describe('instructions', () => {
         }),
       ).toBeInTheDocument()
       expect(help()).toHaveTextContent(/select as many skills as apply/i)
-      expect(help()).not.toHaveTextContent(/limit|up to 10|of 10/i)
+      expect(help()).not.toHaveTextContent(/limit|up to \d+|of \d+/i)
       expect(help()).toHaveTextContent(/right-click/i)
       await user.click(chip(word))
     }

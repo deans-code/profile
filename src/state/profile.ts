@@ -10,7 +10,7 @@ export const MIN_SCORE = 1
 export const MAX_SCORE = 10
 
 /** Most values that can be selected. */
-export const MAX_SELECTION = 10
+export const MAX_SELECTION = 20
 
 /** A page with selectable words. */
 export type Page = 'values' | Section

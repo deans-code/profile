@@ -610,3 +610,25 @@ kbd {
 .confirm p {
   margin: 0;
 }
+
+/* Link to ChatGPT */
+.assistant {
+  border: 1px dashed var(--accent);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  margin: 0.75rem 0;
+}
+
+.assistant p {
+  margin: 0.25rem 0;
+}
+
+.assistant a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.assistant-note {
+  color: var(--muted);
+  font-size: 0.9rem;
+}

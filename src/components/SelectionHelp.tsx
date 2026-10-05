@@ -14,7 +14,8 @@ export default function SelectionHelp({ limit, unit }: Props) {
       </p>
       <p>{limit === undefined ? `Select as many ${unit} as apply.` : `Select up to ${limit} ${unit}.`}</p>
       <p className="help-alt">
-        Keyboard: focus a word and press <kbd>?</kbd> or <kbd>Shift</kbd>+<kbd>F10</kbd>. Touch: press and hold.
+        <strong>Mouse:</strong> <strong>right-click</strong> a word. <strong>Keyboard:</strong> focus a word and press{' '}
+        <kbd>?</kbd> or <kbd>Shift</kbd>+<kbd>F10</kbd>. <strong>Touch:</strong> press and hold.
       </p>
     </aside>
   )

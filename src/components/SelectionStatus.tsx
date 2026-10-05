@@ -4,7 +4,7 @@ interface Props {
   limit?: number
 }
 
-/** "n selected", or "n of 10 selected" with an explanation when the page has a limit that is reached or exceeded. */
+/** "n selected", or "n of 20 selected" with an explanation when the page has a limit that is reached or exceeded. */
 export default function SelectionStatus({ count, limit }: Props) {
   if (limit === undefined) {
     return (

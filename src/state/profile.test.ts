@@ -255,7 +255,7 @@ describe('selection limit', () => {
   })
 
   describe('over-limit pages (for example a loaded profile)', () => {
-    const over: ProfileState = { ...initialState, selectedValues: values.slice(0, 12) }
+    const over: ProfileState = { ...initialState, selectedValues: values.slice(0, MAX_SELECTION + 2) }
 
     it('reports how many to remove', () => {
       expect(overBy(over, 'values')).toBe(2)
@@ -263,8 +263,8 @@ describe('selection limit', () => {
     })
 
     it('allows deselecting but not selecting', () => {
-      expect(reducer(over, { type: 'toggleValue', name: values[12] })).toBe(over)
-      expect(reducer(over, { type: 'toggleValue', name: values[0] }).selectedValues).toHaveLength(11)
+      expect(reducer(over, { type: 'toggleValue', name: values[MAX_SELECTION + 2] })).toBe(over)
+      expect(reducer(over, { type: 'toggleValue', name: values[0] }).selectedValues).toHaveLength(MAX_SELECTION + 1)
     })
 
     it('blocks moving forward, naming the page and count, but not moving back', () => {
@@ -327,11 +327,11 @@ describe('loadProfile', () => {
   })
 
   it('opens the values page for an over-limit values list, keeping every value', () => {
-    const profile = { ...complete, selectedValues: values.slice(0, 12) }
+    const profile = { ...complete, selectedValues: values.slice(0, MAX_SELECTION + 2) }
     expect(loadLanding(profile).notice).toMatch(/Deselect 2 words on the values page/)
     const s = reducer(initialState, { type: 'loadProfile', profile })
     expect(s.step).toBe('values')
-    expect(s.selectedValues).toHaveLength(12)
+    expect(s.selectedValues).toHaveLength(MAX_SELECTION + 2)
   })
 
   it('loads many skills without asking to deselect, but still gates over-limit values', () => {
@@ -340,7 +340,7 @@ describe('loadProfile', () => {
       selectedSkills: { ...complete.selectedSkills, engineering: catalogSkillNames('engineering').slice(0, 30) },
     }
     expect(loadLanding(many)).toEqual({ step: 'card', notice: null })
-    const both = { ...many, selectedValues: values.slice(0, 12) }
+    const both = { ...many, selectedValues: values.slice(0, MAX_SELECTION + 2) }
     const landing = loadLanding(both)
     expect(landing.step).toBe('values')
     expect(landing.notice).toMatch(/Deselect 2 words on the values page/)

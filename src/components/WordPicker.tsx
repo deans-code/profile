@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import type { TermKind } from '../data/definitions'
+import { ASSISTANT_HELP } from '../data/assistant'
 import AddEntry from './AddEntry'
+import AssistantLink from './AssistantLink'
 import SelectionHelp from './SelectionHelp'
 import SelectionStatus from './SelectionStatus'
 import TermButton from './TermButton'
@@ -64,6 +66,7 @@ export default function WordPicker({
     <section aria-labelledby={headingId}>
       <h2 id={headingId}>{heading}</h2>
       <p className="hint">{hint}</p>
+      {ASSISTANT_HELP[kind] && <AssistantLink {...ASSISTANT_HELP[kind]} />}
       <SelectionHelp limit={limit} unit={kind === 'values' ? 'values' : 'skills'} />
 
       <input

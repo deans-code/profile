@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import { VALUE_CATEGORIES } from './data/values'
+import { MAX_SELECTION as LIMIT } from './state/profile'
 
 const word = (name: string) => screen.getByRole('button', { name })
 const main = () => within(screen.getByRole('main'))
@@ -60,15 +61,15 @@ describe('grouped values', () => {
     expect(main().queryByRole('heading', { name: 'Custom' })).not.toBeInTheDocument()
   })
 
-  it('keeps the limit of 10 values', async () => {
+  it('keeps the values limit', async () => {
     const user = userEvent.setup()
     render(<App />)
     const names = VALUE_CATEGORIES.flatMap((c) => c.values)
-    for (const n of names.slice(0, 10)) await user.click(word(n))
-    expect(screen.getByText(/^10 of 10 selected/)).toBeInTheDocument()
-    await user.click(word(names[10]))
-    expect(word(names[10])).toHaveAttribute('aria-pressed', 'false')
-    expect(word(names[10])).toHaveAttribute('aria-disabled', 'true')
+    for (const n of names.slice(0, LIMIT)) await user.click(word(n))
+    expect(screen.getByText(new RegExp(`^${LIMIT} of ${LIMIT} selected`))).toBeInTheDocument()
+    await user.click(word(names[LIMIT]))
+    expect(word(names[LIMIT])).toHaveAttribute('aria-pressed', 'false')
+    expect(word(names[LIMIT])).toHaveAttribute('aria-disabled', 'true')
   })
 
   it('opens a description on right-click without changing the selection, including for new values', async () => {

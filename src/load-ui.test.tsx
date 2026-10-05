@@ -59,7 +59,7 @@ describe('Load saved profile', () => {
     // Values: loaded values selected, custom restored.
     expect(word('Integrity')).toHaveAttribute('aria-pressed', 'true')
     expect(word('Grit')).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText(/^2 of 10 selected/)).toBeInTheDocument()
+    expect(screen.getByText(/^2 of 20 selected/)).toBeInTheDocument()
     await user.click(word('Trust'))
     await user.click(next())
 
@@ -182,19 +182,19 @@ describe('Load saved profile', () => {
   })
 
   describe('over-limit and incomplete files', () => {
-    it('loads all 12 values, opens the values page and says how many to deselect', async () => {
+    it('loads all 22 values, opens the values page and says how many to deselect', async () => {
       const user = userEvent.setup()
       render(<App />)
-      const values = Array.from({ length: 12 }, (_, i) => `Custom value ${i}`)
+      const values = Array.from({ length: 22 }, (_, i) => `Custom value ${i}`)
       await upload(user, profileJson({ values }))
       expect(await screen.findByText(/Loaded profile\.json\. Deselect 2 words on the values page/)).toBeInTheDocument()
       expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
-      expect(screen.getByText(/^12 of 10 selected/)).toHaveTextContent(/deselect 2 words/i)
+      expect(screen.getByText(/^22 of 20 selected/)).toHaveTextContent(/deselect 2 words/i)
       expect(next()).toBeDisabled()
 
       await user.click(word('Custom value 0'))
       await user.click(word('Custom value 1'))
-      expect(screen.getByText(/^10 of 10 selected/)).toBeInTheDocument()
+      expect(screen.getByText(/^20 of 20 selected/)).toBeInTheDocument()
       expect(next()).toBeEnabled()
     })
 
