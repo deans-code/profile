@@ -1,6 +1,8 @@
 import {
   MAX_SELECTION,
   initialState,
+  isFull,
+  limitFor,
   loadLanding,
   overBy,
   reducer,
@@ -186,23 +188,28 @@ describe('selection limit', () => {
     expect(s.selectedValues).not.toContain(values[MAX_SELECTION])
   })
 
-  it('stops selecting skills at the limit', () => {
-    const s = run([
-      ...pickSkills(MAX_SELECTION),
-      { type: 'toggleSkill', section: 'technical', name: technical[MAX_SELECTION] },
-    ])
-    expect(s.selectedSkills.technical).toHaveLength(MAX_SELECTION)
+  it('does not limit skills: 30 can be selected in a section', () => {
+    const s = run(pickSkills(30))
+    expect(s.selectedSkills.technical).toHaveLength(30)
   })
 
-  it('applies the limit per page', () => {
+  it('limits only the values page; skills are unaffected by a full values page', () => {
     const s = run([
       ...pick(MAX_SELECTION, values),
-      ...pickSkills(MAX_SELECTION),
+      ...pickSkills(MAX_SELECTION + 5),
       { type: 'toggleSkill', section: 'engineering', name: 'Scrum' },
     ])
     expect(s.selectedValues).toHaveLength(MAX_SELECTION)
-    expect(s.selectedSkills.technical).toHaveLength(MAX_SELECTION)
+    expect(s.selectedSkills.technical).toHaveLength(MAX_SELECTION + 5)
     expect(s.selectedSkills.engineering).toEqual(['Scrum'])
+  })
+
+  it('reports limits per page: values only', () => {
+    expect(limitFor('values')).toBe(MAX_SELECTION)
+    expect(limitFor('technical')).toBeUndefined()
+    expect(limitFor('engineering')).toBeUndefined()
+    expect(limitFor('interpersonal')).toBeUndefined()
+    expect(isFull(run(pickSkills(40)), 'technical')).toBe(false)
   })
 
   it('counts custom entries and rejects one past the limit', () => {
@@ -225,10 +232,15 @@ describe('selection limit', () => {
     expect(s.selectedValues).not.toContain(values[MAX_SELECTION])
   })
 
-  it('rejects custom skills past the limit', () => {
-    const s = run([...pickSkills(MAX_SELECTION), { type: 'addCustomSkill', section: 'technical', text: 'Zig' }])
-    expect(s.customSkills.technical).toEqual([])
-    expect(s.selectedSkills.technical).toHaveLength(MAX_SELECTION)
+  it('accepts custom skills past ten', () => {
+    const s = run([...pickSkills(15), { type: 'addCustomSkill', section: 'technical', text: 'Zig' }])
+    expect(s.customSkills.technical).toEqual(['Zig'])
+    expect(s.selectedSkills.technical).toHaveLength(16)
+    const dup = run([
+      ...pickSkills(15),
+      { type: 'addCustomSkill', section: 'technical', text: technical[20].toUpperCase() },
+    ])
+    expect(dup.selectedSkills.technical).toContain(technical[20])
   })
 
   it('lets a word be swapped after deselecting', () => {
@@ -262,14 +274,19 @@ describe('selection limit', () => {
       expect(reducer(onTechnical, { type: 'goTo', step: 'values' }).step).toBe('values')
     })
 
-    it('blocks later steps when an earlier skill page is over the limit', () => {
+    it('does not block later steps for a skill page holding more than ten', () => {
       const s: ProfileState = {
         ...initialState,
         selectedValues: ['Integrity'],
-        selectedSkills: { ...initialState.selectedSkills, technical: technical.slice(0, 11) },
+        selectedSkills: {
+          technical: technical.slice(0, 40),
+          engineering: ['Scrum'],
+          interpersonal: ['Teamwork'],
+        },
       }
-      expect(stepBlockedReason(s, 'engineering')).toMatch(/Deselect 1 word on the technical development page/)
-      expect(stepBlockedReason(s, 'technical')).toBeNull()
+      expect(overBy(s, 'technical')).toBe(0)
+      expect(stepBlockedReason(s, 'engineering')).toBeNull()
+      expect(stepBlockedReason(s, 'card')).toBeNull()
     })
 
     it('unblocks once within the limit', () => {
@@ -317,12 +334,17 @@ describe('loadProfile', () => {
     expect(s.selectedValues).toHaveLength(12)
   })
 
-  it('opens the first over-limit skill page', () => {
-    const profile = {
+  it('loads many skills without asking to deselect, but still gates over-limit values', () => {
+    const many = {
       ...complete,
-      selectedSkills: { ...complete.selectedSkills, engineering: catalogSkillNames('engineering').slice(0, 11) },
+      selectedSkills: { ...complete.selectedSkills, engineering: catalogSkillNames('engineering').slice(0, 30) },
     }
-    expect(reducer(initialState, { type: 'loadProfile', profile }).step).toBe('engineering')
+    expect(loadLanding(many)).toEqual({ step: 'card', notice: null })
+    const both = { ...many, selectedValues: values.slice(0, 12) }
+    const landing = loadLanding(both)
+    expect(landing.step).toBe('values')
+    expect(landing.notice).toMatch(/Deselect 2 words on the values page/)
+    expect(reducer(initialState, { type: 'loadProfile', profile: both }).selectedSkills.engineering).toHaveLength(30)
   })
 
   it('opens the values page when there are no values, and the first empty section otherwise', () => {

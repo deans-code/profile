@@ -11,7 +11,7 @@ describe('definition panel', () => {
     const user = userEvent.setup()
     render(<App />)
     await user.pointer({ keys: '[MouseRight]', target: word('Integrity') })
-    expect(panel()).toHaveAccessibleName('Definition of Integrity')
+    expect(panel()).toHaveAccessibleName('Description of Integrity')
     expect(panel()).toHaveTextContent(/principles/i)
     expect(word('Integrity')).toHaveAttribute('aria-pressed', 'false')
   })
@@ -41,7 +41,7 @@ describe('definition panel', () => {
     render(<App />)
     word('Honesty').focus()
     await user.keyboard(keys)
-    expect(panel()).toHaveAccessibleName('Definition of Honesty')
+    expect(panel()).toHaveAccessibleName('Description of Honesty')
     expect(word('Honesty')).toHaveAttribute('aria-pressed', 'false')
   })
 
@@ -75,7 +75,7 @@ describe('definition panel', () => {
     await user.pointer({ keys: '[MouseRight]', target: word('Respect') })
     await user.pointer({ keys: '[MouseRight]', target: word('Trust') })
     expect(screen.getAllByRole('dialog')).toHaveLength(1)
-    expect(panel()).toHaveAccessibleName('Definition of Trust')
+    expect(panel()).toHaveAccessibleName('Description of Trust')
   })
 
   it('opens on touch long-press without toggling selection', () => {
@@ -89,7 +89,7 @@ describe('definition panel', () => {
       })
       fireEvent.pointerUp(el, { pointerType: 'touch' })
       fireEvent.click(el)
-      expect(panel()).toHaveAccessibleName('Definition of Quality')
+      expect(panel()).toHaveAccessibleName('Description of Quality')
       expect(el).toHaveAttribute('aria-pressed', 'false')
 
       // A normal tap afterwards still toggles.
@@ -177,7 +177,7 @@ describe('long-press does not swallow later selections', () => {
       render(<App />)
       const el = word('Quality')
       await longPress(el)
-      expect(panel()).toHaveAccessibleName('Definition of Quality')
+      expect(panel()).toHaveAccessibleName('Description of Quality')
       fireEvent.pointerUp(el, { pointerType: 'touch' }) // released with no click
       await act(async () => {
         vi.advanceTimersByTime(CLICK_SUPPRESS_MS + 10)
@@ -338,11 +338,12 @@ describe('controls match the instructions', () => {
       expect(help()).toHaveTextContent(/\?/)
       expect(help()).toHaveTextContent(/shift.*f10/i)
       expect(help()).toHaveTextContent(/press and hold/i)
+      expect(help()).toHaveTextContent(/description/i)
 
       const el = word('Humility')
       const check = async (act: () => Promise<void> | void) => {
         await act()
-        expect(panel()).toHaveAccessibleName('Definition of Humility')
+        expect(panel()).toHaveAccessibleName('Description of Humility')
         expect(el).toHaveAttribute('aria-pressed', 'false')
         await user.keyboard('{Escape}')
         expect(panel()).toBeNull()

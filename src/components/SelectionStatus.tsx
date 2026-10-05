@@ -1,15 +1,22 @@
-import { MAX_SELECTION } from '../state/profile'
-
 interface Props {
   count: number
+  /** The page's selection limit; omit for pages with no limit. */
+  limit?: number
 }
 
-/** "n of 10 selected", plus an explanation when the page is at or over its limit. */
-export default function SelectionStatus({ count }: Props) {
-  const over = count - MAX_SELECTION
+/** "n selected", or "n of 10 selected" with an explanation when the page has a limit that is reached or exceeded. */
+export default function SelectionStatus({ count, limit }: Props) {
+  if (limit === undefined) {
+    return (
+      <p className="count" aria-live="polite">
+        {count} selected
+      </p>
+    )
+  }
+  const over = count - limit
   return (
     <p className="count" aria-live="polite">
-      {count} of {MAX_SELECTION} selected
+      {count} of {limit} selected
       {over > 0 && (
         <span className="limit-note">
           {' '}

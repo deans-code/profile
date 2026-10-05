@@ -152,7 +152,7 @@ function Panel({ term, onClose }: { term: OpenTerm; onClose: (returnFocus?: bool
       id={DEFINITION_PANEL_ID}
       className="definition"
       role="dialog"
-      aria-label={`Definition of ${term.name}`}
+      aria-label={`Description of ${term.name}`}
       tabIndex={-1}
       style={{ top: pos?.top ?? 0, left: pos?.left ?? 0, visibility: pos ? 'visible' : 'hidden' }}
     >

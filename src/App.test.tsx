@@ -6,11 +6,12 @@ const chip = (name: string) => screen.getByRole('button', { name })
 const next = () => screen.getByRole('button', { name: /continue|finish/i })
 
 describe('values step', () => {
-  it('shows an unselected cloud of at least 40 values', () => {
+  it('shows at least 100 unselected values', () => {
     render(<App />)
-    const cloud = screen.getByRole('list', { name: 'Values' })
-    const chips = within(cloud).getAllByRole('button')
-    expect(chips.length).toBeGreaterThanOrEqual(40)
+    const chips = within(screen.getByRole('main'))
+      .getAllByRole('button')
+      .filter((b) => b.hasAttribute('aria-pressed'))
+    expect(chips.length).toBeGreaterThanOrEqual(100)
     expect(chips.every((c) => c.getAttribute('aria-pressed') === 'false')).toBe(true)
   })
 
@@ -214,32 +215,59 @@ function fireScore(el: HTMLElement, value: string) {
 }
 
 describe('instructions', () => {
-  it('shows how to select and open definitions at the top of every selection step', async () => {
+  const help = () => screen.getByRole('complementary', { name: 'How to use this step' })
+
+  it('leads with the desktop controls, then the page line, then one secondary keyboard and touch line', async () => {
+    render(<App />)
+    const lines = within(help()).getAllByText(/./, { selector: 'p' })
+    expect(lines).toHaveLength(3)
+    expect(lines[0]).toHaveTextContent(
+      'Click a word to select or deselect it. Right-click a word to read its description.',
+    )
+    expect(lines[1]).toHaveTextContent('Select up to 10 values.')
+    expect(lines[2]).toHaveClass('help-alt')
+    expect(lines[2]).toHaveTextContent('Keyboard: focus a word and press ? or Shift+F10. Touch: press and hold.')
+    expect(help()).not.toHaveTextContent(/definition/i)
+  })
+
+  it('states the limit of 10 on the values page only; skill pages say as many as apply', async () => {
     const user = userEvent.setup()
     render(<App />)
-    const check = () => {
-      const help = screen.getByRole('complementary', { name: 'How to use this step' })
-      expect(help).toHaveTextContent(/click a word to select/i)
-      expect(help).toHaveTextContent(/right-click a word to see what it means/i)
-      expect(help).toHaveTextContent(/keyboard/i)
-      expect(help).toHaveTextContent(/touch screen/i)
-    }
-    check()
+    expect(help()).toHaveTextContent(/up to 10 values/i)
     await user.click(chip('Integrity'))
-    for (const word of ['Python', 'Scrum', 'Teamwork']) {
+    for (const [section, word] of [
+      ['technical', 'Python'],
+      ['engineering', 'Scrum'],
+      ['interpersonal', 'Teamwork'],
+    ]) {
       await user.click(next())
-      check()
+      expect(
+        screen.getByRole('heading', {
+          name: new RegExp(section === 'technical' ? 'technical development' : section, 'i'),
+        }),
+      ).toBeInTheDocument()
+      expect(help()).toHaveTextContent(/select as many skills as apply/i)
+      expect(help()).not.toHaveTextContent(/limit|up to 10|of 10/i)
+      expect(help()).toHaveTextContent(/right-click/i)
       await user.click(chip(word))
     }
+  })
+
+  it('names the open panel as a description', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.pointer({ keys: '[MouseRight]', target: chip('Respect') })
+    expect(screen.getByRole('dialog')).toHaveAccessibleName('Description of Respect')
   })
 })
 
 describe('uniform words and section colours', () => {
   it('renders every value with the same class, with no size variants', () => {
     render(<App />)
-    const cloud = screen.getByRole('list', { name: 'Values' })
-    const classes = new Set(within(cloud).getAllByRole('button').map((b) => b.className))
-    expect([...classes]).toEqual(['chip'])
+    const chips = within(screen.getByRole('main'))
+      .getAllByRole('button')
+      .filter((b) => b.hasAttribute('aria-pressed'))
+    expect([...new Set(chips.map((b) => b.className))]).toEqual(['chip'])
   })
 
   it('renders skills with the same class as values', async () => {
@@ -294,5 +322,54 @@ describe('end to end with definitions', () => {
     expect(within(card).getByText('Python')).toBeInTheDocument()
     expect(within(card).getAllByText('5/10')).toHaveLength(3)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+})
+
+describe('end to end with many skills', () => {
+  it('scores, shows and exports 30+ skills across sections', async () => {
+    const user = userEvent.setup()
+    const blobs: Blob[] = []
+    URL.createObjectURL = vi.fn((b: Blob | MediaSource) => {
+      blobs.push(b as Blob)
+      return 'blob:mock'
+    })
+    URL.revokeObjectURL = vi.fn()
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
+    render(<App />)
+
+    await user.click(chip('Integrity'))
+    await user.click(next())
+
+    const pickSome = async (count: number) => {
+      const buttons = within(screen.getByRole('main'))
+        .getAllByRole('button')
+        .filter((b) => b.hasAttribute('aria-pressed'))
+        .slice(0, count)
+      for (const b of buttons) await user.click(b)
+      return buttons.map((b) => b.textContent!.replace('✓', '').trim())
+    }
+    const technical = await pickSome(14)
+    await user.click(next())
+    const engineering = await pickSome(12)
+    await user.click(next())
+    const interpersonal = await pickSome(6)
+    expect(screen.getByText('6 selected')).toBeInTheDocument()
+    await user.click(next())
+
+    expect(screen.getAllByRole('slider')).toHaveLength(32)
+    await user.click(next())
+    const card = screen.getByRole('article', { name: 'Profile card' })
+    for (const name of [...technical, ...engineering, ...interpersonal]) {
+      expect(within(card).getByText(name)).toBeInTheDocument()
+    }
+
+    await user.click(screen.getByRole('button', { name: 'Download JSON' }))
+    await user.click(screen.getByRole('button', { name: 'Download Markdown' }))
+    const json = JSON.parse(await blobs[0].text())
+    expect(json.skills.technical).toHaveLength(14)
+    expect(json.skills.engineering).toHaveLength(12)
+    expect(json.skills.interpersonal).toHaveLength(6)
+    const markdown = await blobs[1].text()
+    expect(markdown.match(/ — \d+\/10/g)).toHaveLength(32)
   })
 })

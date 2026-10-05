@@ -9,13 +9,19 @@ export const DEFAULT_SCORE = 5
 export const MIN_SCORE = 1
 export const MAX_SCORE = 10
 
-/** Most words that can be selected on each selection page. */
+/** Most values that can be selected. */
 export const MAX_SELECTION = 10
 
 /** A page with selectable words. */
 export type Page = 'values' | Section
 
 export const PAGES: Page[] = ['values', ...SECTIONS]
+
+/** Per-page selection limits. Pages that are not listed have no limit. */
+export const LIMITS: Partial<Record<Page, number>> = { values: MAX_SELECTION }
+
+/** The most words selectable on a page, or undefined when the page has no limit. */
+export const limitFor = (page: Page): number | undefined => LIMITS[page]
 
 export interface ProfileState {
   step: Step
@@ -72,10 +78,16 @@ export function selectionCount(state: ProfileState, page: Page): number {
   return page === 'values' ? state.selectedValues.length : state.selectedSkills[page].length
 }
 
-export const isFull = (state: ProfileState, page: Page) => selectionCount(state, page) >= MAX_SELECTION
+export function isFull(state: ProfileState, page: Page): boolean {
+  const limit = limitFor(page)
+  return limit !== undefined && selectionCount(state, page) >= limit
+}
 
 /** How many words must be deselected before the page is within its limit. */
-export const overBy = (state: ProfileState, page: Page) => Math.max(0, selectionCount(state, page) - MAX_SELECTION)
+export function overBy(state: ProfileState, page: Page): number {
+  const limit = limitFor(page)
+  return limit === undefined ? 0 : Math.max(0, selectionCount(state, page) - limit)
+}
 
 const pageLabel = (page: Page) => (page === 'values' ? 'values' : SECTION_LABELS[page].toLowerCase())
 
@@ -96,7 +108,7 @@ export function stepBlockedReason(state: ProfileState, step: Step): string | nul
   for (const page of PAGES) {
     const over = overBy(state, page)
     if (STEPS.indexOf(page) < target && over > 0) {
-      return `Deselect ${over} ${over === 1 ? 'word' : 'words'} on the ${pageLabel(page)} page to continue (limit ${MAX_SELECTION}).`
+      return `Deselect ${over} ${over === 1 ? 'word' : 'words'} on the ${pageLabel(page)} page to continue (limit ${limitFor(page)}).`
     }
   }
   if (state.selectedValues.length === 0) return 'Select at least one value first.'

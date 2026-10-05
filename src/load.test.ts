@@ -159,3 +159,76 @@ describe('profileToState', () => {
     expect(s.selectedSkills.interpersonal).toEqual(['Teamwork'])
   })
 })
+
+// The built-in values as they were before values were grouped; saved profiles may contain any of them.
+const ORIGINAL_VALUES = [
+  'Integrity',
+  'Honesty',
+  'Respect',
+  'Collaboration',
+  'Learning',
+  'Quality',
+  'Trust',
+  'Accountability',
+  'Curiosity',
+  'Autonomy',
+  'Growth',
+  'Empathy',
+  'Innovation',
+  'Transparency',
+  'Craftsmanship',
+  'Reliability',
+  'Teamwork',
+  'Excellence',
+  'Ownership',
+  'Simplicity',
+  'Pragmatism',
+  'Kindness',
+  'Courage',
+  'Fairness',
+  'Diversity',
+  'Inclusion',
+  'Work-life balance',
+  'Impact',
+  'Openness',
+  'Humility',
+  'Perseverance',
+  'Creativity',
+  'Mentorship',
+  'Sustainability',
+  'Security',
+  'Stability',
+  'Freedom',
+  'Fun',
+  'Recognition',
+  'Community',
+  'Service',
+  'Adaptability',
+  'Focus',
+  'Discipline',
+  'Balance',
+  'Generosity',
+  'Patience',
+  'Compassion',
+  'Authenticity',
+  'Ambition',
+  'Efficiency',
+  'Fairness in pay',
+  'Continuous improvement',
+  'Customer focus',
+  'Open source',
+  'Ethics',
+  'Wellbeing',
+  'Leadership',
+  'Purpose',
+  'Resilience',
+]
+
+describe('profiles saved before values were grouped', () => {
+  it('restores every original value as a built-in value, not a custom one', () => {
+    expect(ORIGINAL_VALUES).toHaveLength(60)
+    const state = profileToState(ok(file({ values: ORIGINAL_VALUES.map((v) => v.toUpperCase()) })))
+    expect(state.customValues).toEqual([])
+    expect(state.selectedValues).toEqual(ORIGINAL_VALUES)
+  })
+})
