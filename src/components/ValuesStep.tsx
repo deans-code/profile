@@ -2,6 +2,8 @@ import type { Dispatch } from 'react'
 import { COMMON_VALUES } from '../data/values'
 import type { Action, ProfileState } from '../state/profile'
 import AddEntry from './AddEntry'
+import SelectionHelp from './SelectionHelp'
+import TermButton from './TermButton'
 
 interface Props {
   state: ProfileState
@@ -15,30 +17,28 @@ export default function ValuesStep({ state, dispatch }: Props) {
     <section aria-labelledby="values-heading">
       <h2 id="values-heading">What do you value?</h2>
       <p className="hint">Select the values that describe you, or add your own.</p>
+      <SelectionHelp />
 
       <ul className="cloud" aria-label="Values">
         {COMMON_VALUES.map((v) => (
           <li key={v.name}>
-            <button
-              type="button"
-              className={`chip weight-${v.weight}`}
-              aria-pressed={selected.has(v.name)}
-              onClick={() => dispatch({ type: 'toggleValue', name: v.name })}
-            >
-              {v.name}
-            </button>
+            <TermButton
+              kind="values"
+              name={v.name}
+              selected={selected.has(v.name)}
+              onToggle={() => dispatch({ type: 'toggleValue', name: v.name })}
+            />
           </li>
         ))}
         {state.customValues.map((name) => (
           <li key={name} className="custom-item">
-            <button
-              type="button"
-              className="chip weight-2 custom"
-              aria-pressed={selected.has(name)}
-              onClick={() => dispatch({ type: 'toggleValue', name })}
-            >
-              {name}
-            </button>
+            <TermButton
+              kind="values"
+              name={name}
+              className="chip custom"
+              selected={selected.has(name)}
+              onToggle={() => dispatch({ type: 'toggleValue', name })}
+            />
             <button
               type="button"
               className="remove"

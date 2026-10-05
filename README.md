@@ -14,6 +14,8 @@ The software runs entirely in the browser. No data leaves the user's device.
 - [x] Provide curated catalogs of technical development, engineering and interpersonal skills, with support for custom skills.
 - [x] Score each selected skill from 1 to 10 using sliders.
 - [x] Present a profile card with downloads as JSON and Markdown.
+- [x] Provide definitions for the built-in values and skills, opened by right-click (with keyboard and touch alternatives).
+- [x] Use a wide, uniform layout with a distinct colour per section and animated changes between sections.
 - [x] Provide a GitHub Actions workflow for deployment to GitHub Pages.
 - [ ] Deploy to GitHub Pages and confirm the live site.
 
@@ -25,7 +27,7 @@ The software runs entirely in the browser. No data leaves the user's device.
 
 ## :beetle: Known defects
 
-The layout at phone widths and keyboard use of the score sliders have not yet been checked manually.
+No known defects.
 
 ## :crystal_ball: Use of AI
 
@@ -85,8 +87,11 @@ npm run preview
 
 ## :zap: Features
 
-- Values cloud of around 60 common values, with custom values.
-- Technical development, engineering and interpersonal skill catalogs, grouped by category, with filtering and custom skills.
+- Around 60 common values, with custom values, all shown at the same size in a grid that uses the full width of the screen.
+- Technical development, engineering and interpersonal skill catalogs, grouped by category into cards, with filtering and custom skills.
+- A short definition for every built-in value and skill (custom entries have none).
+- A distinct colour for each section, with accessible contrast in light and dark themes.
+- Scroll-to-top and an animated change of section when moving between steps (skipped when the system asks for reduced motion).
 - Guided steps that require at least one value and at least one skill in each section before scoring.
 - Scoring of every selected skill from 1 to 10.
 - Profile card showing values and scored skills.
@@ -98,6 +103,18 @@ npm run preview
 2. Select skills in each of the technical development, engineering and interpersonal sections. Use the filter to find skills, or add your own.
 3. Score each selected skill using the sliders (1 is a beginner, 10 is an expert).
 4. Review your profile card, then use **Download JSON** or **Download Markdown**. Use **Edit** to go back and make changes.
+
+### Definitions
+
+Click a word to select or deselect it. To see what it means:
+
+| Input | Action |
+|-------|--------|
+| Mouse | Right-click the word |
+| Keyboard | Focus the word and press `?`, the context-menu key or `Shift`+`F10` |
+| Touch | Press and hold the word |
+
+Press `Escape`, use **Close** or click elsewhere to dismiss the definition. Custom words have no definition, so right-clicking them shows the browser's normal menu.
 
 ## :ship: Deployment
 
@@ -121,6 +138,9 @@ The build output is host-agnostic. For Cloudflare Pages, Netlify or similar, use
 - **React, TypeScript and Vite**, with no backend.
 - **One reducer** (`src/state/profile.ts`) holds the wizard state. Each step is a view over it, so navigating back keeps every selection and score.
 - **Catalogs as data** (`src/data`), separate from the components, so the lists can be edited without touching the UI.
+- **Definitions as data** (`src/data/definitions`), one map per list, with a test that fails if any built-in value or skill is missing a definition. One panel (`DefinitionPanel`) is shared by every word, and `TermButton` handles right-click, keyboard and long-press.
+- **Section colours** are CSS custom properties set per `data-section`, with tests that check their contrast in both themes.
+- **Section changes** go through `useStepNavigation`, which scrolls to the top, sets the animation direction, moves focus to the new heading and ignores repeat requests while the change settles.
 - **Export as pure functions** (`src/export.ts`), producing the JSON and Markdown (with Markdown escaping of user text) before a local download.
 
 Planning artifacts for the change are in `openspec/`.

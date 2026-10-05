@@ -212,3 +212,87 @@ function fireScore(el: HTMLElement, value: string) {
   setter.call(el, value)
   el.dispatchEvent(new Event('input', { bubbles: true }))
 }
+
+describe('instructions', () => {
+  it('shows how to select and open definitions at the top of every selection step', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    const check = () => {
+      const help = screen.getByRole('complementary', { name: 'How to use this step' })
+      expect(help).toHaveTextContent(/click a word to select/i)
+      expect(help).toHaveTextContent(/right-click a word to see what it means/i)
+      expect(help).toHaveTextContent(/keyboard/i)
+      expect(help).toHaveTextContent(/touch screen/i)
+    }
+    check()
+    await user.click(chip('Integrity'))
+    for (const word of ['Python', 'Scrum', 'Teamwork']) {
+      await user.click(next())
+      check()
+      await user.click(chip(word))
+    }
+  })
+})
+
+describe('uniform words and section colours', () => {
+  it('renders every value with the same class, with no size variants', () => {
+    render(<App />)
+    const cloud = screen.getByRole('list', { name: 'Values' })
+    const classes = new Set(within(cloud).getAllByRole('button').map((b) => b.className))
+    expect([...classes]).toEqual(['chip'])
+  })
+
+  it('renders skills with the same class as values', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(chip('Integrity'))
+    await user.click(next())
+    const skills = screen.getAllByRole('button').filter((b) => b.hasAttribute('aria-pressed'))
+    expect(new Set(skills.map((b) => b.className))).toEqual(new Set(['chip']))
+  })
+
+  it('switches the section colour with each step and gives each step its own colour hook', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<App />)
+    const root = () => container.querySelector('.app-root')!
+    expect(root()).toHaveAttribute('data-section', 'values')
+    const steps = within(screen.getByRole('navigation', { name: 'Steps' })).getAllByRole('button')
+    expect(steps.map((b) => b.getAttribute('data-section'))).toEqual([
+      'values',
+      'technical',
+      'engineering',
+      'interpersonal',
+      'scoring',
+      'card',
+    ])
+    await user.click(chip('Integrity'))
+    await user.click(next())
+    expect(root()).toHaveAttribute('data-section', 'technical')
+  })
+})
+
+describe('end to end with definitions', () => {
+  it('opening definitions along the way does not change the exported profile', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.pointer({ keys: '[MouseRight]', target: chip('Integrity') })
+    await user.click(screen.getByRole('button', { name: 'Close' }))
+    await user.click(chip('Integrity'))
+    await user.click(next())
+    await user.pointer({ keys: '[MouseRight]', target: chip('Python') })
+    await user.click(screen.getByRole('button', { name: 'Close' }))
+    await user.click(chip('Python'))
+    await user.click(next())
+    await user.click(chip('Scrum'))
+    await user.click(next())
+    await user.click(chip('Teamwork'))
+    await user.click(next())
+    await user.click(next())
+
+    const card = screen.getByRole('article', { name: 'Profile card' })
+    expect(within(card).getByText('Integrity')).toBeInTheDocument()
+    expect(within(card).getByText('Python')).toBeInTheDocument()
+    expect(within(card).getAllByText('5/10')).toHaveLength(3)
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+})

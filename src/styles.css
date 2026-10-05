@@ -2,14 +2,49 @@
   --bg: #f7f8fa;
   --surface: #ffffff;
   --text: #1c2430;
-  --muted: #5b6678;
-  --border: #d3d9e2;
-  --accent: #2456d6;
-  --accent-text: #ffffff;
-  --chip-on: #dfe8ff;
+  --muted: #566075;
+  --border: #c9d0db;
   --radius: 10px;
+  --gap: 0.625rem;
   color-scheme: light dark;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Section palettes. Each section sets its accent colour, the text colour used on it, and a tint. */
+[data-section='values'] {
+  --accent: #1d4ed8;
+  --accent-text: #ffffff;
+  --tint: #e8efff;
+}
+
+[data-section='technical'] {
+  --accent: #0f766e;
+  --accent-text: #ffffff;
+  --tint: #dcf5f1;
+}
+
+[data-section='engineering'] {
+  --accent: #b45309;
+  --accent-text: #ffffff;
+  --tint: #fdf0dc;
+}
+
+[data-section='interpersonal'] {
+  --accent: #7e22ce;
+  --accent-text: #ffffff;
+  --tint: #f3e8ff;
+}
+
+[data-section='scoring'] {
+  --accent: #be123c;
+  --accent-text: #ffffff;
+  --tint: #ffe4ea;
+}
+
+[data-section='card'] {
+  --accent: #15803d;
+  --accent-text: #ffffff;
+  --tint: #e0f6e8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,10 +53,43 @@
     --surface: #1b212b;
     --text: #e8ecf2;
     --muted: #9aa5b8;
-    --border: #333c4b;
-    --accent: #6b94ff;
+    --border: #3a4455;
+  }
+
+  [data-section='values'] {
+    --accent: #8fb0ff;
     --accent-text: #0b1020;
-    --chip-on: #263a6b;
+    --tint: #1f2f58;
+  }
+
+  [data-section='technical'] {
+    --accent: #4dd4c6;
+    --accent-text: #0b1020;
+    --tint: #14403d;
+  }
+
+  [data-section='engineering'] {
+    --accent: #f5b04c;
+    --accent-text: #0b1020;
+    --tint: #4a3510;
+  }
+
+  [data-section='interpersonal'] {
+    --accent: #c9a0ff;
+    --accent-text: #0b1020;
+    --tint: #3a2760;
+  }
+
+  [data-section='scoring'] {
+    --accent: #ff8fa6;
+    --accent-text: #0b1020;
+    --tint: #55202f;
+  }
+
+  [data-section='card'] {
+    --accent: #6fdc8c;
+    --accent-text: #0b1020;
+    --tint: #163a21;
   }
 }
 
@@ -37,9 +105,9 @@ body {
 }
 
 .app {
-  max-width: 56rem;
+  width: min(100% - 2rem, 120rem);
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1rem 0 2rem;
 }
 
 h1 {
@@ -48,11 +116,16 @@ h1 {
 }
 
 h2 {
-  margin-top: 1.5rem;
+  margin: 1.25rem 0 0.25rem;
+  color: var(--accent);
+}
+
+h2:focus {
+  outline: none;
 }
 
 h3 {
-  margin: 1.25rem 0 0.5rem;
+  margin: 0 0 0.5rem;
   font-size: 1rem;
   color: var(--muted);
   text-transform: uppercase;
@@ -117,7 +190,7 @@ input[type='search'] {
   max-width: 24rem;
 }
 
-/* Stepper */
+/* Stepper: each step shows its own section colour */
 .stepper {
   display: flex;
   flex-wrap: wrap;
@@ -129,8 +202,8 @@ input[type='search'] {
 
 .stepper button {
   background: var(--surface);
-  color: var(--text);
-  border-color: var(--border);
+  color: var(--accent);
+  border-color: var(--accent);
   padding: 0.25rem 0.75rem;
   font-size: 0.875rem;
 }
@@ -138,10 +211,9 @@ input[type='search'] {
 .stepper button[aria-current='step'] {
   background: var(--accent);
   color: var(--accent-text);
-  border-color: var(--accent);
 }
 
-/* Chips and cloud */
+/* Words: one size everywhere, laid out in a grid that grows with the screen */
 ul {
   list-style: none;
   padding: 0;
@@ -149,51 +221,71 @@ ul {
 }
 
 .cloud,
-.chips,
+.chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+  gap: var(--gap);
+  margin-bottom: 1rem;
+}
+
 .card-values {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.625rem;
+  gap: var(--gap);
   margin-bottom: 1rem;
 }
 
 .chip {
+  width: 100%;
+  min-height: 2.5rem;
   background: var(--surface);
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 0.25rem 0.875rem;
+  border-radius: var(--radius);
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.25;
+  text-align: center;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+.chip:hover {
+  border-color: var(--accent);
 }
 
 .chip[aria-pressed='true'] {
-  background: var(--chip-on);
+  background: var(--tint);
   border-color: var(--accent);
+  border-width: 2px;
+  padding: calc(0.375rem - 1px) calc(0.75rem - 1px);
   font-weight: 600;
 }
 
+.chip[aria-pressed='true']::before {
+  content: '\2713\00a0';
+  content: '\2713\00a0' / '';
+  color: var(--accent);
+}
+
 .chip.static {
-  background: var(--chip-on);
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  background: var(--tint);
   border-color: var(--accent);
   cursor: default;
-}
-
-.weight-1 {
-  font-size: 0.9rem;
-}
-
-.weight-2 {
-  font-size: 1.05rem;
-}
-
-.weight-3 {
-  font-size: 1.3rem;
+  font-weight: 600;
 }
 
 .custom-item {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.125rem;
+}
+
+.custom-item .chip {
+  flex: 1;
 }
 
 .remove {
@@ -214,10 +306,70 @@ ul {
   max-width: 24rem;
 }
 
+/* Skill categories as cards in a responsive grid */
+.categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.category {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem 0.25rem;
+}
+
+/* Instructions */
+.help {
+  background: var(--tint);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  margin: 0.75rem 0 1.25rem;
+}
+
+.help p {
+  margin: 0.25rem 0;
+}
+
+.help-alt {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+kbd {
+  font: inherit;
+  font-size: 0.85em;
+  padding: 0 0.3em;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--surface);
+}
+
 /* Scoring */
+.score-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.score-group,
+.card-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+}
+
 .scores li {
   display: grid;
-  grid-template-columns: minmax(8rem, 1fr) 2fr 2rem;
+  grid-template-columns: minmax(7rem, 1fr) 1.4fr 2rem;
   align-items: center;
   gap: 0.75rem;
   padding: 0.375rem 0;
@@ -237,19 +389,20 @@ ul {
 
 /* Profile card */
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem 1.25rem;
+  display: grid;
+  gap: 1rem;
 }
 
-.card h3:first-child {
-  margin-top: 0;
+.card-skill-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+  gap: 1rem;
+  align-items: start;
 }
 
 .card-skills li {
   display: grid;
-  grid-template-columns: minmax(8rem, 1fr) 2fr 3.5rem;
+  grid-template-columns: minmax(7rem, 1fr) 1.4fr 3.5rem;
   align-items: center;
   gap: 0.75rem;
   padding: 0.125rem 0;
@@ -305,6 +458,32 @@ ul {
   text-align: right;
 }
 
+/* Definition panel */
+.definition {
+  position: fixed;
+  z-index: 10;
+  max-width: min(22rem, calc(100vw - 1rem));
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+}
+
+.definition p {
+  margin: 0 0 0.5rem;
+}
+
+.definition-term {
+  font-weight: 700;
+}
+
+.definition-close {
+  padding: 0.125rem 0.75rem;
+  font-size: 0.875rem;
+}
+
 @media (max-width: 40rem) {
   .scores li,
   .card-skills li {
@@ -332,5 +511,39 @@ ul {
 
   .blocked {
     text-align: left;
+  }
+}
+
+/* Section change animation */
+.app {
+  overflow-x: clip;
+}
+
+@keyframes enter-forward {
+  from {
+    opacity: 0;
+    transform: translateX(3rem);
+  }
+}
+
+@keyframes enter-backward {
+  from {
+    opacity: 0;
+    transform: translateX(-3rem);
+  }
+}
+
+.step-view.enter-forward {
+  animation: enter-forward 350ms ease-out;
+}
+
+.step-view.enter-backward {
+  animation: enter-backward 350ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step-view.enter-forward,
+  .step-view.enter-backward {
+    animation: none;
   }
 }

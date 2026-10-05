@@ -30,7 +30,7 @@
 
 ## 7. Polish and integration
 
-- [ ] 7.1 Apply responsive and light/dark styling and verify keyboard and focus behavior manually at phone and desktop widths
+- [x] 7.1 Apply responsive and light/dark styling and verify keyboard and focus behavior manually at phone and desktop widths
 - [x] 7.2 Run an end-to-end flow test (values → three skill sections → scoring → card → both downloads) and `npm run build`; verify both pass
 
 ## 8. Hosting
