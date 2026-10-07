@@ -22,7 +22,7 @@ describe('values step', () => {
     render(<App />)
     await user.click(chip('Integrity'))
     expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText('1 of 20 selected')).toBeInTheDocument()
+    expect(screen.getByText('1 of 5 selected')).toBeInTheDocument()
     await user.click(chip('Integrity'))
     expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'false')
 
@@ -115,15 +115,16 @@ describe('skill steps', () => {
 describe('experience options', () => {
   const radio = (name: RegExp) => screen.getByRole('radio', { name })
 
-  it('shows both options on every selection page, defaulting to previous experience', async () => {
+  it('shows both options on every skill page, defaulting to previous experience, but not on the values page', async () => {
     const user = userEvent.setup()
     render(<App />)
+    expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument()
     await user.click(chip('Integrity'))
-    for (let page = 0; page < 5; page++) {
+    for (let page = 0; page < 4; page++) {
+      await user.click(next())
       expect(screen.getByRole('radiogroup', { name: 'Experience option' })).toBeInTheDocument()
       expect(radio(/^Previous experience/)).toBeChecked()
       expect(radio(/^Desired experience/)).not.toBeChecked()
-      if (page < 4) await user.click(next())
     }
   })
 
@@ -153,6 +154,8 @@ describe('experience options', () => {
   it('switches with the arrow keys', async () => {
     const user = userEvent.setup()
     render(<App />)
+    await user.click(chip('Integrity'))
+    await user.click(next())
     radio(/^Previous experience/).focus()
     await user.keyboard('{ArrowRight}')
     expect(radio(/^Desired experience/)).toBeChecked()
@@ -161,33 +164,36 @@ describe('experience options', () => {
     expect(radio(/^Previous experience/)).toBeChecked()
   })
 
-  it('carries the chosen option to the next page', async () => {
+  it('opens every page on previous experience, keeping the desired words and count', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(radio(/^Desired experience/))
     await user.click(chip('Integrity'))
     await user.click(next())
-    expect(radio(/^Desired experience/)).toBeChecked()
-    expect(screen.getByRole('complementary', { name: 'How to use this step' })).toHaveTextContent(
-      /choosing Desired experience/,
-    )
-  })
-
-  it('applies the limit of 20 values to each option separately', async () => {
-    const user = userEvent.setup()
-    render(<App />)
-    const pick = async () => {
-      const buttons = within(screen.getByRole('main'))
-        .getAllByRole('button')
-        .filter((b) => b.hasAttribute('aria-pressed'))
-      for (const b of buttons.slice(0, 20)) await user.click(b)
-    }
-    await pick()
-    expect(screen.getByText(/20 of 20 selected/)).toBeInTheDocument()
     await user.click(radio(/^Desired experience/))
-    expect(screen.getByText('0 of 20 selected')).toBeInTheDocument()
-    await pick()
-    expect(screen.getByText(/20 of 20 selected/)).toBeInTheDocument()
+    await user.click(chip('Python'))
+
+    // Continue
+    await user.click(next())
+    expect(radio(/^Previous experience/)).toBeChecked()
+    await user.click(radio(/^Desired experience/))
+
+    // Back
+    await user.click(screen.getByRole('button', { name: 'Back' }))
+    expect(radio(/^Previous experience/)).toBeChecked()
+    expect(radio(/^Desired experience/)).toHaveTextContent('Desired experience (1)')
+    await user.click(radio(/^Desired experience/))
+    expect(chip('Python')).toHaveAttribute('aria-pressed', 'true')
+
+    // A step tab
+    const nav = within(screen.getByRole('navigation', { name: 'Steps' }))
+    await user.click(nav.getByRole('button', { name: 'Interpersonal' }))
+    expect(radio(/^Previous experience/)).toBeChecked()
+    await user.click(radio(/^Desired experience/))
+    await user.click(nav.getByRole('button', { name: 'Technical development' }))
+    expect(radio(/^Previous experience/)).toBeChecked()
+    expect(screen.getByRole('complementary', { name: 'How to use this step' })).toHaveTextContent(
+      /choosing Previous experience/,
+    )
   })
 
   it('adds a custom entry to the active option only', async () => {
@@ -247,6 +253,10 @@ describe('profile card and downloads', () => {
     const card = screen.getByRole('article', { name: 'Profile card' })
     expect(within(card).getAllByText('Previous experience').length).toBeGreaterThan(0)
     expect(within(card).getAllByText('Desired experience').length).toBeGreaterThan(0)
+    const values = within(card).getByRole('heading', { name: 'Values' }).parentElement!
+    expect(within(values).getByText('Integrity')).toBeInTheDocument()
+    expect(within(values).queryByText('Previous experience')).not.toBeInTheDocument()
+    expect(within(values).queryByText('Desired experience')).not.toBeInTheDocument()
     expect(within(card).getByText('Python')).toBeInTheDocument()
     expect(within(card).getByText('Rust')).toBeInTheDocument()
     expect(within(card).getByText('Ollama')).toBeInTheDocument()
@@ -255,8 +265,16 @@ describe('profile card and downloads', () => {
     expect(card.querySelector('.bar, .score')).toBeNull()
 
     await user.click(screen.getByRole('button', { name: 'Edit' }))
-    await user.click(radio(/^Previous experience/))
     expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument()
+  })
+
+  it('opens the page reached by Edit on previous experience', async () => {
+    const user = await toCard()
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
+    expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
+    await user.click(next())
+    expect(radio(/^Previous experience/)).toBeChecked()
   })
 
   it('omits an empty group', async () => {
@@ -285,7 +303,7 @@ describe('profile card and downloads', () => {
 
     expect(names).toEqual(['profile.json', 'profile.md'])
     const json = JSON.parse(await created[0].text())
-    expect(json.values).toEqual({ experience: ['Integrity'], desired: [] })
+    expect(json.values).toEqual(['Integrity'])
     expect(json.skills.technical).toEqual({ experience: ['Python'], desired: ['Rust'] })
     expect(json.skills.ai).toEqual({ experience: ['Ollama'], desired: ['OpenRouter'] })
     const md = await created[1].text()
@@ -299,28 +317,25 @@ describe('profile card and downloads', () => {
 describe('instructions', () => {
   const help = () => screen.getByRole('complementary', { name: 'How to use this step' })
 
-  it('leads with the desktop controls, then the option line, the page line, then one secondary line', async () => {
+  it('leads with the desktop controls, then the page line, then one secondary line, with no option wording on values', async () => {
     render(<App />)
     const lines = within(help()).getAllByText(/./, { selector: 'p' })
-    expect(lines).toHaveLength(4)
+    expect(lines).toHaveLength(3)
     expect(lines[0]).toHaveTextContent(
       'Click a word to select or deselect it. Right-click a word to read its description.',
     )
-    expect(lines[1]).toHaveTextContent(
-      'You are choosing Previous experience. The other option has its own selections: switch with the buttons above.',
-    )
-    expect(lines[2]).toHaveTextContent('Select up to 20 values for each option.')
-    expect(lines[3]).toHaveClass('help-alt')
-    expect(lines[3]).toHaveTextContent(
+    expect(lines[1]).toHaveTextContent('Select up to 5 values.')
+    expect(lines[2]).toHaveClass('help-alt')
+    expect(lines[2]).toHaveTextContent(
       'Mouse: right-click a word. Keyboard: focus a word and press ? or Shift+F10. Touch: press and hold.',
     )
-    expect(help()).not.toHaveTextContent(/definition/i)
+    expect(help()).not.toHaveTextContent(/definition|previous|desired|other option/i)
   })
 
   it('states the values limit on the values page only; skill pages say as many as apply', async () => {
     const user = userEvent.setup()
     render(<App />)
-    expect(help()).toHaveTextContent(/up to 20 values/i)
+    expect(help()).toHaveTextContent(/up to 5 values/i)
     await user.click(chip('Integrity'))
     for (const [section, word] of [
       ['technical', 'Python'],
@@ -414,7 +429,7 @@ describe('end to end with definitions', () => {
     expect(within(card).getByText('Integrity')).toBeInTheDocument()
     expect(within(card).getByText('Python')).toBeInTheDocument()
     expect(within(card).getByText('Ollama')).toBeInTheDocument()
-    expect(within(card).getAllByText('Previous experience')).toHaveLength(5)
+    expect(within(card).getAllByText('Previous experience')).toHaveLength(4)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 })

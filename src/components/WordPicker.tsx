@@ -22,10 +22,10 @@ interface Props {
   categories: WordCategory[]
   selected: string[]
   custom: string[]
-  /** The experience option being edited, the selection counts for each option, and how to change it. */
-  mode: Mode
-  counts: Record<Mode, number>
-  onModeChange: (mode: Mode) => void
+  /** The experience option being edited, the selection counts for each option, and how to change it. Omit on pages with a single list (values). */
+  mode?: Mode
+  counts?: Record<Mode, number>
+  onModeChange?: (mode: Mode) => void
   /** Maximum selectable words on this page; omit for no limit. */
   limit?: number
   /** What the filter and the Add control are called, for example "technical development skills". */
@@ -81,7 +81,7 @@ export default function WordPicker({
       <h2 id={headingId}>{heading}</h2>
       <p className="hint">{hint}</p>
       {ASSISTANT_HELP[kind] && <AssistantLink {...ASSISTANT_HELP[kind]} />}
-      <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />
+      {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
       <SelectionHelp limit={limit} unit={kind === 'values' ? 'values' : 'skills'} mode={mode} />
 
       <div className="filter-block">

@@ -4,7 +4,7 @@
 
 A tool to help capture an individual's profile: what they value, and what hands-on, engineering, interpersonal and AI engineering experience they have and want.
 
-Users pick up to 20 values from grouped, common choices, build skill lists from curated catalogs, record both previous and desired experience, and finish with a profile card that can be downloaded as JSON or Markdown.
+Users pick up to 5 values from grouped, common choices, build skill lists from curated catalogs, record both previous and desired experience, and finish with a profile card that can be downloaded as JSON or Markdown.
 
 The software runs entirely in the browser. No data leaves the user's device, unless the user chooses to follow the optional ChatGPT link (see below), which sends only a generic prompt.
 
@@ -12,13 +12,14 @@ The software runs entirely in the browser. No data leaves the user's device, unl
 
 - [x] Provide grouped values (over 100, in categories) to select from, with support for custom values.
 - [x] Provide curated catalogs of technical development, engineering and interpersonal skills, with support for custom skills.
-- [x] Record previous experience and desired experience separately on every selection page.
+- [x] Record previous experience and desired experience separately on every skill page.
 - [x] Provide an AI engineering page covering approaches, frameworks, tools, providers, open-weight models and local hardware.
 - [x] Remove scoring.
 - [x] Present a profile card with downloads as JSON and Markdown.
 - [x] Provide a description for every built-in value and skill, opened by right-click (with keyboard and touch alternatives).
 - [x] Use a wide, uniform layout with a distinct colour per section and animated changes between sections.
-- [x] Limit values to 20 selections; skills are unlimited.
+- [x] Limit values to 5 selections; skills are unlimited.
+- [x] Choose values once (no previous or desired option for values), and open every skill page on previous experience.
 - [x] Offer a link to ChatGPT, with a ready-made prompt, on the values and interpersonal pages to help discover more.
 - [x] Load a previously downloaded JSON profile and continue editing it.
 - [x] Provide a GitHub Actions workflow for deployment to GitHub Pages.
@@ -94,26 +95,26 @@ npm run preview
 
 - Over 100 common values in nine categories (for example Character and integrity, Learning and growth, Society and the world), with a filter and custom values, all shown at the same size in cards that use the full width of the screen.
 - Technical development, engineering and interpersonal skill catalogs, grouped by category into cards, with filtering and custom skills.
-- A limit of 20 selected values in each option, with a running count. Skills have no limit.
+- A limit of 5 selected values, with a running count. Skills have no limit.
 - A short description for every built-in value and skill (custom entries have none).
 - Loading of a saved JSON profile, validated before it replaces the current profile.
 - A distinct colour for each section, with accessible contrast in light and dark themes.
 - Scroll-to-top and an animated change of section when moving between steps (skipped when the system asks for reduced motion).
-- Two options on every selection page, **Previous experience** and **Desired experience**, each with its own selections and count. The chosen option carries from page to page.
+- Two options on every skill page, **Previous experience** and **Desired experience**, each with its own selections and count. Every page opens on Previous experience. Values have a single list.
 - Guided steps that require at least one value and at least one skill in each section (in either option) before the profile.
-- Profile card showing previous and desired words for every page, without scores.
+- Profile card showing previous and desired words for every skill page, and one list of values, without scores.
 - Download of the profile as JSON or Markdown, generated locally.
 
 ## :paperclip: Usage
 
 1. Select the values that describe you, or add your own, then continue.
 2. Select skills in each of the technical development, engineering, interpersonal and AI engineering sections. Use the filter to find skills, or add your own.
-3. On every page, choose **Previous experience** (what you have done) or **Desired experience** (what you want to do) at the top, and select words for each. A word can be in both.
+3. On each skill page, choose **Previous experience** (what you have done) or **Desired experience** (what you want to do) at the top, and select words for each. A word can be in both.
 4. Review your profile card, then use **Download JSON** or **Download Markdown**. Use **Edit** to go back and make changes.
 
 ### Selection limit
 
-The values page allows up to 20 selected values in each option, including your own. At the limit the remaining values are dimmed and a message explains how to free a slot: deselect a value, then choose another. Descriptions still open for dimmed values.
+The values page allows up to 5 selected values, including your own. At the limit the remaining values are dimmed and a message explains how to free a slot: deselect a value, then choose another. Descriptions still open for dimmed values.
 
 The technical development, engineering, interpersonal and AI engineering pages have no limit: select as many skills as apply. The profile card lists every selected skill.
 
@@ -134,11 +135,12 @@ Use **Load saved profile** (top right, on any page) and choose a JSON file previ
 - The file is read in your browser only; nothing is uploaded.
 - If you already have selections you are asked to confirm before they are replaced.
 - Files that are not valid profiles (not JSON, wrong structure, over 1 MB) are rejected with a message, and your current profile is left unchanged.
-- A saved profile with more than 20 values in an option (for example, one edited by hand) is loaded in full. The values page opens, and you must deselect down to 20 before you can continue. Any number of skills loads normally.
+- A saved profile with more than 5 values (for example, one edited by hand or saved when the limit was higher) is loaded in full. The values page opens, and you must deselect down to 5 before you can continue. Any number of skills loads normally.
+- Profiles saved when values had two options load with both lists merged into one.
 - Profiles saved before experience options existed (with scores) still load: their words become previous experience, the scores are ignored and the AI engineering page starts empty.
 - Markdown downloads cannot be loaded.
 
-The JSON format is `values: { experience, desired }` and `skills.<technical|engineering|interpersonal|ai>: { experience, desired }`, each a list of names.
+The JSON format is `values: [...]` (a list of names) and `skills.<technical|engineering|interpersonal|ai>: { experience, desired }`, each a list of names.
 
 ### Descriptions
 

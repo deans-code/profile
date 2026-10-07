@@ -7,7 +7,7 @@ interface Props {
   onEdit: () => void
 }
 
-function Group({ title, lists, chips }: { title: string; lists: Experience; chips: 'value' | 'skill' }) {
+function Group({ title, lists }: { title: string; lists: Experience }) {
   return (
     <div className="card-group">
       <h3>{title}</h3>
@@ -16,7 +16,7 @@ function Group({ title, lists, chips }: { title: string; lists: Experience; chip
           lists[mode].length > 0 && (
             <div key={mode}>
               <h4 className="card-mode">{MODE_LABELS[mode]}</h4>
-              <ul className={chips === 'value' ? 'card-values' : 'card-words'}>
+              <ul className="card-words">
                 {lists[mode].map((name) => (
                   <li key={name} className="chip static">
                     {name}
@@ -38,11 +38,20 @@ export default function ProfileCard({ state, onEdit }: Props) {
       <h2 id="card-heading">Your profile</h2>
 
       <article className="card" aria-label="Profile card">
-        <Group title="Values" lists={profile.values} chips="value" />
+        <div className="card-group">
+          <h3>Values</h3>
+          <ul className="card-values">
+            {profile.values.map((v) => (
+              <li key={v} className="chip static">
+                {v}
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <div className="card-skill-groups">
           {SECTIONS.map((section) => (
-            <Group key={section} title={SECTION_LABELS[section]} lists={profile.skills[section]} chips="skill" />
+            <Group key={section} title={SECTION_LABELS[section]} lists={profile.skills[section]} />
           ))}
         </div>
       </article>

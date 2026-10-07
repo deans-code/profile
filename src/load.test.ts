@@ -10,7 +10,7 @@ const lists = (experience: string[], desired: string[] = []) => ({ experience, d
 const file = (overrides: Record<string, unknown> = {}) =>
   JSON.stringify({
     exportedAt: '2026-01-02T03:04:05.000Z',
-    values: lists(['Integrity'], ['Curiosity']),
+    values: ['Integrity', 'Curiosity'],
     skills: {
       technical: lists(['Python']),
       engineering: lists([], ['Scrum']),
@@ -47,7 +47,7 @@ const error = (text: string) => {
 describe('parseProfile', () => {
   it('reads a valid file', () => {
     expect(ok(file())).toEqual({
-      values: lists(['Integrity'], ['Curiosity']),
+      values: ['Integrity', 'Curiosity'],
       skills: {
         technical: lists(['Python']),
         engineering: lists([], ['Scrum']),
@@ -81,7 +81,7 @@ describe('parseProfile', () => {
     const p = ok(
       file({
         extra: { anything: true },
-        values: lists(['  Integrity ', 'integrity', 'Trust']),
+        values: ['  Integrity ', 'integrity', 'Trust'],
         skills: {
           technical: lists(['Python', ' python ']),
           engineering: lists([]),
@@ -90,25 +90,36 @@ describe('parseProfile', () => {
         },
       }),
     )
-    expect(p.values.experience).toEqual(['Integrity', 'Trust'])
+    expect(p.values).toEqual(['Integrity', 'Trust'])
     expect(p.skills.technical.experience).toEqual(['Python'])
     expect(p.skills.engineering).toEqual(lists([]))
   })
 
   it('loads lists above the selection limit in full', () => {
-    const values = Array.from({ length: 22 }, (_, i) => `Value ${i}`)
-    expect(ok(file({ values: lists(values) })).values.experience).toHaveLength(22)
+    const values = Array.from({ length: 8 }, (_, i) => `Value ${i}`)
+    expect(ok(file({ values })).values).toHaveLength(8)
   })
 
-  it('treats a missing option list as empty', () => {
-    const p = ok(file({ values: { experience: ['Integrity'] } }))
-    expect(p.values).toEqual(lists(['Integrity']))
+  describe('values in the format with two options', () => {
+    it('merges both lists into one, without duplicates ignoring case', () => {
+      const p = ok(file({ values: { experience: ['Integrity'], desired: ['Curiosity', 'integrity'] } }))
+      expect(p.values).toEqual(['Integrity', 'Curiosity'])
+    })
+
+    it('treats a missing list as empty', () => {
+      expect(ok(file({ values: { experience: ['Integrity'] } })).values).toEqual(['Integrity'])
+    })
+
+    it('checks the entries of each list', () => {
+      expect(error(file({ values: { experience: [], desired: [3] } }))).toMatch(/not text/)
+      expect(error(file({ values: { experience: 'Integrity' } }))).toMatch(/not a list/)
+    })
   })
 
   describe('files from before experience options', () => {
     it('loads values and skills as previous experience, ignoring scores, with an empty AI page', () => {
       expect(ok(legacyFile())).toEqual({
-        values: lists(['Integrity']),
+        values: ['Integrity'],
         skills: {
           technical: lists(['Python']),
           engineering: lists(['Scrum']),
@@ -151,7 +162,7 @@ describe('parseProfile', () => {
         /interpersonal skills are missing/,
       ))
 
-    it('non-text value names', () => expect(error(file({ values: lists(['ok', 3 as never]) }))).toMatch(/not text/))
+    it('non-text value names', () => expect(error(file({ values: ['ok', 3] }))).toMatch(/not text/))
     it('non-text skill names', () =>
       expect(
         error(
@@ -160,9 +171,9 @@ describe('parseProfile', () => {
           }),
         ),
       ).toMatch(/not text/))
-    it('empty names', () => expect(error(file({ values: lists(['  ']) }))).toMatch(/empty name/))
-    it('a value list that is not a list', () =>
-      expect(error(file({ values: { experience: 'Integrity' } }))).toMatch(/not a list/))
+    it('empty names', () => expect(error(file({ values: ['  '] }))).toMatch(/empty name/))
+    it('values that are neither a list nor an object', () =>
+      expect(error(file({ values: 'Integrity' }))).toMatch(/values list is not in a form/))
     it('legacy entries that are not skills', () =>
       expect(
         error(legacyFile({ skills: { technical: [{ name: 'Python' }, 5], engineering: [], interpersonal: [] } })),
@@ -170,14 +181,14 @@ describe('parseProfile', () => {
 
     it('too many entries in any list', () => {
       const many = Array.from({ length: MAX_ENTRIES + 1 }, (_, i) => `v${i}`)
-      expect(error(file({ values: lists(many) }))).toMatch(/more than 100/)
-      expect(error(file({ values: lists([], many) }))).toMatch(/more than 100/)
+      expect(error(file({ values: many }))).toMatch(/more than 100/)
+      expect(error(file({ values: { experience: [], desired: many } }))).toMatch(/more than 100/)
       const skills = { technical: lists([], many), engineering: lists([]), interpersonal: lists([]), ai: lists([]) }
       expect(error(file({ skills }))).toMatch(/more than 100/)
     })
 
     it('names that are too long', () =>
-      expect(error(file({ values: lists(['x'.repeat(MAX_NAME_LENGTH + 1)]) }))).toMatch(/longer than 100/))
+      expect(error(file({ values: ['x'.repeat(MAX_NAME_LENGTH + 1)] }))).toMatch(/longer than 100/))
 
     it('oversized files, before parsing', () =>
       expect(error('x'.repeat(MAX_FILE_BYTES + 1))).toMatch(/larger than 1 MB/))
@@ -188,7 +199,7 @@ describe('profileToState', () => {
   it('restores built-ins with their spelling and others as custom entries, in the right option', () => {
     const p = ok(
       file({
-        values: lists(['integrity'], ['Grit']),
+        values: ['integrity', 'Grit'],
         skills: {
           technical: lists(['python'], ['Zig']),
           engineering: lists([]),
@@ -198,7 +209,7 @@ describe('profileToState', () => {
       }),
     )
     const s = { ...initialState, ...profileToState(p) }
-    expect(s.selectedValues).toEqual(lists(['Integrity'], ['Grit']))
+    expect(s.selectedValues).toEqual(['Integrity', 'Grit'])
     expect(s.customValues).toEqual(['Grit'])
     expect(s.selectedSkills.technical).toEqual(lists(['Python'], ['Zig']))
     expect(s.customSkills.technical).toEqual(['Zig'])
@@ -283,6 +294,6 @@ describe('profiles saved before values were grouped', () => {
     expect(ORIGINAL_VALUES).toHaveLength(60)
     const state = profileToState(ok(file({ values: ORIGINAL_VALUES.map((v) => v.toUpperCase()) })))
     expect(state.customValues).toEqual([])
-    expect(state.selectedValues).toEqual({ experience: ORIGINAL_VALUES, desired: [] })
+    expect(state.selectedValues).toEqual(ORIGINAL_VALUES)
   })
 })

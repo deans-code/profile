@@ -1,6 +1,6 @@
 import type { Dispatch } from 'react'
 import { VALUE_CATEGORIES } from '../data/values'
-import { limitFor, selectionCount, type Action, type ProfileState } from '../state/profile'
+import { limitFor, type Action, type ProfileState } from '../state/profile'
 import WordPicker from './WordPicker'
 
 interface Props {
@@ -16,11 +16,8 @@ export default function ValuesStep({ state, dispatch }: Props) {
       heading="What do you value?"
       hint="Select the values that describe you, or add your own."
       categories={VALUE_CATEGORIES.map((c) => ({ category: c.category, words: c.values }))}
-      selected={state.selectedValues[state.mode]}
+      selected={state.selectedValues}
       custom={state.customValues}
-      mode={state.mode}
-      counts={{ experience: selectionCount(state, 'values', 'experience'), desired: selectionCount(state, 'values', 'desired') }}
-      onModeChange={(mode) => dispatch({ type: 'setMode', mode })}
       limit={limitFor('values')}
       noun="values"
       filterLabel="Filter values"

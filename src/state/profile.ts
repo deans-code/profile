@@ -15,15 +15,15 @@ export const MODE_LABELS: Record<Mode, string> = {
   desired: 'Desired experience',
 }
 
-/** Most values that can be selected in each mode. */
-export const MAX_SELECTION = 20
+/** Most values that can be selected. */
+export const MAX_SELECTION = 5
 
 /** A page with selectable words. */
 export type Page = 'values' | Section
 
 export const PAGES: Page[] = ['values', ...SECTIONS]
 
-/** Per-page selection limits (per mode). Pages that are not listed have no limit. */
+/** Per-page selection limits (per mode on skill pages). Pages that are not listed have no limit. */
 export const LIMITS: Partial<Record<Page, number>> = { values: MAX_SELECTION }
 
 /** The most words selectable on a page in one mode, or undefined when the page has no limit. */
@@ -35,7 +35,8 @@ export interface ProfileState {
   step: Step
   /** The option the selection pages are editing. Shared by every page. */
   mode: Mode
-  selectedValues: PerMode<string[]>
+  /** Values have a single list: they are not split into previous and desired experience. */
+  selectedValues: string[]
   customValues: string[]
   selectedSkills: Record<Section, PerMode<string[]>>
   customSkills: Record<Section, string[]>
@@ -52,7 +53,7 @@ const perSection = <T>(make: () => T): Record<Section, T> =>
 export const initialState: ProfileState = {
   step: 'values',
   mode: 'experience',
-  selectedValues: perMode<string[]>(() => []),
+  selectedValues: [],
   customValues: [],
   selectedSkills: perSection(() => perMode<string[]>(() => [])),
   customSkills: perSection<string[]>(() => []),
@@ -84,9 +85,9 @@ export function allSkillNames(state: ProfileState, section: Section): string[] {
   return [...catalogSkillNames(section), ...state.customSkills[section]]
 }
 
-/** Words selected on a page in the given mode (the active mode by default). */
+/** Words selected on a page in the given mode (the active mode by default). The values page ignores the mode. */
 export function selectedFor(state: ProfileState, page: Page, mode: Mode = state.mode): string[] {
-  return page === 'values' ? state.selectedValues[mode] : state.selectedSkills[page][mode]
+  return page === 'values' ? state.selectedValues : state.selectedSkills[page][mode]
 }
 
 export function selectionCount(state: ProfileState, page: Page, mode: Mode = state.mode): number {
@@ -106,6 +107,7 @@ export function overBy(state: ProfileState, page: Page, mode: Mode): number {
 
 /** A page is complete when at least one word is selected in either mode. */
 export function pageComplete(state: ProfileState, page: Page): boolean {
+  if (page === 'values') return state.selectedValues.length > 0
   return MODES.some((m) => selectionCount(state, page, m) > 0)
 }
 
@@ -119,7 +121,7 @@ export function missingSections(state: ProfileState): Section[] {
 function firstOver(state: ProfileState, before: number): { page: Page; mode: Mode; over: number } | undefined {
   for (const page of PAGES) {
     if (STEPS.indexOf(page) >= before) continue
-    for (const mode of MODES) {
+    for (const mode of page === 'values' ? (['experience'] as const) : MODES) {
       const over = overBy(state, page, mode)
       if (over > 0) return { page, mode, over }
     }
@@ -133,7 +135,8 @@ export function stepBlockedReason(state: ProfileState, step: Step): string | nul
   const over = firstOver(state, STEPS.indexOf(step))
   if (over) {
     const noun = over.over === 1 ? 'word' : 'words'
-    return `Deselect ${over.over} ${noun} under ${MODE_LABELS[over.mode]} on the ${pageLabel(over.page)} page to continue (limit ${limitFor(over.page)}).`
+    const where = over.page === 'values' ? '' : ` under ${MODE_LABELS[over.mode]}`
+    return `Deselect ${over.over} ${noun}${where} on the ${pageLabel(over.page)} page to continue (limit ${limitFor(over.page)}).`
   }
   if (!pageComplete(state, 'values')) return 'Select at least one value first.'
   if (step === 'card') {
@@ -178,26 +181,26 @@ export function reducer(state: ProfileState, action: Action): ProfileState {
       return { ...state, mode: action.mode }
 
     case 'toggleValue': {
-      const selected = state.selectedValues[mode]
+      const selected = state.selectedValues
       if (!selected.includes(action.name) && isFull(state, 'values')) return state
-      return { ...state, selectedValues: withMode(state.selectedValues, mode, toggle(selected, action.name)) }
+      return { ...state, selectedValues: toggle(selected, action.name) }
     }
 
     case 'addCustomValue': {
       const text = action.text.trim()
       if (!text) return state
-      const selected = state.selectedValues[mode]
+      const selected = state.selectedValues
       const existing = findMatch(allValues(state), text)
       if (existing) {
         return selected.includes(existing) || isFull(state, 'values')
           ? state
-          : { ...state, selectedValues: withMode(state.selectedValues, mode, [...selected, existing]) }
+          : { ...state, selectedValues: [...selected, existing] }
       }
       if (isFull(state, 'values')) return state
       return {
         ...state,
         customValues: [...state.customValues, text],
-        selectedValues: withMode(state.selectedValues, mode, [...selected, text]),
+        selectedValues: [...selected, text],
       }
     }
 
@@ -205,7 +208,7 @@ export function reducer(state: ProfileState, action: Action): ProfileState {
       return {
         ...state,
         customValues: without(state.customValues, action.name),
-        selectedValues: withoutBoth(state.selectedValues, action.name),
+        selectedValues: without(state.selectedValues, action.name),
       }
 
     case 'toggleSkill': {
@@ -260,6 +263,7 @@ export function reducer(state: ProfileState, action: Action): ProfileState {
       return { ...action.profile, mode: 'experience', step: loadLanding(action.profile).step }
 
     case 'goTo':
-      return stepBlockedReason(state, action.step) ? state : { ...state, step: action.step }
+      // Every page opens on previous experience.
+      return stepBlockedReason(state, action.step) ? state : { ...state, step: action.step, mode: 'experience' }
   }
 }

@@ -29,7 +29,7 @@ export default function App() {
   const { navigate, motion, setMotionFor } = useStepNavigation(state, dispatch, contentRef)
 
   const hasProgress =
-    MODES.some((m) => state.selectedValues[m].length > 0) ||
+    state.selectedValues.length > 0 ||
     SECTIONS.some((s) => MODES.some((m) => state.selectedSkills[s][m].length > 0))
 
   function loadProfile(profile: Profile): string | null {

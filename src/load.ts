@@ -70,6 +70,24 @@ function parseExperience(raw: unknown, where: string, missingOk: boolean): Parse
 }
 
 /**
+ * Reads the values: a plain list, or (in files from when values had two options) an object whose
+ * previous and desired lists are merged into one, without duplicates.
+ */
+function parseValues(raw: unknown): Parsed<string[]> {
+  const where = 'The values list'
+  if (Array.isArray(raw)) return parseNames(raw, where, false)
+  if (!isObject(raw)) return { error: `${where} is not in a form this app can read.` }
+  const merged: string[] = []
+  for (const mode of MODES) {
+    const names = parseNames(raw[mode] ?? [], where, false)
+    if ('error' in names) return names
+    merged.push(...names.value)
+  }
+  const seen = new Set<string>()
+  return { value: merged.filter((n) => !seen.has(norm(n)) && seen.add(norm(n))) }
+}
+
+/**
  * Reads a profile previously downloaded as JSON, in the current format or the older one with scores
  * (scores are ignored and the entries count as previous experience). Extra properties and the export
  * timestamp are ignored, names are trimmed, and duplicates (ignoring case) are removed, keeping the first.
@@ -88,7 +106,7 @@ export function parseProfile(text: string): ParseResult {
     return fail('This file is not a profile downloaded from this app: it needs "values" and "skills".')
   }
 
-  const values = parseExperience(data.values, 'The values lists', false)
+  const values = parseValues(data.values)
   if ('error' in values) return fail(values.error)
 
   const skills = {} as Profile['skills']
@@ -108,12 +126,12 @@ export function parseProfile(text: string): ParseResult {
  * built-in entry use its spelling; anything else becomes a custom entry, kept once per page.
  */
 export function profileToState(profile: Profile): LoadedProfile {
-  const resolve = (lists: Experience, builtIn: string[]) => {
+  /** Resolves each list against the built-ins; names that are not built in share one custom list. */
+  const resolve = <L extends string[] | Experience>(lists: L, builtIn: string[]) => {
     const known = new Map(builtIn.map((n) => [norm(n), n]))
     const custom: string[] = []
-    const selected = { experience: [], desired: [] } as Experience
-    for (const mode of MODES) {
-      selected[mode] = lists[mode].map((name) => {
+    const one = (names: string[]) =>
+      names.map((name) => {
         const match = known.get(norm(name))
         if (match) return match
         const existing = custom.find((c) => norm(c) === norm(name))
@@ -121,7 +139,9 @@ export function profileToState(profile: Profile): LoadedProfile {
         custom.push(name)
         return name
       })
-    }
+    const selected = (Array.isArray(lists)
+      ? one(lists)
+      : { experience: one(lists.experience), desired: one(lists.desired) }) as L
     return { selected, custom }
   }
 

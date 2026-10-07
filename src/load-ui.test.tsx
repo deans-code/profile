@@ -16,7 +16,7 @@ const lists = (experience: string[], desired: string[] = []) => ({ experience, d
 const profileJson = (overrides: Record<string, unknown> = {}) =>
   JSON.stringify({
     exportedAt: '2026-01-02T03:04:05.000Z',
-    values: lists(['Integrity', 'Grit']),
+    values: ['Integrity', 'Grit'],
     skills: {
       technical: lists(['Python', 'Zig']),
       engineering: lists(['Scrum']),
@@ -88,7 +88,7 @@ describe('Load saved profile', () => {
     // Values: loaded values selected, custom restored.
     expect(word('Integrity')).toHaveAttribute('aria-pressed', 'true')
     expect(word('Grit')).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText(/^2 of 20 selected/)).toBeInTheDocument()
+    expect(screen.getByText(/^2 of 5 selected/)).toBeInTheDocument()
     await user.click(word('Trust'))
     await user.click(next())
 
@@ -112,10 +112,19 @@ describe('Load saved profile', () => {
     expect(within(card()).getByText('Go')).toBeInTheDocument()
   })
 
+  it('merges the values of a file saved with two options into one list', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await upload(user, profileJson({ values: lists(['Integrity'], ['Curiosity', 'integrity']) }))
+    await screen.findByRole('heading', { name: 'Your profile' })
+    const values = within(card()).getByRole('heading', { name: 'Values' }).parentElement!
+    expect(within(values).getAllByRole('listitem').map((li) => li.textContent)).toEqual(['Curiosity', 'Integrity'])
+  })
+
   it('matches built-in entries ignoring case and restores others as custom', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await upload(user, profileJson({ values: lists(['integrity']) }))
+    await upload(user, profileJson({ values: ['integrity'] }))
     await screen.findByRole('heading', { name: 'Your profile' })
     expect(within(card()).getByText('Integrity')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Edit' }))
@@ -128,8 +137,8 @@ describe('Load saved profile', () => {
       ['wrong structure', JSON.stringify({ values: ['a'] }), /not a profile downloaded from this app/],
       [
         'a name that is not text',
-        profileJson({ values: lists([5 as never]) }),
-        /values lists contains a name that is not text/,
+        profileJson({ values: [5] }),
+        /values list contains a name that is not text/,
       ],
     ])('%s', async (_name, text, message) => {
       const user = userEvent.setup()
@@ -176,10 +185,14 @@ describe('Load saved profile', () => {
       expect(within(card()).getByText('Integrity')).toBeInTheDocument()
     })
 
-    it('counts a desired-only selection as progress to replace', async () => {
+    it('counts a desired-only skill selection as progress to replace', async () => {
       const user = userEvent.setup()
       render(<App />)
+      await user.click(word('Trust'))
+      await user.click(next())
       await user.click(radio(/^Desired experience/))
+      await user.click(word('Python'))
+      await user.click(screen.getByRole('button', { name: 'Back' }))
       await user.click(word('Trust'))
       await upload(user, profileJson())
       expect(await screen.findByRole('group', { name: 'Confirm loading a profile' })).toBeInTheDocument()
@@ -220,21 +233,22 @@ describe('Load saved profile', () => {
   })
 
   describe('over-limit and incomplete files', () => {
-    it('loads all 22 values, opens the values page and says how many to deselect', async () => {
+    it('loads all 8 values, opens the values page and says how many to deselect', async () => {
       const user = userEvent.setup()
       render(<App />)
-      const values = Array.from({ length: 22 }, (_, i) => `Custom value ${i}`)
-      await upload(user, profileJson({ values: lists(values) }))
+      const values = Array.from({ length: 8 }, (_, i) => `Custom value ${i}`)
+      await upload(user, profileJson({ values }))
       expect(
-        await screen.findByText(/Loaded profile\.json\. Deselect 2 words under Previous experience on the values page/),
+        await screen.findByText(/Loaded profile\.json\. Deselect 3 words on the values page to continue \(limit 5\)/),
       ).toBeInTheDocument()
       expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
-      expect(screen.getByText(/^22 of 20 selected/)).toHaveTextContent(/deselect 2 words/i)
+      expect(screen.getByText(/^8 of 5 selected/)).toHaveTextContent(/deselect 3 words/i)
       expect(next()).toBeDisabled()
 
       await user.click(word('Custom value 0'))
       await user.click(word('Custom value 1'))
-      expect(screen.getByText(/^20 of 20 selected/)).toBeInTheDocument()
+      await user.click(word('Custom value 2'))
+      expect(screen.getByText(/^5 of 5 selected/)).toBeInTheDocument()
       expect(next()).toBeEnabled()
     })
 
@@ -301,12 +315,11 @@ describe('end to end: build, download, load, edit, download', () => {
     expect(strip(reloaded)).toEqual(strip(original))
 
     await user.click(screen.getByRole('button', { name: 'Edit' }))
-    await user.click(radio(/^Previous experience/))
     await user.click(word('Trust'))
     for (let i = 0; i < 5; i++) await user.click(next())
     await user.click(screen.getByRole('button', { name: 'Download JSON' }))
     const edited = JSON.parse(await blobs[2].text())
-    expect(edited.values).toEqual(lists(['Grit', 'Integrity', 'Trust']))
+    expect(edited.values).toEqual(['Grit', 'Integrity', 'Trust'])
     expect(edited.skills.technical).toEqual(lists(['Python'], ['Rust']))
     expect(edited.skills.ai).toEqual(lists(['Ollama'], ['OpenRouter']))
   })

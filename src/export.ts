@@ -5,7 +5,7 @@ import { MODES, MODE_LABELS, type Mode, type ProfileState } from './state/profil
 export type Experience = Record<Mode, string[]>
 
 export interface Profile {
-  values: Experience
+  values: string[]
   skills: Record<Section, Experience>
 }
 
@@ -19,7 +19,7 @@ const sorted = (lists: Experience): Experience => ({
 export function buildProfile(state: ProfileState): Profile {
   const skills = {} as Profile['skills']
   for (const section of SECTIONS) skills[section] = sorted(state.selectedSkills[section])
-  return { values: sorted(state.selectedValues), skills }
+  return { values: [...state.selectedValues].sort(byName), skills }
 }
 
 export function toJson(profile: Profile, exportedAt: Date = new Date()): string {
@@ -45,7 +45,8 @@ export function toMarkdown(profile: Profile): string {
       for (const name of lists[mode]) lines.push(`- ${escapeMarkdown(name)}`)
     }
   }
-  page('Values', profile.values)
+  lines.push('', '## Values', '')
+  for (const name of profile.values) lines.push(`- ${escapeMarkdown(name)}`)
   for (const section of SECTIONS) page(SECTION_LABELS[section], profile.skills[section])
   return lines.join('\n') + '\n'
 }

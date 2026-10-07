@@ -15,12 +15,22 @@ async function selectValues(user: ReturnType<typeof userEvent.setup>, n: number)
 }
 
 describe('selection limit UI', () => {
-  it('shows "n of 20 selected"', async () => {
+  it('shows "n of 5 selected"', async () => {
     const user = userEvent.setup()
     render(<App />)
     expect(screen.getByText(`0 of ${LIMIT} selected`)).toBeInTheDocument()
-    await selectValues(user, 7)
-    expect(screen.getByText(new RegExp(`^7 of ${LIMIT} selected`))).toBeInTheDocument()
+    await selectValues(user, 3)
+    expect(screen.getByText(new RegExp(`^3 of ${LIMIT} selected`))).toBeInTheDocument()
+    expect(LIMIT).toBe(5)
+  })
+
+  it('has a single selection on the values page, with no experience options', () => {
+    render(<App />)
+    expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument()
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+    const help = screen.getByRole('complementary', { name: 'How to use this step' })
+    expect(help).toHaveTextContent('Select up to 5 values.')
+    expect(help).not.toHaveTextContent(/previous|desired|other option/i)
   })
 
   it('announces the limit and marks unselected words unavailable but focusable', async () => {
@@ -71,7 +81,7 @@ describe('selection limit UI', () => {
     expect(input).toHaveValue('Mettle')
   })
 
-  it('still opens definitions for unavailable words and leaves the selection unchanged', async () => {
+  it('still opens descriptions for unavailable words and leaves the selection unchanged', async () => {
     const user = userEvent.setup()
     render(<App />)
     await selectValues(user, LIMIT)

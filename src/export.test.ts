@@ -10,8 +10,8 @@ const state = run([
   { type: 'toggleSkill', section: 'technical', name: 'Go' },
   { type: 'addCustomSkill', section: 'technical', text: 'C# & café' },
   { type: 'toggleSkill', section: 'engineering', name: 'Scrum' },
-  { type: 'setMode', mode: 'desired' },
   { type: 'toggleValue', name: 'Curiosity' },
+  { type: 'setMode', mode: 'desired' },
   { type: 'toggleSkill', section: 'technical', name: 'Python' },
   { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
   { type: 'toggleSkill', section: 'ai', name: 'OpenRouter' },
@@ -20,10 +20,10 @@ const state = run([
 const profile = buildProfile(state)
 
 describe('buildProfile', () => {
-  it('sorts each list alphabetically and keeps the options apart', () => {
+  it('sorts each list alphabetically, keeps skill options apart and has one values list', () => {
     expect(profile.skills.technical).toEqual({ experience: ['C# & café', 'Go', 'Python'], desired: ['Python'] })
     expect(profile.skills.ai).toEqual({ experience: [], desired: ['Ollama', 'OpenRouter'] })
-    expect(profile.values).toEqual({ experience: ['Craft "quality" *always*', 'Integrity'], desired: ['Curiosity'] })
+    expect(profile.values).toEqual(['Craft "quality" *always*', 'Curiosity', 'Integrity'])
   })
 })
 
@@ -33,7 +33,7 @@ describe('toJson', () => {
 
   it('has the documented structure', () => {
     expect(json.exportedAt).toBe('2026-01-02T03:04:05.000Z')
-    expect(json.values).toEqual({ experience: ['Craft "quality" *always*', 'Integrity'], desired: ['Curiosity'] })
+    expect(json.values).toEqual(['Craft "quality" *always*', 'Curiosity', 'Integrity'])
     expect(Object.keys(json.skills)).toEqual(['technical', 'engineering', 'interpersonal', 'ai'])
     expect(json.skills.engineering).toEqual({ experience: ['Scrum'], desired: [] })
     expect(json.skills.ai).toEqual({ experience: [], desired: ['Ollama', 'OpenRouter'] })
@@ -48,7 +48,7 @@ describe('toJson', () => {
 
   it('includes custom entries and survives special characters', () => {
     expect(json.skills.technical.experience).toContain('C# & café')
-    expect(json.values.experience).toContain('Craft "quality" *always*')
+    expect(json.values).toContain('Craft "quality" *always*')
   })
 })
 
@@ -64,7 +64,14 @@ describe('toMarkdown', () => {
     expect(md).toContain('## AI engineering')
   })
 
-  it('lists previous and desired experience, omitting empty lists, with no scores', () => {
+  it('lists values once, without option headings', () => {
+    const values = md.slice(md.indexOf('## Values'), md.indexOf('## Technical development'))
+    expect(values).toContain('- Curiosity')
+    expect(values).toContain('- Integrity')
+    expect(values).not.toContain('###')
+  })
+
+  it('lists previous and desired experience for skills, omitting empty lists, with no scores', () => {
     expect(md).toContain('### Previous experience')
     expect(md).toContain('### Desired experience')
     expect(md).toContain('- Python')
