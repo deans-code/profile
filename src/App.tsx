@@ -1,12 +1,11 @@
 import { useReducer, useRef } from 'react'
 import { SECTIONS, SECTION_LABELS } from './data/skills'
 import type { Profile } from './export'
-import { STEPS, initialState, loadLanding, reducer, stepBlockedReason, type Step } from './state/profile'
+import { MODES, STEPS, initialState, loadLanding, reducer, stepBlockedReason, type Step } from './state/profile'
 import { profileToState } from './load'
 import { DefinitionProvider } from './components/DefinitionPanel'
 import LoadProfile from './components/LoadProfile'
 import ProfileCard from './components/ProfileCard'
-import ScoringStep from './components/ScoringStep'
 import SkillStep from './components/SkillStep'
 import ValuesStep from './components/ValuesStep'
 import { useStepNavigation } from './useStepNavigation'
@@ -16,7 +15,7 @@ const STEP_LABELS: Record<Step, string> = {
   technical: SECTION_LABELS.technical,
   engineering: SECTION_LABELS.engineering,
   interpersonal: SECTION_LABELS.interpersonal,
-  scoring: 'Scoring',
+  ai: SECTION_LABELS.ai,
   card: 'Profile',
 }
 
@@ -29,7 +28,9 @@ export default function App() {
   const contentRef = useRef<HTMLElement>(null)
   const { navigate, motion, setMotionFor } = useStepNavigation(state, dispatch, contentRef)
 
-  const hasProgress = state.selectedValues.length > 0 || SECTIONS.some((s) => state.selectedSkills[s].length > 0)
+  const hasProgress =
+    MODES.some((m) => state.selectedValues[m].length > 0) ||
+    SECTIONS.some((s) => MODES.some((m) => state.selectedSkills[s][m].length > 0))
 
   function loadProfile(profile: Profile): string | null {
     const next = profileToState(profile)
@@ -73,10 +74,9 @@ export default function App() {
           <main ref={contentRef}>
             <div key={state.step} className={`step-view enter-${motion}`}>
               {state.step === 'values' && <ValuesStep state={state} dispatch={dispatch} />}
-              {(state.step === 'technical' || state.step === 'engineering' || state.step === 'interpersonal') && (
+              {state.step !== 'values' && state.step !== 'card' && (
                 <SkillStep key={state.step} section={state.step} state={state} dispatch={dispatch} />
               )}
-              {state.step === 'scoring' && <ScoringStep state={state} dispatch={dispatch} />}
               {state.step === 'card' && <ProfileCard state={state} onEdit={() => navigate('values')} />}
             </div>
           </main>

@@ -3,7 +3,9 @@ import userEvent from '@testing-library/user-event'
 import App from './App'
 
 const chip = (name: string) => screen.getByRole('button', { name })
-const next = () => screen.getByRole('button', { name: /continue|finish/i })
+// The AI engineering catalog has a "Continue" word, so look only in the footer.
+const next = () =>
+  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)$/i })
 
 describe('values step', () => {
   it('shows at least 100 unselected values', () => {
@@ -94,98 +96,179 @@ describe('skill steps', () => {
     expect(chip('Go')).toHaveAttribute('aria-pressed', 'true')
   })
 
-  it('gates scoring until all sections have selections, names the missing ones, and keeps selections on back', async () => {
+  it('gates the profile until all pages have selections, names the missing ones, and keeps selections on back', async () => {
     const user = await toTechnical()
     await user.click(chip('Python'))
     await user.click(next())
     await user.click(next())
     expect(screen.getByRole('heading', { name: /interpersonal skills/i })).toBeInTheDocument()
+    await user.click(next())
+    expect(screen.getByRole('heading', { name: /ai engineering skills/i })).toBeInTheDocument()
     expect(next()).toBeDisabled()
-    expect(screen.getByRole('status')).toHaveTextContent(/engineering, interpersonal/)
+    expect(screen.getByRole('status')).toHaveTextContent(/engineering, interpersonal, ai engineering/)
 
-    await user.click(screen.getByRole('button', { name: 'Back' }))
-    await user.click(screen.getByRole('button', { name: 'Back' }))
+    for (let i = 0; i < 3; i++) await user.click(screen.getByRole('button', { name: 'Back' }))
     expect(chip('Python')).toHaveAttribute('aria-pressed', 'true')
   })
 })
 
-describe('scoring and card', () => {
-  async function toScoring() {
+describe('experience options', () => {
+  const radio = (name: RegExp) => screen.getByRole('radio', { name })
+
+  it('shows both options on every selection page, defaulting to previous experience', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(chip('Integrity'))
+    for (let page = 0; page < 5; page++) {
+      expect(screen.getByRole('radiogroup', { name: 'Experience option' })).toBeInTheDocument()
+      expect(radio(/^Previous experience/)).toBeChecked()
+      expect(radio(/^Desired experience/)).not.toBeChecked()
+      if (page < 4) await user.click(next())
+    }
+  })
+
+  it('keeps previous and desired selections apart, with a count on each option', async () => {
     const user = userEvent.setup()
     render(<App />)
     await user.click(chip('Integrity'))
     await user.click(next())
     await user.click(chip('Python'))
+    await user.click(chip('Go'))
+    expect(radio(/^Previous experience/)).toHaveTextContent('Previous experience (2)')
+    expect(radio(/^Desired experience/)).toHaveTextContent('Desired experience (0)')
+
+    await user.click(radio(/^Desired experience/))
+    expect(radio(/^Desired experience/)).toBeChecked()
+    expect(chip('Python')).toHaveAttribute('aria-pressed', 'false')
+    await user.click(chip('Python'))
+    await user.click(chip('Rust'))
+    expect(radio(/^Previous experience/)).toHaveTextContent('Previous experience (2)')
+    expect(radio(/^Desired experience/)).toHaveTextContent('Desired experience (2)')
+
+    await user.click(radio(/^Previous experience/))
+    expect(chip('Python')).toHaveAttribute('aria-pressed', 'true')
+    expect(chip('Rust')).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('switches with the arrow keys', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    radio(/^Previous experience/).focus()
+    await user.keyboard('{ArrowRight}')
+    expect(radio(/^Desired experience/)).toBeChecked()
+    expect(radio(/^Desired experience/)).toHaveFocus()
+    await user.keyboard('{ArrowLeft}')
+    expect(radio(/^Previous experience/)).toBeChecked()
+  })
+
+  it('carries the chosen option to the next page', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(radio(/^Desired experience/))
+    await user.click(chip('Integrity'))
+    await user.click(next())
+    expect(radio(/^Desired experience/)).toBeChecked()
+    expect(screen.getByRole('complementary', { name: 'How to use this step' })).toHaveTextContent(
+      /choosing Desired experience/,
+    )
+  })
+
+  it('applies the limit of 20 values to each option separately', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    const pick = async () => {
+      const buttons = within(screen.getByRole('main'))
+        .getAllByRole('button')
+        .filter((b) => b.hasAttribute('aria-pressed'))
+      for (const b of buttons.slice(0, 20)) await user.click(b)
+    }
+    await pick()
+    expect(screen.getByText(/20 of 20 selected/)).toBeInTheDocument()
+    await user.click(radio(/^Desired experience/))
+    expect(screen.getByText('0 of 20 selected')).toBeInTheDocument()
+    await pick()
+    expect(screen.getByText(/20 of 20 selected/)).toBeInTheDocument()
+  })
+
+  it('adds a custom entry to the active option only', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(chip('Integrity'))
+    await user.click(next())
+    await user.click(radio(/^Desired experience/))
+    await user.type(screen.getByLabelText(/add your own technical development skill/i), 'Zig')
+    await user.click(screen.getByRole('button', { name: 'Add' }))
+    expect(chip('Zig')).toHaveAttribute('aria-pressed', 'true')
+    await user.click(radio(/^Previous experience/))
+    expect(chip('Zig')).toHaveAttribute('aria-pressed', 'false')
+    expect(radio(/^Desired experience/)).toHaveTextContent('Desired experience (1)')
+  })
+})
+
+describe('profile card and downloads', () => {
+  async function toCard() {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(chip('Integrity'))
+    await user.click(next())
+    await user.click(chip('Python'))
+    await user.click(radio(/^Desired experience/))
+    await user.click(chip('Rust'))
+    await user.click(radio(/^Previous experience/))
     await user.click(next())
     await user.click(chip('Scrum'))
     await user.click(next())
     await user.click(chip('Teamwork'))
     await user.click(next())
+    await user.click(chip('Ollama'))
+    await user.click(radio(/^Desired experience/))
+    await user.click(chip('OpenRouter'))
+    await user.click(next())
     return user
   }
+  const radio = (name: RegExp) => screen.getByRole('radio', { name })
 
-  it('lists only selected skills with sliders defaulting to 5', async () => {
-    await toScoring()
-    const sliders = screen.getAllByRole('slider')
-    expect(sliders).toHaveLength(3)
-    for (const s of sliders) {
-      expect(s).toHaveValue('5')
-      expect(s).toHaveAttribute('min', '1')
-      expect(s).toHaveAttribute('max', '10')
-    }
-    expect(screen.getByLabelText('Python')).toBeInTheDocument()
-    expect(screen.queryByLabelText('Go')).not.toBeInTheDocument()
+  it('has no scoring step and no sliders anywhere', async () => {
+    render(<App />)
+    const steps = within(screen.getByRole('navigation', { name: 'Steps' })).getAllByRole('button')
+    expect(steps.map((b) => b.textContent)).toEqual([
+      'Values',
+      'Technical development',
+      'Engineering',
+      'Interpersonal',
+      'AI engineering',
+      'Profile',
+    ])
+    expect(screen.queryByRole('slider')).not.toBeInTheDocument()
   })
 
-  it('adjusts scores and retains them on navigation, resetting after deselect', async () => {
-    // Arrow-key stepping on a range input is native browser behaviour (jsdom does not implement it);
-    // it is covered by the manual check in task 7.1. Clamping to 1-10 is covered by the reducer tests.
-    const user = await toScoring()
-    const slider = screen.getByLabelText('Python')
-    fireScore(slider, '7')
-    expect(slider).toHaveValue('7')
-    expect(screen.getByLabelText('Python score')).toHaveTextContent('7')
-    fireScore(slider, '10')
-    expect(slider).toHaveValue('10')
-
-    await user.click(screen.getByRole('button', { name: 'Back' }))
-    await user.click(screen.getByRole('button', { name: 'Back' }))
-    await user.click(screen.getByRole('button', { name: 'Back' }))
-    await user.click(chip('Go'))
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
-    await user.click(next())
-    await user.click(next())
-    expect(screen.getByLabelText('Python')).toHaveValue('10')
-    expect(screen.getByLabelText('Go')).toHaveValue('5')
-
-    await user.click(screen.getByRole('button', { name: 'Back' }))
-    await user.click(screen.getByRole('button', { name: 'Back' }))
-    await user.click(screen.getByRole('button', { name: 'Back' }))
-    await user.click(chip('Python'))
-    await user.click(chip('Python'))
-    await user.click(next())
-    await user.click(next())
-    await user.click(next())
-    expect(screen.getByLabelText('Python')).toHaveValue('5')
-  })
-
-  it('shows the profile card ordered by score, with Edit retaining state', async () => {
-    const user = await toScoring()
-    fireScore(screen.getByLabelText('Teamwork'), '9')
-    await user.click(next())
+  it('shows previous and desired words as separate groups, without scores, with Edit retaining state', async () => {
+    const user = await toCard()
     const card = screen.getByRole('article', { name: 'Profile card' })
-    expect(within(card).getByText('Integrity')).toBeInTheDocument()
-    expect(within(card).getByText('9/10')).toBeInTheDocument()
-    expect(within(card).getAllByText('5/10')).toHaveLength(2)
+    expect(within(card).getAllByText('Previous experience').length).toBeGreaterThan(0)
+    expect(within(card).getAllByText('Desired experience').length).toBeGreaterThan(0)
+    expect(within(card).getByText('Python')).toBeInTheDocument()
+    expect(within(card).getByText('Rust')).toBeInTheDocument()
+    expect(within(card).getByText('Ollama')).toBeInTheDocument()
+    expect(within(card).getByText('OpenRouter')).toBeInTheDocument()
+    expect(card).not.toHaveTextContent(/\/10/)
+    expect(card.querySelector('.bar, .score')).toBeNull()
 
     await user.click(screen.getByRole('button', { name: 'Edit' }))
+    await user.click(radio(/^Previous experience/))
     expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'true')
   })
 
-  it('end to end: values, three skill sections, scoring, card, then both downloads', async () => {
-    const user = await toScoring()
-    await user.click(next())
+  it('omits an empty group', async () => {
+    await toCard()
+    const card = screen.getByRole('article', { name: 'Profile card' })
+    const engineering = within(card).getByRole('heading', { name: 'Engineering' }).parentElement!
+    expect(within(engineering).getByText('Previous experience')).toBeInTheDocument()
+    expect(within(engineering).queryByText('Desired experience')).not.toBeInTheDocument()
+  })
 
+  it('downloads JSON and Markdown with both options and no scores', async () => {
+    const user = await toCard()
     const created: Blob[] = []
     URL.createObjectURL = vi.fn((b: Blob | MediaSource) => {
       created.push(b as Blob)
@@ -201,32 +284,34 @@ describe('scoring and card', () => {
     await user.click(screen.getByRole('button', { name: 'Download Markdown' }))
 
     expect(names).toEqual(['profile.json', 'profile.md'])
-    expect(JSON.parse(await created[0].text()).values).toEqual(['Integrity'])
-    expect(await created[1].text()).toContain('- Python — 5/10')
+    const json = JSON.parse(await created[0].text())
+    expect(json.values).toEqual({ experience: ['Integrity'], desired: [] })
+    expect(json.skills.technical).toEqual({ experience: ['Python'], desired: ['Rust'] })
+    expect(json.skills.ai).toEqual({ experience: ['Ollama'], desired: ['OpenRouter'] })
+    const md = await created[1].text()
+    expect(md).toContain('## AI engineering')
+    expect(md).toContain('- Python')
+    expect(md).not.toMatch(/\/10|score/i)
     click.mockRestore()
   })
 })
 
-function fireScore(el: HTMLElement, value: string) {
-  // user-event has no range drag; set the value through the native setter React tracks.
-  const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
-  setter.call(el, value)
-  el.dispatchEvent(new Event('input', { bubbles: true }))
-}
-
 describe('instructions', () => {
   const help = () => screen.getByRole('complementary', { name: 'How to use this step' })
 
-  it('leads with the desktop controls, then the page line, then one secondary keyboard and touch line', async () => {
+  it('leads with the desktop controls, then the option line, the page line, then one secondary line', async () => {
     render(<App />)
     const lines = within(help()).getAllByText(/./, { selector: 'p' })
-    expect(lines).toHaveLength(3)
+    expect(lines).toHaveLength(4)
     expect(lines[0]).toHaveTextContent(
       'Click a word to select or deselect it. Right-click a word to read its description.',
     )
-    expect(lines[1]).toHaveTextContent('Select up to 20 values.')
-    expect(lines[2]).toHaveClass('help-alt')
-    expect(lines[2]).toHaveTextContent(
+    expect(lines[1]).toHaveTextContent(
+      'You are choosing Previous experience. The other option has its own selections: switch with the buttons above.',
+    )
+    expect(lines[2]).toHaveTextContent('Select up to 20 values for each option.')
+    expect(lines[3]).toHaveClass('help-alt')
+    expect(lines[3]).toHaveTextContent(
       'Mouse: right-click a word. Keyboard: focus a word and press ? or Shift+F10. Touch: press and hold.',
     )
     expect(help()).not.toHaveTextContent(/definition/i)
@@ -241,17 +326,19 @@ describe('instructions', () => {
       ['technical', 'Python'],
       ['engineering', 'Scrum'],
       ['interpersonal', 'Teamwork'],
+      ['ai', 'Ollama'],
     ]) {
       await user.click(next())
       expect(
         screen.getByRole('heading', {
-          name: new RegExp(section === 'technical' ? 'technical development' : section, 'i'),
+          name: new RegExp(section === 'technical' ? 'technical development' : section === 'ai' ? 'ai engineering' : section, 'i'),
         }),
       ).toBeInTheDocument()
       expect(help()).toHaveTextContent(/select as many skills as apply/i)
       expect(help()).not.toHaveTextContent(/limit|up to \d+|of \d+/i)
       expect(help()).toHaveTextContent(/right-click/i)
-      await user.click(chip(word))
+      expect(help()).toHaveTextContent(/choosing Previous experience/)
+      if (section !== 'ai') await user.click(chip(word))
     }
   })
 
@@ -292,7 +379,7 @@ describe('uniform words and section colours', () => {
       'technical',
       'engineering',
       'interpersonal',
-      'scoring',
+      'ai',
       'card',
     ])
     await user.click(chip('Integrity'))
@@ -302,7 +389,7 @@ describe('uniform words and section colours', () => {
 })
 
 describe('end to end with definitions', () => {
-  it('opening definitions along the way does not change the exported profile', async () => {
+  it('opening descriptions along the way does not change the exported profile', async () => {
     const user = userEvent.setup()
     render(<App />)
     await user.pointer({ keys: '[MouseRight]', target: chip('Integrity') })
@@ -317,18 +404,23 @@ describe('end to end with definitions', () => {
     await user.click(next())
     await user.click(chip('Teamwork'))
     await user.click(next())
+    await user.pointer({ keys: '[MouseRight]', target: chip('Ollama') })
+    expect(screen.getByRole('dialog')).toHaveAccessibleName('Description of Ollama')
+    await user.click(screen.getByRole('button', { name: 'Close' }))
+    await user.click(chip('Ollama'))
     await user.click(next())
 
     const card = screen.getByRole('article', { name: 'Profile card' })
     expect(within(card).getByText('Integrity')).toBeInTheDocument()
     expect(within(card).getByText('Python')).toBeInTheDocument()
-    expect(within(card).getAllByText('5/10')).toHaveLength(3)
+    expect(within(card).getByText('Ollama')).toBeInTheDocument()
+    expect(within(card).getAllByText('Previous experience')).toHaveLength(5)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 })
 
 describe('end to end with many skills', () => {
-  it('scores, shows and exports 30+ skills across sections', async () => {
+  it('shows and exports 30+ skills across pages', async () => {
     const user = userEvent.setup()
     const blobs: Blob[] = []
     URL.createObjectURL = vi.fn((b: Blob | MediaSource) => {
@@ -357,21 +449,22 @@ describe('end to end with many skills', () => {
     const interpersonal = await pickSome(6)
     expect(screen.getByText('6 selected')).toBeInTheDocument()
     await user.click(next())
-
-    expect(screen.getAllByRole('slider')).toHaveLength(32)
+    const ai = await pickSome(10)
     await user.click(next())
+
     const card = screen.getByRole('article', { name: 'Profile card' })
-    for (const name of [...technical, ...engineering, ...interpersonal]) {
+    for (const name of [...technical, ...engineering, ...interpersonal, ...ai]) {
       expect(within(card).getByText(name)).toBeInTheDocument()
     }
 
     await user.click(screen.getByRole('button', { name: 'Download JSON' }))
     await user.click(screen.getByRole('button', { name: 'Download Markdown' }))
     const json = JSON.parse(await blobs[0].text())
-    expect(json.skills.technical).toHaveLength(14)
-    expect(json.skills.engineering).toHaveLength(12)
-    expect(json.skills.interpersonal).toHaveLength(6)
+    expect(json.skills.technical.experience).toHaveLength(14)
+    expect(json.skills.engineering.experience).toHaveLength(12)
+    expect(json.skills.interpersonal.experience).toHaveLength(6)
+    expect(json.skills.ai.experience).toHaveLength(10)
     const markdown = await blobs[1].text()
-    expect(markdown.match(/ — \d+\/10/g)).toHaveLength(32)
+    expect(markdown.match(/^- /gm)).toHaveLength(1 + 14 + 12 + 6 + 10)
   })
 })

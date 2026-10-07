@@ -1,6 +1,6 @@
 import type { Dispatch } from 'react'
 import { CATALOGS, SECTION_LABELS, type Section } from '../data/skills'
-import { limitFor, type Action, type ProfileState } from '../state/profile'
+import { limitFor, selectionCount, type Action, type ProfileState } from '../state/profile'
 import WordPicker from './WordPicker'
 
 interface Props {
@@ -16,10 +16,16 @@ export default function SkillStep({ section, state, dispatch }: Props) {
       kind={section}
       headingId="skills-heading"
       heading={`${label} skills`}
-      hint="Select the skills you have, or add your own."
+      hint="Select the skills that apply, or add your own."
       categories={CATALOGS[section].map((c) => ({ category: c.category, words: c.skills }))}
-      selected={state.selectedSkills[section]}
+      selected={state.selectedSkills[section][state.mode]}
       custom={state.customSkills[section]}
+      mode={state.mode}
+      counts={{
+        experience: selectionCount(state, section, 'experience'),
+        desired: selectionCount(state, section, 'desired'),
+      }}
+      onModeChange={(mode) => dispatch({ type: 'setMode', mode })}
       limit={limitFor(section)}
       noun={`${label.toLowerCase()} skills`}
       filterLabel="Filter skills"

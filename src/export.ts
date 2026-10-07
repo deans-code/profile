@@ -1,43 +1,31 @@
 import { SECTIONS, SECTION_LABELS, type Section } from './data/skills'
-import { getScore, type ProfileState } from './state/profile'
+import { MODES, MODE_LABELS, type Mode, type ProfileState } from './state/profile'
 
-export interface ScoredSkill {
-  name: string
-  score: number
-}
+/** The words chosen on one page, for each experience option. */
+export type Experience = Record<Mode, string[]>
 
 export interface Profile {
-  values: string[]
-  skills: Record<Section, ScoredSkill[]>
+  values: Experience
+  skills: Record<Section, Experience>
 }
 
-/** Score descending, then name. */
-const byScoreThenName = (a: ScoredSkill, b: ScoredSkill) => b.score - a.score || a.name.localeCompare(b.name)
+const byName = (a: string, b: string) => a.localeCompare(b)
+
+const sorted = (lists: Experience): Experience => ({
+  experience: [...lists.experience].sort(byName),
+  desired: [...lists.desired].sort(byName),
+})
 
 export function buildProfile(state: ProfileState): Profile {
-  const skills = {} as Record<Section, ScoredSkill[]>
-  for (const section of SECTIONS) {
-    skills[section] = state.selectedSkills[section]
-      .map((name) => ({ name, score: getScore(state, section, name) }))
-      .sort(byScoreThenName)
-  }
-  return { values: [...state.selectedValues].sort((a, b) => a.localeCompare(b)), skills }
+  const skills = {} as Profile['skills']
+  for (const section of SECTIONS) skills[section] = sorted(state.selectedSkills[section])
+  return { values: sorted(state.selectedValues), skills }
 }
 
 export function toJson(profile: Profile, exportedAt: Date = new Date()): string {
-  return JSON.stringify(
-    {
-      exportedAt: exportedAt.toISOString(),
-      values: profile.values,
-      skills: {
-        technical: profile.skills.technical,
-        engineering: profile.skills.engineering,
-        interpersonal: profile.skills.interpersonal,
-      },
-    },
-    null,
-    2,
-  )
+  const skills = {} as Profile['skills']
+  for (const section of SECTIONS) skills[section] = profile.skills[section]
+  return JSON.stringify({ exportedAt: exportedAt.toISOString(), values: profile.values, skills }, null, 2)
 }
 
 /** Escapes Markdown syntax so user text renders literally. */
@@ -48,12 +36,17 @@ export function escapeMarkdown(text: string): string {
 }
 
 export function toMarkdown(profile: Profile): string {
-  const lines: string[] = ['# Profile', '', '## Values', '']
-  for (const v of profile.values) lines.push(`- ${escapeMarkdown(v)}`)
-  for (const section of SECTIONS) {
-    lines.push('', `## ${SECTION_LABELS[section]}`, '')
-    for (const s of profile.skills[section]) lines.push(`- ${escapeMarkdown(s.name)} — ${s.score}/10`)
+  const lines: string[] = ['# Profile']
+  const page = (heading: string, lists: Experience) => {
+    lines.push('', `## ${heading}`)
+    for (const mode of MODES) {
+      if (lists[mode].length === 0) continue
+      lines.push('', `### ${MODE_LABELS[mode]}`, '')
+      for (const name of lists[mode]) lines.push(`- ${escapeMarkdown(name)}`)
+    }
   }
+  page('Values', profile.values)
+  for (const section of SECTIONS) page(SECTION_LABELS[section], profile.skills[section])
   return lines.join('\n') + '\n'
 }
 

@@ -1,10 +1,12 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import { ASSISTANT_HELP, chatGptUrl } from './data/assistant'
 
 const word = (name: string) => screen.getByRole('button', { name })
-const next = () => screen.getByRole('button', { name: /continue|finish/i })
+// The AI engineering catalog has a "Continue" word, so look only in the footer.
+const next = () =>
+  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)$/i })
 const link = () => screen.queryByRole('link', { name: /open chatgpt/i })
 
 async function goTo(user: ReturnType<typeof userEvent.setup>, step: 'technical' | 'engineering' | 'interpersonal') {
@@ -83,13 +85,14 @@ describe('ChatGPT link', () => {
     expect(href).toBe(chatGptUrl(ASSISTANT_HELP.values!.prompt))
   })
 
-  it('does not appear on the scoring or profile pages', async () => {
+  it('does not appear on the AI engineering or profile pages', async () => {
     const user = userEvent.setup()
     render(<App />)
     await goTo(user, 'interpersonal')
     await user.click(word('Teamwork'))
     await user.click(next())
     expect(link()).not.toBeInTheDocument()
+    await user.click(word('Ollama'))
     await user.click(next())
     expect(link()).not.toBeInTheDocument()
   })

@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 
 const css = readFileSync(resolve(__dirname, 'styles.css'), 'utf-8')
 
-const SECTIONS = ['values', 'technical', 'engineering', 'interpersonal', 'scoring', 'card']
+const SECTIONS = ['values', 'technical', 'engineering', 'interpersonal', 'ai', 'card']
 
 type Tokens = Record<string, string>
 

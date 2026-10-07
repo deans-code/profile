@@ -1,10 +1,27 @@
 import { buildProfile, toJson } from './export'
 import { MAX_ENTRIES, MAX_FILE_BYTES, MAX_NAME_LENGTH, parseProfile, profileToState } from './load'
-import { initialState, reducer, getScore, type Action } from './state/profile'
+import { initialState, reducer, type Action } from './state/profile'
 
 const run = (actions: Action[]) => actions.reduce(reducer, initialState)
 
+const lists = (experience: string[], desired: string[] = []) => ({ experience, desired })
+
+/** A file in the current format. */
 const file = (overrides: Record<string, unknown> = {}) =>
+  JSON.stringify({
+    exportedAt: '2026-01-02T03:04:05.000Z',
+    values: lists(['Integrity'], ['Curiosity']),
+    skills: {
+      technical: lists(['Python']),
+      engineering: lists([], ['Scrum']),
+      interpersonal: lists(['Teamwork']),
+      ai: lists(['Ollama'], ['OpenRouter']),
+    },
+    ...overrides,
+  })
+
+/** A file downloaded before experience options existed: scored skills and no AI page. */
+const legacyFile = (overrides: Record<string, unknown> = {}) =>
   JSON.stringify({
     exportedAt: '2026-01-02T03:04:05.000Z',
     values: ['Integrity'],
@@ -30,11 +47,12 @@ const error = (text: string) => {
 describe('parseProfile', () => {
   it('reads a valid file', () => {
     expect(ok(file())).toEqual({
-      values: ['Integrity'],
+      values: lists(['Integrity'], ['Curiosity']),
       skills: {
-        technical: [{ name: 'Python', score: 8 }],
-        engineering: [{ name: 'Scrum', score: 5 }],
-        interpersonal: [{ name: 'Teamwork', score: 7 }],
+        technical: lists(['Python']),
+        engineering: lists([], ['Scrum']),
+        interpersonal: lists(['Teamwork']),
+        ai: lists(['Ollama'], ['OpenRouter']),
       },
     })
   })
@@ -45,10 +63,12 @@ describe('parseProfile', () => {
       { type: 'addCustomValue', text: 'Grit "quoted" *star*' },
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
       { type: 'addCustomSkill', section: 'technical', text: 'C# & café' },
-      { type: 'setScore', section: 'technical', name: 'Python', score: 9 },
       { type: 'toggleSkill', section: 'engineering', name: 'Scrum' },
+      { type: 'setMode', mode: 'desired' },
+      { type: 'toggleSkill', section: 'technical', name: 'Python' },
       { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
-      { type: 'setScore', section: 'interpersonal', name: 'Teamwork', score: 2 },
+      { type: 'toggleSkill', section: 'ai', name: 'Ollama' },
+      { type: 'addCustomSkill', section: 'ai', text: 'My own tool' },
     ])
     const original = buildProfile(state)
     const loaded = profileToState(ok(toJson(original)))
@@ -61,25 +81,61 @@ describe('parseProfile', () => {
     const p = ok(
       file({
         extra: { anything: true },
-        values: ['  Integrity ', 'integrity', 'Trust'],
+        values: lists(['  Integrity ', 'integrity', 'Trust']),
         skills: {
-          technical: [
-            { name: 'Python', score: 8, note: 'x' },
-            { name: ' python ', score: 2 },
-          ],
-          engineering: [],
-          interpersonal: [],
+          technical: lists(['Python', ' python ']),
+          engineering: lists([]),
+          interpersonal: lists([]),
+          ai: lists([]),
         },
       }),
     )
-    expect(p.values).toEqual(['Integrity', 'Trust'])
-    expect(p.skills.technical).toEqual([{ name: 'Python', score: 8 }])
-    expect(p.skills.engineering).toEqual([])
+    expect(p.values.experience).toEqual(['Integrity', 'Trust'])
+    expect(p.skills.technical.experience).toEqual(['Python'])
+    expect(p.skills.engineering).toEqual(lists([]))
   })
 
   it('loads lists above the selection limit in full', () => {
-    const values = Array.from({ length: 12 }, (_, i) => `Value ${i}`)
-    expect(ok(file({ values })).values).toHaveLength(12)
+    const values = Array.from({ length: 22 }, (_, i) => `Value ${i}`)
+    expect(ok(file({ values: lists(values) })).values.experience).toHaveLength(22)
+  })
+
+  it('treats a missing option list as empty', () => {
+    const p = ok(file({ values: { experience: ['Integrity'] } }))
+    expect(p.values).toEqual(lists(['Integrity']))
+  })
+
+  describe('files from before experience options', () => {
+    it('loads values and skills as previous experience, ignoring scores, with an empty AI page', () => {
+      expect(ok(legacyFile())).toEqual({
+        values: lists(['Integrity']),
+        skills: {
+          technical: lists(['Python']),
+          engineering: lists(['Scrum']),
+          interpersonal: lists(['Teamwork']),
+          ai: lists([]),
+        },
+      })
+    })
+
+    it('does not validate the old scores', () => {
+      const text = legacyFile({
+        skills: { technical: [{ name: 'Python', score: 99 }], engineering: [], interpersonal: [] },
+      })
+      expect(ok(text).skills.technical).toEqual(lists(['Python']))
+    })
+
+    it('loads names that are no longer built in as custom entries', () => {
+      const text = legacyFile({
+        skills: {
+          technical: [{ name: 'Retired skill', score: 5 }],
+          engineering: [],
+          interpersonal: [],
+        },
+      })
+      const state = profileToState(ok(text))
+      expect(state.customSkills.technical).toEqual(['Retired skill'])
+    })
   })
 
   describe('rejections', () => {
@@ -91,37 +147,37 @@ describe('parseProfile', () => {
     it('missing skills', () => expect(error(JSON.stringify({ values: ['a'] }))).toMatch(/not a profile/))
     it('missing values', () => expect(error(JSON.stringify({ skills: {} }))).toMatch(/not a profile/))
     it('a missing skills section', () =>
-      expect(error(file({ skills: { technical: [], engineering: [] } }))).toMatch(/interpersonal skills are missing/))
-
-    it('non-text value names', () => expect(error(file({ values: ['ok', 3] }))).toMatch(/not text/))
-    it('non-text skill names', () =>
-      expect(
-        error(file({ skills: { technical: [{ name: 7, score: 5 }], engineering: [], interpersonal: [] } })),
-      ).toMatch(/not text/))
-    it('empty names', () => expect(error(file({ values: ['  '] }))).toMatch(/empty name/))
-    it('entries that are not skills', () =>
-      expect(error(file({ skills: { technical: ['Python'], engineering: [], interpersonal: [] } }))).toMatch(
-        /not a skill/,
+      expect(error(file({ skills: { technical: lists([]), engineering: lists([]), ai: lists([]) } }))).toMatch(
+        /interpersonal skills are missing/,
       ))
 
-    it.each([[11], [0], [4.5], ['7'], [null], [-1]])('score %j, naming the skill', (score) => {
-      const text = file({ skills: { technical: [{ name: 'Python', score }], engineering: [], interpersonal: [] } })
-      expect(error(text)).toMatch(/score for "Python" must be a whole number from 1 to 10/)
-    })
+    it('non-text value names', () => expect(error(file({ values: lists(['ok', 3 as never]) }))).toMatch(/not text/))
+    it('non-text skill names', () =>
+      expect(
+        error(
+          file({
+            skills: { technical: lists([7 as never]), engineering: lists([]), interpersonal: lists([]), ai: lists([]) },
+          }),
+        ),
+      ).toMatch(/not text/))
+    it('empty names', () => expect(error(file({ values: lists(['  ']) }))).toMatch(/empty name/))
+    it('a value list that is not a list', () =>
+      expect(error(file({ values: { experience: 'Integrity' } }))).toMatch(/not a list/))
+    it('legacy entries that are not skills', () =>
+      expect(
+        error(legacyFile({ skills: { technical: [{ name: 'Python' }, 5], engineering: [], interpersonal: [] } })),
+      ).toMatch(/not a skill/))
 
-    it('too many entries', () => {
-      const values = Array.from({ length: MAX_ENTRIES + 1 }, (_, i) => `v${i}`)
-      expect(error(file({ values }))).toMatch(/more than 100/)
-      const skills = {
-        technical: Array.from({ length: MAX_ENTRIES + 1 }, (_, i) => ({ name: `s${i}`, score: 5 })),
-        engineering: [],
-        interpersonal: [],
-      }
+    it('too many entries in any list', () => {
+      const many = Array.from({ length: MAX_ENTRIES + 1 }, (_, i) => `v${i}`)
+      expect(error(file({ values: lists(many) }))).toMatch(/more than 100/)
+      expect(error(file({ values: lists([], many) }))).toMatch(/more than 100/)
+      const skills = { technical: lists([], many), engineering: lists([]), interpersonal: lists([]), ai: lists([]) }
       expect(error(file({ skills }))).toMatch(/more than 100/)
     })
 
     it('names that are too long', () =>
-      expect(error(file({ values: ['x'.repeat(MAX_NAME_LENGTH + 1)] }))).toMatch(/longer than 100/))
+      expect(error(file({ values: lists(['x'.repeat(MAX_NAME_LENGTH + 1)]) }))).toMatch(/longer than 100/))
 
     it('oversized files, before parsing', () =>
       expect(error('x'.repeat(MAX_FILE_BYTES + 1))).toMatch(/larger than 1 MB/))
@@ -129,34 +185,32 @@ describe('parseProfile', () => {
 })
 
 describe('profileToState', () => {
-  it('restores built-ins with their spelling and others as custom entries', () => {
+  it('restores built-ins with their spelling and others as custom entries, in the right option', () => {
     const p = ok(
       file({
-        values: ['integrity', 'Grit'],
+        values: lists(['integrity'], ['Grit']),
         skills: {
-          technical: [
-            { name: 'python', score: 8 },
-            { name: 'Zig', score: 3 },
-          ],
-          engineering: [],
-          interpersonal: [],
+          technical: lists(['python'], ['Zig']),
+          engineering: lists([]),
+          interpersonal: lists([]),
+          ai: lists(['ollama', 'Home-grown agent'], ['Home-grown agent']),
         },
       }),
     )
     const s = { ...initialState, ...profileToState(p) }
-    expect(s.selectedValues).toEqual(['Integrity', 'Grit'])
+    expect(s.selectedValues).toEqual(lists(['Integrity'], ['Grit']))
     expect(s.customValues).toEqual(['Grit'])
-    expect(s.selectedSkills.technical).toEqual(['Python', 'Zig'])
+    expect(s.selectedSkills.technical).toEqual(lists(['Python'], ['Zig']))
     expect(s.customSkills.technical).toEqual(['Zig'])
-    expect(getScore(s, 'technical', 'Python')).toBe(8)
-    expect(getScore(s, 'technical', 'Zig')).toBe(3)
+    expect(s.selectedSkills.ai).toEqual(lists(['Ollama', 'Home-grown agent'], ['Home-grown agent']))
+    expect(s.customSkills.ai).toEqual(['Home-grown agent'])
   })
 
-  it('does not store default scores and keeps sections separate', () => {
+  it('keeps sections separate', () => {
     const s = { ...initialState, ...profileToState(ok(file())) }
-    expect(s.scores.engineering).toEqual({})
     expect(s.customSkills.engineering).toEqual([])
-    expect(s.selectedSkills.interpersonal).toEqual(['Teamwork'])
+    expect(s.selectedSkills.interpersonal).toEqual(lists(['Teamwork']))
+    expect(s.selectedSkills.engineering).toEqual(lists([], ['Scrum']))
   })
 })
 
@@ -229,6 +283,6 @@ describe('profiles saved before values were grouped', () => {
     expect(ORIGINAL_VALUES).toHaveLength(60)
     const state = profileToState(ok(file({ values: ORIGINAL_VALUES.map((v) => v.toUpperCase()) })))
     expect(state.customValues).toEqual([])
-    expect(state.selectedValues).toEqual(ORIGINAL_VALUES)
+    expect(state.selectedValues).toEqual({ experience: ORIGINAL_VALUES, desired: [] })
   })
 })

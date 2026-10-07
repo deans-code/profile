@@ -10,6 +10,7 @@ const BUILT_IN: Record<TermKind, string[]> = {
   technical: catalogSkillNames('technical'),
   engineering: catalogSkillNames('engineering'),
   interpersonal: catalogSkillNames('interpersonal'),
+  ai: catalogSkillNames('ai'),
 }
 const KINDS = Object.keys(BUILT_IN) as TermKind[]
 

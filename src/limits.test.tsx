@@ -5,7 +5,9 @@ import { COMMON_VALUES } from './data/values'
 import { MAX_SELECTION as LIMIT } from './state/profile'
 
 const word = (name: string) => screen.getByRole('button', { name })
-const next = () => screen.getByRole('button', { name: /continue|finish/i })
+// The AI engineering catalog has a "Continue" word, so look only in the footer.
+const next = () =>
+  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)$/i })
 const values = COMMON_VALUES.map((v) => v.name)
 
 async function selectValues(user: ReturnType<typeof userEvent.setup>, n: number) {

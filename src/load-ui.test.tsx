@@ -4,23 +4,38 @@ import App from './App'
 import { MAX_FILE_BYTES } from './load'
 
 const word = (name: string) => screen.getByRole('button', { name })
-const next = () => screen.getByRole('button', { name: /continue|finish/i })
+// The AI engineering catalog has a "Continue" word, so look only in the footer.
+const next = () =>
+  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)$/i })
+const radio = (name: RegExp) => screen.getByRole('radio', { name })
 const picker = () => screen.getByLabelText('Choose a saved profile file') as HTMLInputElement
 const card = () => screen.getByRole('article', { name: 'Profile card' })
+
+const lists = (experience: string[], desired: string[] = []) => ({ experience, desired })
 
 const profileJson = (overrides: Record<string, unknown> = {}) =>
   JSON.stringify({
     exportedAt: '2026-01-02T03:04:05.000Z',
-    values: ['Integrity', 'Grit'],
+    values: lists(['Integrity', 'Grit']),
     skills: {
-      technical: [
-        { name: 'Python', score: 9 },
-        { name: 'Zig', score: 3 },
-      ],
+      technical: lists(['Python', 'Zig']),
+      engineering: lists(['Scrum']),
+      interpersonal: lists(['Teamwork']),
+      ai: lists(['Ollama'], ['OpenRouter']),
+    },
+    ...overrides,
+  })
+
+/** A file downloaded before experience options: scored skills, no AI page. */
+const legacyJson = () =>
+  JSON.stringify({
+    exportedAt: '2026-01-02T03:04:05.000Z',
+    values: ['Integrity'],
+    skills: {
+      technical: [{ name: 'Python', score: 9 }],
       engineering: [{ name: 'Scrum', score: 6 }],
       interpersonal: [{ name: 'Teamwork', score: 7 }],
     },
-    ...overrides,
   })
 
 const upload = (user: ReturnType<typeof userEvent.setup>, text: string, name = 'profile.json') =>
@@ -36,17 +51,31 @@ describe('Load saved profile', () => {
     expect(screen.getByRole('button', { name: 'Load saved profile' })).toBeInTheDocument()
   })
 
-  it('restores a valid file and shows the profile card', async () => {
+  it('restores a valid file and shows the profile card with both options', async () => {
     const user = userEvent.setup()
     render(<App />)
     await upload(user, profileJson())
     expect(await screen.findByRole('heading', { name: 'Your profile' })).toBeInTheDocument()
-    expect(within(card()).getByText('Integrity')).toBeInTheDocument()
-    expect(within(card()).getByText('Grit')).toBeInTheDocument()
-    expect(within(card()).getByText('Python')).toBeInTheDocument()
-    expect(within(card()).getByText('9/10')).toBeInTheDocument()
-    expect(within(card()).getByText('Zig')).toBeInTheDocument()
+    for (const name of ['Integrity', 'Grit', 'Python', 'Zig', 'Ollama', 'OpenRouter']) {
+      expect(within(card()).getByText(name)).toBeInTheDocument()
+    }
+    expect(within(card()).getAllByText('Desired experience')).toHaveLength(1)
+    expect(card()).not.toHaveTextContent(/\/10/)
     expect(screen.getByText(/Loaded profile\.json/)).toBeInTheDocument()
+  })
+
+  it('loads an older file with scores as previous experience, ignoring the scores', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await upload(user, legacyJson())
+    // The AI engineering page is empty, so the app asks for a selection there.
+    expect((await screen.findAllByText(/Select at least one skill in: ai engineering/)).length).toBeGreaterThan(0)
+    expect(screen.getByRole('heading', { name: /ai engineering skills/i })).toBeInTheDocument()
+    await user.click(word('Ollama'))
+    await user.click(next())
+    expect(within(card()).getByText('Python')).toBeInTheDocument()
+    expect(card()).not.toHaveTextContent(/\/10|9/)
+    expect(within(card()).queryByText('Desired experience')).not.toBeInTheDocument()
   })
 
   it('lets the user edit the loaded profile through every step', async () => {
@@ -73,11 +102,11 @@ describe('Load saved profile', () => {
     expect(word('Teamwork')).toHaveAttribute('aria-pressed', 'true')
     await user.click(next())
 
-    // Scoring: loaded scores kept, new skill at the default.
-    expect(screen.getByRole('slider', { name: 'Python' })).toHaveValue('9')
-    expect(screen.getByRole('slider', { name: 'Zig' })).toHaveValue('3')
-    expect(screen.getByRole('slider', { name: 'Scrum' })).toHaveValue('6')
-    expect(screen.getByRole('slider', { name: 'Go' })).toHaveValue('5')
+    // AI engineering: both options restored.
+    expect(word('Ollama')).toHaveAttribute('aria-pressed', 'true')
+    expect(radio(/^Desired experience/)).toHaveTextContent('Desired experience (1)')
+    await user.click(radio(/^Desired experience/))
+    expect(word('OpenRouter')).toHaveAttribute('aria-pressed', 'true')
     await user.click(next())
     expect(within(card()).getByText('Trust')).toBeInTheDocument()
     expect(within(card()).getByText('Go')).toBeInTheDocument()
@@ -86,7 +115,7 @@ describe('Load saved profile', () => {
   it('matches built-in entries ignoring case and restores others as custom', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await upload(user, profileJson({ values: ['integrity'] }))
+    await upload(user, profileJson({ values: lists(['integrity']) }))
     await screen.findByRole('heading', { name: 'Your profile' })
     expect(within(card()).getByText('Integrity')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Edit' }))
@@ -98,9 +127,9 @@ describe('Load saved profile', () => {
       ['not JSON', 'hello', /not valid JSON/],
       ['wrong structure', JSON.stringify({ values: ['a'] }), /not a profile downloaded from this app/],
       [
-        'a bad score',
-        profileJson({ skills: { technical: [{ name: 'Python', score: 11 }], engineering: [], interpersonal: [] } }),
-        /score for "Python" must be a whole number/,
+        'a name that is not text',
+        profileJson({ values: lists([5 as never]) }),
+        /values lists contains a name that is not text/,
       ],
     ])('%s', async (_name, text, message) => {
       const user = userEvent.setup()
@@ -147,6 +176,15 @@ describe('Load saved profile', () => {
       expect(within(card()).getByText('Integrity')).toBeInTheDocument()
     })
 
+    it('counts a desired-only selection as progress to replace', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await user.click(radio(/^Desired experience/))
+      await user.click(word('Trust'))
+      await upload(user, profileJson())
+      expect(await screen.findByRole('group', { name: 'Confirm loading a profile' })).toBeInTheDocument()
+    })
+
     it('Cancel leaves the profile and page unchanged', async () => {
       const user = userEvent.setup()
       render(<App />)
@@ -186,8 +224,10 @@ describe('Load saved profile', () => {
       const user = userEvent.setup()
       render(<App />)
       const values = Array.from({ length: 22 }, (_, i) => `Custom value ${i}`)
-      await upload(user, profileJson({ values }))
-      expect(await screen.findByText(/Loaded profile\.json\. Deselect 2 words on the values page/)).toBeInTheDocument()
+      await upload(user, profileJson({ values: lists(values) }))
+      expect(
+        await screen.findByText(/Loaded profile\.json\. Deselect 2 words under Previous experience on the values page/),
+      ).toBeInTheDocument()
       expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
       expect(screen.getByText(/^22 of 20 selected/)).toHaveTextContent(/deselect 2 words/i)
       expect(next()).toBeDisabled()
@@ -203,7 +243,14 @@ describe('Load saved profile', () => {
       render(<App />)
       await upload(
         user,
-        profileJson({ skills: { technical: [{ name: 'Python', score: 5 }], engineering: [], interpersonal: [] } }),
+        profileJson({
+          skills: {
+            technical: lists(['Python']),
+            engineering: lists([]),
+            interpersonal: lists([]),
+            ai: lists(['Ollama']),
+          },
+        }),
       )
       expect(await screen.findByText(/Select at least one skill in: engineering, interpersonal/)).toBeInTheDocument()
       await waitFor(() => expect(screen.getByRole('heading', { name: /engineering skills/i })).toBeInTheDocument())
@@ -228,21 +275,23 @@ describe('end to end: build, download, load, edit, download', () => {
     await user.click(screen.getByRole('button', { name: 'Add' }))
     await user.click(next())
     await user.click(word('Python'))
+    await user.click(radio(/^Desired experience/))
+    await user.click(word('Rust'))
+    await user.click(radio(/^Previous experience/))
     await user.click(next())
     await user.click(word('Scrum'))
     await user.click(next())
     await user.click(word('Teamwork'))
     await user.click(next())
-    const slider = screen.getByRole('slider', { name: 'Python' })
-    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
-    setter.call(slider, '8')
-    slider.dispatchEvent(new Event('input', { bubbles: true }))
+    await user.click(word('Ollama'))
+    await user.click(radio(/^Desired experience/))
+    await user.click(word('OpenRouter'))
     await user.click(next())
     await user.click(screen.getByRole('button', { name: 'Download JSON' }))
     const original = await blobs[0].text()
     first.unmount()
 
-    // A fresh session: load the downloaded file, edit, and download again.
+    // A fresh session: load the downloaded file, then download again.
     render(<App />)
     await upload(user, original, 'my-profile.json')
     await screen.findByRole('heading', { name: 'Your profile' })
@@ -252,15 +301,13 @@ describe('end to end: build, download, load, edit, download', () => {
     expect(strip(reloaded)).toEqual(strip(original))
 
     await user.click(screen.getByRole('button', { name: 'Edit' }))
+    await user.click(radio(/^Previous experience/))
     await user.click(word('Trust'))
-    await user.click(next())
-    await user.click(next())
-    await user.click(next())
-    await user.click(next())
-    await user.click(next())
+    for (let i = 0; i < 5; i++) await user.click(next())
     await user.click(screen.getByRole('button', { name: 'Download JSON' }))
     const edited = JSON.parse(await blobs[2].text())
-    expect(edited.values).toEqual(['Grit', 'Integrity', 'Trust'])
-    expect(edited.skills.technical).toEqual([{ name: 'Python', score: 8 }])
+    expect(edited.values).toEqual(lists(['Grit', 'Integrity', 'Trust']))
+    expect(edited.skills.technical).toEqual(lists(['Python'], ['Rust']))
+    expect(edited.skills.ai).toEqual(lists(['Ollama'], ['OpenRouter']))
   })
 })

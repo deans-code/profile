@@ -3,9 +3,11 @@ import type { TermKind } from '../data/definitions'
 import { ASSISTANT_HELP } from '../data/assistant'
 import AddEntry from './AddEntry'
 import AssistantLink from './AssistantLink'
+import ModeSwitch from './ModeSwitch'
 import SelectionHelp from './SelectionHelp'
 import SelectionStatus from './SelectionStatus'
 import TermButton from './TermButton'
+import type { Mode } from '../state/profile'
 
 export interface WordCategory {
   category: string
@@ -20,6 +22,10 @@ interface Props {
   categories: WordCategory[]
   selected: string[]
   custom: string[]
+  /** The experience option being edited, the selection counts for each option, and how to change it. */
+  mode: Mode
+  counts: Record<Mode, number>
+  onModeChange: (mode: Mode) => void
   /** Maximum selectable words on this page; omit for no limit. */
   limit?: number
   /** What the filter and the Add control are called, for example "technical development skills". */
@@ -44,6 +50,9 @@ export default function WordPicker({
   categories,
   selected,
   custom,
+  mode,
+  counts,
+  onModeChange,
   limit,
   noun,
   filterLabel,
@@ -72,7 +81,8 @@ export default function WordPicker({
       <h2 id={headingId}>{heading}</h2>
       <p className="hint">{hint}</p>
       {ASSISTANT_HELP[kind] && <AssistantLink {...ASSISTANT_HELP[kind]} />}
-      <SelectionHelp limit={limit} unit={kind === 'values' ? 'values' : 'skills'} />
+      <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />
+      <SelectionHelp limit={limit} unit={kind === 'values' ? 'values' : 'skills'} mode={mode} />
 
       <div className="filter-block">
         <label htmlFor={filterId} className="filter-label">

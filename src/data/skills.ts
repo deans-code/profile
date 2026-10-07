@@ -1,11 +1,12 @@
-export type Section = 'technical' | 'engineering' | 'interpersonal'
+export type Section = 'technical' | 'engineering' | 'interpersonal' | 'ai'
 
-export const SECTIONS: Section[] = ['technical', 'engineering', 'interpersonal']
+export const SECTIONS: Section[] = ['technical', 'engineering', 'interpersonal', 'ai']
 
 export const SECTION_LABELS: Record<Section, string> = {
   technical: 'Technical development',
   engineering: 'Engineering',
   interpersonal: 'Interpersonal',
+  ai: 'AI engineering',
 }
 
 export interface SkillCategory {
@@ -29,7 +30,31 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
     },
     {
       category: 'Data',
-      skills: ['SQL', 'PostgreSQL', 'MySQL', 'SQL Server', 'MongoDB', 'Redis', 'Data modelling', 'Elasticsearch'],
+      skills: [
+        'SQL',
+        'PostgreSQL',
+        'MySQL',
+        'SQL Server',
+        'MongoDB',
+        'Redis',
+        'Data modelling',
+        'Elasticsearch',
+        'Vector databases',
+        'Data analysis',
+      ],
+    },
+    {
+      category: 'Data tooling and pipelines',
+      skills: [
+        'NumPy and pandas',
+        'Jupyter notebooks',
+        'Data pipelines',
+        'Apache Airflow',
+        'Apache Kafka',
+        'Message queues',
+        'Apache Spark',
+        'Parquet and data formats',
+      ],
     },
     {
       category: 'Mobile',
@@ -40,8 +65,12 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
       skills: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Terraform', 'CI/CD pipelines', 'Linux', 'Git', 'Shell scripting'],
     },
     {
-      category: 'AI and machine learning',
-      skills: ['Machine learning', 'LLM application development', 'Prompt engineering', 'Data analysis'],
+      category: 'Compute and GPUs',
+      skills: ['GPU computing', 'CUDA', 'Cloud GPU instances', 'Helm', 'Serverless', 'Infrastructure as code'],
+    },
+    {
+      category: 'Observability tooling',
+      skills: ['Observability platforms', 'Prometheus and Grafana', 'OpenTelemetry', 'Log aggregation', 'Distributed tracing'],
     },
   ],
   engineering: [
@@ -173,6 +202,160 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
     {
       category: 'Business awareness',
       skills: ['Customer focus', 'Business acumen', 'Cultural awareness', 'Commercial awareness'],
+    },
+  ],
+  ai: [
+    {
+      category: 'Approaches',
+      skills: [
+        'Vibe coding',
+        'Spec-driven development',
+        'Agentic coding',
+        'AI pair programming',
+        'AI-assisted test-driven development',
+        'Context engineering',
+        'Prompt engineering',
+        'Plan-then-execute workflows',
+        'Multi-agent workflows',
+        'Reviewing AI-generated code',
+        'AI-assisted refactoring',
+        'AI-assisted debugging',
+      ],
+    },
+    {
+      category: 'Frameworks and methodologies',
+      skills: [
+        'Superpowers',
+        'OpenSpec',
+        'GitHub Spec Kit',
+        'BMAD Method',
+        'Agent OS',
+        'Memory Bank pattern',
+        'Task Master',
+        'Custom team workflows',
+      ],
+    },
+    {
+      category: 'Terminal (TUI and CLI) tools',
+      skills: ['Claude Code', 'Codex CLI', 'Gemini CLI', 'GitHub Copilot CLI', 'Amp', 'Qwen Code'],
+    },
+    {
+      category: 'Desktop apps and AI-first editors',
+      skills: [
+        'Cursor',
+        'Windsurf',
+        'Zed',
+        'Kiro',
+        'Google Antigravity',
+        'Warp',
+        'Claude desktop app',
+        'ChatGPT desktop app',
+      ],
+    },
+    {
+      category: 'IDE and code editor plugins',
+      skills: [
+        'GitHub Copilot',
+        'Cline',
+        'Roo Code',
+        'Kilo Code',
+        'Continue',
+        'JetBrains AI Assistant',
+        'JetBrains Junie',
+        'Amazon Q Developer',
+        'Gemini Code Assist',
+        'Tabnine',
+      ],
+    },
+    {
+      category: 'Open-source coding tools',
+      skills: ['OpenCode', 'Aider', 'Goose', 'Crush', 'OpenHands', 'Open Interpreter'],
+    },
+    {
+      category: 'Closed-model providers',
+      skills: ['Anthropic', 'OpenAI', 'Google Gemini', 'xAI', 'Mistral AI', 'Cohere'],
+    },
+    {
+      category: 'Inference providers and gateways',
+      skills: [
+        'OpenRouter',
+        'Fireworks AI',
+        'Together AI',
+        'Groq',
+        'Cerebras',
+        'Hugging Face Inference',
+        'Replicate',
+        'Baseten',
+        'DeepInfra',
+        'LiteLLM',
+        'Amazon Bedrock',
+        'Azure AI Foundry',
+        'Google Vertex AI',
+      ],
+    },
+    {
+      category: 'Open-weight models',
+      skills: [
+        'Llama',
+        'Qwen',
+        'DeepSeek',
+        'Gemma',
+        'gpt-oss',
+        'Mistral and Mixtral',
+        'GLM',
+        'Kimi',
+        'Phi',
+        'Choosing an open-weight model',
+      ],
+    },
+    {
+      category: 'Local runtimes and tools',
+      skills: ['Ollama', 'llama.cpp', 'LM Studio', 'vLLM', 'LocalAI', 'Jan', 'MLX', 'llamafile', 'Open WebUI'],
+    },
+    {
+      category: 'Local hardware and optimisation',
+      skills: [
+        'Running open-weight models on local hardware',
+        'Apple Silicon unified memory',
+        'NVIDIA consumer GPUs',
+        'CPU-only inference',
+        'Quantisation',
+        'GGUF model format',
+        'VRAM and memory sizing',
+        'Context length tuning',
+        'Multi-GPU and offloading',
+      ],
+    },
+    {
+      category: 'Agent extensibility',
+      skills: [
+        'Model Context Protocol (MCP)',
+        'Agent skills',
+        'Sub-agents',
+        'Hooks and automation',
+        'Instruction files (AGENTS.md and CLAUDE.md)',
+        'Custom slash commands',
+        'Plugins and marketplaces',
+        'Tool and function calling',
+        'Agent SDKs',
+      ],
+    },
+    {
+      category: 'Building AI applications',
+      skills: [
+        'LLM application development',
+        'Retrieval-augmented generation (RAG)',
+        'Embeddings',
+        'Evals',
+        'Fine-tuning',
+        'Guardrails',
+        'Structured outputs',
+        'Agent frameworks',
+        'Machine learning',
+        'LLM observability',
+        'Prompt caching',
+        'AI safety and red teaming',
+      ],
     },
   ],
 }

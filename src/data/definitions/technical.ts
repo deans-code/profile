@@ -61,9 +61,30 @@ export const TECHNICAL_DEFINITIONS: Record<string, string> = {
   Git: 'The standard distributed version control system for tracking changes to code and collaborating on it.',
   'Shell scripting': 'Automating tasks by writing scripts for command-line shells such as Bash or PowerShell.',
 
-  // AI and machine learning
-  'Machine learning': 'Building systems that learn patterns from data to make predictions or decisions.',
-  'LLM application development': 'Building software that uses large language models, for example chat, search and agents.',
-  'Prompt engineering': 'Writing and refining instructions to get reliable, useful output from language models.',
+  // Data tooling and pipelines
+  'Vector databases': 'Databases that store numeric embeddings and find the closest matches quickly, used for similarity search.',
   'Data analysis': 'Exploring and interpreting data to find patterns and answer questions, using tools such as Python or SQL.',
+  'NumPy and pandas': 'The core Python libraries for fast numeric arrays and for working with tables of data.',
+  'Jupyter notebooks': 'Interactive documents that mix code, results and notes, widely used for exploring data and experiments.',
+  'Data pipelines': 'Automated flows that collect, clean, transform and move data between systems.',
+  'Apache Airflow': 'A platform for scheduling and monitoring data workflows defined as code.',
+  'Apache Kafka': 'A distributed event-streaming platform for moving large volumes of data between systems in real time.',
+  'Message queues': 'Services that pass messages between applications asynchronously, such as RabbitMQ or SQS.',
+  'Apache Spark': 'An engine for processing very large datasets in parallel across many machines.',
+  'Parquet and data formats': 'Working with efficient storage formats such as Parquet, Avro and JSON Lines for analytics and pipelines.',
+
+  // Compute and GPUs
+  'GPU computing': 'Using graphics processors for highly parallel work such as numerical computing and model training or inference.',
+  CUDA: 'NVIDIA’s platform and programming model for running general-purpose code on its GPUs.',
+  'Cloud GPU instances': 'Renting GPU-equipped virtual machines from a cloud provider for compute-heavy workloads.',
+  Helm: 'A package manager for Kubernetes that installs and configures applications from reusable charts.',
+  Serverless: 'Running code on managed platforms that scale automatically and charge only for usage, such as AWS Lambda.',
+  'Infrastructure as code': 'Defining servers, networks and services in version-controlled files so environments are repeatable.',
+
+  // Observability tooling
+  'Observability platforms': 'Tools that collect metrics, logs and traces so teams can see how systems behave in production.',
+  'Prometheus and Grafana': 'A popular open source pair for collecting metrics and building dashboards and alerts.',
+  OpenTelemetry: 'An open standard and set of libraries for producing metrics, logs and traces from applications.',
+  'Log aggregation': 'Collecting logs from many services into one searchable place, for example with Loki or the ELK stack.',
+  'Distributed tracing': 'Following a single request across many services to find where time is spent or errors occur.',
 }

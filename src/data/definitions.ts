@@ -1,4 +1,5 @@
 import type { Section } from './skills'
+import { AI_DEFINITIONS } from './definitions/ai'
 import { ENGINEERING_DEFINITIONS } from './definitions/engineering'
 import { INTERPERSONAL_DEFINITIONS } from './definitions/interpersonal'
 import { TECHNICAL_DEFINITIONS } from './definitions/technical'
@@ -10,6 +11,7 @@ const SKILL_DEFINITIONS: Record<Section, Record<string, string>> = {
   technical: TECHNICAL_DEFINITIONS,
   engineering: ENGINEERING_DEFINITIONS,
   interpersonal: INTERPERSONAL_DEFINITIONS,
+  ai: AI_DEFINITIONS,
 }
 
 const DEFINITIONS: Record<TermKind, Record<string, string>> = {
@@ -24,6 +26,7 @@ const INDEX: Record<TermKind, Map<string, string>> = {
   technical: new Map(),
   engineering: new Map(),
   interpersonal: new Map(),
+  ai: new Map(),
 }
 for (const kind of Object.keys(DEFINITIONS) as TermKind[]) {
   for (const [name, text] of Object.entries(DEFINITIONS[kind])) INDEX[kind].set(norm(name), text)

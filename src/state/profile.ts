@@ -1,15 +1,21 @@
 import { SECTIONS, SECTION_LABELS, catalogSkillNames, type Section } from '../data/skills'
 import { COMMON_VALUES } from '../data/values'
 
-export type Step = 'values' | Section | 'scoring' | 'card'
+export type Step = 'values' | Section | 'card'
 
-export const STEPS: Step[] = ['values', ...SECTIONS, 'scoring', 'card']
+export const STEPS: Step[] = ['values', ...SECTIONS, 'card']
 
-export const DEFAULT_SCORE = 5
-export const MIN_SCORE = 1
-export const MAX_SCORE = 10
+/** Whether a selection records what the user has done or what they want to do. */
+export type Mode = 'experience' | 'desired'
 
-/** Most values that can be selected. */
+export const MODES: Mode[] = ['experience', 'desired']
+
+export const MODE_LABELS: Record<Mode, string> = {
+  experience: 'Previous experience',
+  desired: 'Desired experience',
+}
+
+/** Most values that can be selected in each mode. */
 export const MAX_SELECTION = 20
 
 /** A page with selectable words. */
@@ -17,47 +23,51 @@ export type Page = 'values' | Section
 
 export const PAGES: Page[] = ['values', ...SECTIONS]
 
-/** Per-page selection limits. Pages that are not listed have no limit. */
+/** Per-page selection limits (per mode). Pages that are not listed have no limit. */
 export const LIMITS: Partial<Record<Page, number>> = { values: MAX_SELECTION }
 
-/** The most words selectable on a page, or undefined when the page has no limit. */
+/** The most words selectable on a page in one mode, or undefined when the page has no limit. */
 export const limitFor = (page: Page): number | undefined => LIMITS[page]
+
+export type PerMode<T> = Record<Mode, T>
 
 export interface ProfileState {
   step: Step
-  selectedValues: string[]
+  /** The option the selection pages are editing. Shared by every page. */
+  mode: Mode
+  selectedValues: PerMode<string[]>
   customValues: string[]
-  selectedSkills: Record<Section, string[]>
+  selectedSkills: Record<Section, PerMode<string[]>>
   customSkills: Record<Section, string[]>
-  /** Only skills the user has moved off the default are stored. */
-  scores: Record<Section, Record<string, number>>
 }
 
-const perSection = <T>(make: () => T): Record<Section, T> => ({
-  technical: make(),
-  engineering: make(),
-  interpersonal: make(),
-})
+/** What a loaded profile supplies: everything except where the user is. */
+export type LoadedProfile = Omit<ProfileState, 'step' | 'mode'>
+
+const perMode = <T>(make: () => T): PerMode<T> => ({ experience: make(), desired: make() })
+
+const perSection = <T>(make: () => T): Record<Section, T> =>
+  Object.fromEntries(SECTIONS.map((s) => [s, make()])) as Record<Section, T>
 
 export const initialState: ProfileState = {
   step: 'values',
-  selectedValues: [],
+  mode: 'experience',
+  selectedValues: perMode<string[]>(() => []),
   customValues: [],
-  selectedSkills: perSection<string[]>(() => []),
+  selectedSkills: perSection(() => perMode<string[]>(() => [])),
   customSkills: perSection<string[]>(() => []),
-  scores: perSection<Record<string, number>>(() => ({})),
 }
 
 export type Action =
+  | { type: 'setMode'; mode: Mode }
   | { type: 'toggleValue'; name: string }
   | { type: 'addCustomValue'; text: string }
   | { type: 'removeCustomValue'; name: string }
   | { type: 'toggleSkill'; section: Section; name: string }
   | { type: 'addCustomSkill'; section: Section; text: string }
   | { type: 'removeCustomSkill'; section: Section; name: string }
-  | { type: 'setScore'; section: Section; name: string; score: number }
   | { type: 'goTo'; step: Step }
-  | { type: 'loadProfile'; profile: Omit<ProfileState, 'step'> }
+  | { type: 'loadProfile'; profile: LoadedProfile }
 
 const norm = (s: string) => s.trim().toLowerCase()
 
@@ -74,8 +84,13 @@ export function allSkillNames(state: ProfileState, section: Section): string[] {
   return [...catalogSkillNames(section), ...state.customSkills[section]]
 }
 
-export function selectionCount(state: ProfileState, page: Page): number {
-  return page === 'values' ? state.selectedValues.length : state.selectedSkills[page].length
+/** Words selected on a page in the given mode (the active mode by default). */
+export function selectedFor(state: ProfileState, page: Page, mode: Mode = state.mode): string[] {
+  return page === 'values' ? state.selectedValues[mode] : state.selectedSkills[page][mode]
+}
+
+export function selectionCount(state: ProfileState, page: Page, mode: Mode = state.mode): number {
+  return selectedFor(state, page, mode).length
 }
 
 export function isFull(state: ProfileState, page: Page): boolean {
@@ -83,38 +98,49 @@ export function isFull(state: ProfileState, page: Page): boolean {
   return limit !== undefined && selectionCount(state, page) >= limit
 }
 
-/** How many words must be deselected before the page is within its limit. */
-export function overBy(state: ProfileState, page: Page): number {
+/** How many words must be deselected in one mode before the page is within its limit. */
+export function overBy(state: ProfileState, page: Page, mode: Mode): number {
   const limit = limitFor(page)
-  return limit === undefined ? 0 : Math.max(0, selectionCount(state, page) - limit)
+  return limit === undefined ? 0 : Math.max(0, selectionCount(state, page, mode) - limit)
+}
+
+/** A page is complete when at least one word is selected in either mode. */
+export function pageComplete(state: ProfileState, page: Page): boolean {
+  return MODES.some((m) => selectionCount(state, page, m) > 0)
 }
 
 const pageLabel = (page: Page) => (page === 'values' ? 'values' : SECTION_LABELS[page].toLowerCase())
 
-export const clampScore = (n: number) => Math.min(MAX_SCORE, Math.max(MIN_SCORE, Math.round(n)))
-
-export function getScore(state: ProfileState, section: Section, name: string): number {
-  return state.scores[section][name] ?? DEFAULT_SCORE
+export function missingSections(state: ProfileState): Section[] {
+  return SECTIONS.filter((s) => !pageComplete(state, s))
 }
 
-export function missingSections(state: ProfileState): Section[] {
-  return SECTIONS.filter((s) => state.selectedSkills[s].length === 0)
+/** The first page (before the given step index) and mode that is over its limit, if any. */
+function firstOver(state: ProfileState, before: number): { page: Page; mode: Mode; over: number } | undefined {
+  for (const page of PAGES) {
+    if (STEPS.indexOf(page) >= before) continue
+    for (const mode of MODES) {
+      const over = overBy(state, page, mode)
+      if (over > 0) return { page, mode, over }
+    }
+  }
+  return undefined
 }
 
 /** Why a step cannot be entered yet, or null when it is available. */
 export function stepBlockedReason(state: ProfileState, step: Step): string | null {
   if (step === 'values') return null
-  const target = STEPS.indexOf(step)
-  for (const page of PAGES) {
-    const over = overBy(state, page)
-    if (STEPS.indexOf(page) < target && over > 0) {
-      return `Deselect ${over} ${over === 1 ? 'word' : 'words'} on the ${pageLabel(page)} page to continue (limit ${limitFor(page)}).`
-    }
+  const over = firstOver(state, STEPS.indexOf(step))
+  if (over) {
+    const noun = over.over === 1 ? 'word' : 'words'
+    return `Deselect ${over.over} ${noun} under ${MODE_LABELS[over.mode]} on the ${pageLabel(over.page)} page to continue (limit ${limitFor(over.page)}).`
   }
-  if (state.selectedValues.length === 0) return 'Select at least one value first.'
-  if (step === 'scoring' || step === 'card') {
+  if (!pageComplete(state, 'values')) return 'Select at least one value first.'
+  if (step === 'card') {
     const missing = missingSections(state)
-    if (missing.length > 0) return `Select at least one skill in: ${missing.join(', ')}.`
+    if (missing.length > 0) {
+      return `Select at least one skill in: ${missing.map((s) => SECTION_LABELS[s].toLowerCase()).join(', ')}.`
+    }
   }
   return null
 }
@@ -123,13 +149,13 @@ export function stepBlockedReason(state: ProfileState, step: Step): string | nul
  * Where to open a freshly loaded profile: the profile card when it is complete, otherwise the
  * first page that needs attention, with a message saying what to do.
  */
-export function loadLanding(profile: Omit<ProfileState, 'step'>): { step: Step; notice: string | null } {
-  const state: ProfileState = { ...profile, step: 'values' }
+export function loadLanding(profile: LoadedProfile): { step: Step; notice: string | null } {
+  const state: ProfileState = { ...profile, step: 'values', mode: 'experience' }
   const notice = stepBlockedReason(state, 'card')
   if (!notice) return { step: 'card', notice: null }
   const page =
-    PAGES.find((p) => overBy(state, p) > 0) ??
-    (state.selectedValues.length === 0 ? 'values' : SECTIONS.find((s) => state.selectedSkills[s].length === 0)) ??
+    firstOver(state, STEPS.length)?.page ??
+    (!pageComplete(state, 'values') ? 'values' : SECTIONS.find((s) => !pageComplete(state, s))) ??
     'values'
   return { step: page, notice }
 }
@@ -137,32 +163,41 @@ export function loadLanding(profile: Omit<ProfileState, 'step'>): { step: Step; 
 const without = (list: string[], name: string) => list.filter((n) => n !== name)
 const toggle = (list: string[], name: string) => (list.includes(name) ? without(list, name) : [...list, name])
 
-function dropScore(state: ProfileState, section: Section, name: string): ProfileState['scores'] {
-  const rest = { ...state.scores[section] }
-  delete rest[name]
-  return { ...state.scores, [section]: rest }
-}
+/** Removes a name from both modes' lists. */
+const withoutBoth = (lists: PerMode<string[]>, name: string): PerMode<string[]> => ({
+  experience: without(lists.experience, name),
+  desired: without(lists.desired, name),
+})
+
+const withMode = <T>(lists: PerMode<T>, mode: Mode, value: T): PerMode<T> => ({ ...lists, [mode]: value })
 
 export function reducer(state: ProfileState, action: Action): ProfileState {
+  const mode = state.mode
   switch (action.type) {
-    case 'toggleValue':
-      if (!state.selectedValues.includes(action.name) && isFull(state, 'values')) return state
-      return { ...state, selectedValues: toggle(state.selectedValues, action.name) }
+    case 'setMode':
+      return { ...state, mode: action.mode }
+
+    case 'toggleValue': {
+      const selected = state.selectedValues[mode]
+      if (!selected.includes(action.name) && isFull(state, 'values')) return state
+      return { ...state, selectedValues: withMode(state.selectedValues, mode, toggle(selected, action.name)) }
+    }
 
     case 'addCustomValue': {
       const text = action.text.trim()
       if (!text) return state
+      const selected = state.selectedValues[mode]
       const existing = findMatch(allValues(state), text)
       if (existing) {
-        return state.selectedValues.includes(existing) || isFull(state, 'values')
+        return selected.includes(existing) || isFull(state, 'values')
           ? state
-          : { ...state, selectedValues: [...state.selectedValues, existing] }
+          : { ...state, selectedValues: withMode(state.selectedValues, mode, [...selected, existing]) }
       }
       if (isFull(state, 'values')) return state
       return {
         ...state,
         customValues: [...state.customValues, text],
-        selectedValues: [...state.selectedValues, text],
+        selectedValues: withMode(state.selectedValues, mode, [...selected, text]),
       }
     }
 
@@ -170,37 +205,42 @@ export function reducer(state: ProfileState, action: Action): ProfileState {
       return {
         ...state,
         customValues: without(state.customValues, action.name),
-        selectedValues: without(state.selectedValues, action.name),
+        selectedValues: withoutBoth(state.selectedValues, action.name),
       }
 
     case 'toggleSkill': {
       const { section, name } = action
-      const selected = state.selectedSkills[section]
-      const nowSelected = !selected.includes(name)
-      if (nowSelected && isFull(state, section)) return state
-      const next: ProfileState = {
+      const selected = state.selectedSkills[section][mode]
+      if (!selected.includes(name) && isFull(state, section)) return state
+      return {
         ...state,
-        selectedSkills: { ...state.selectedSkills, [section]: toggle(selected, name) },
+        selectedSkills: {
+          ...state.selectedSkills,
+          [section]: withMode(state.selectedSkills[section], mode, toggle(selected, name)),
+        },
       }
-      return nowSelected ? next : { ...next, scores: dropScore(next, section, name) }
     }
 
     case 'addCustomSkill': {
       const { section } = action
       const text = action.text.trim()
       if (!text) return state
+      const selected = state.selectedSkills[section][mode]
       const existing = findMatch(allSkillNames(state, section), text)
-      const selected = state.selectedSkills[section]
+      const withSelected = (name: string): ProfileState['selectedSkills'] => ({
+        ...state.selectedSkills,
+        [section]: withMode(state.selectedSkills[section], mode, [...selected, name]),
+      })
       if (existing) {
         return selected.includes(existing) || isFull(state, section)
           ? state
-          : { ...state, selectedSkills: { ...state.selectedSkills, [section]: [...selected, existing] } }
+          : { ...state, selectedSkills: withSelected(existing) }
       }
       if (isFull(state, section)) return state
       return {
         ...state,
         customSkills: { ...state.customSkills, [section]: [...state.customSkills[section], text] },
-        selectedSkills: { ...state.selectedSkills, [section]: [...selected, text] },
+        selectedSkills: withSelected(text),
       }
     }
 
@@ -209,25 +249,15 @@ export function reducer(state: ProfileState, action: Action): ProfileState {
       return {
         ...state,
         customSkills: { ...state.customSkills, [section]: without(state.customSkills[section], name) },
-        selectedSkills: { ...state.selectedSkills, [section]: without(state.selectedSkills[section], name) },
-        scores: dropScore(state, section, name),
-      }
-    }
-
-    case 'setScore': {
-      const { section, name } = action
-      if (!state.selectedSkills[section].includes(name)) return state
-      return {
-        ...state,
-        scores: {
-          ...state.scores,
-          [section]: { ...state.scores[section], [name]: clampScore(action.score) },
+        selectedSkills: {
+          ...state.selectedSkills,
+          [section]: withoutBoth(state.selectedSkills[section], name),
         },
       }
     }
 
     case 'loadProfile':
-      return { ...action.profile, step: loadLanding(action.profile).step }
+      return { ...action.profile, mode: 'experience', step: loadLanding(action.profile).step }
 
     case 'goTo':
       return stepBlockedReason(state, action.step) ? state : { ...state, step: action.step }

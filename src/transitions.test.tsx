@@ -5,7 +5,9 @@ import { motion } from './test-setup'
 import { TRANSITION_MS } from './useStepNavigation'
 
 const chip = (name: string) => screen.getByRole('button', { name })
-const next = () => screen.getByRole('button', { name: /continue|finish/i })
+// The AI engineering catalog has a "Continue" word, so look only in the footer.
+const next = () =>
+  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)$/i })
 const stepView = (container: HTMLElement) => container.querySelector('.step-view')!
 const heading = (name: RegExp) => screen.getByRole('heading', { name })
 
@@ -63,8 +65,10 @@ describe('section transitions', () => {
     await user.click(chip('Python'))
     await user.click(next())
     await user.click(next())
-    // Interpersonal has nothing selected, so scoring stays blocked.
+    await user.click(next())
+    // Nothing is selected on the later pages, so the profile stays blocked.
     expect(next()).toBeDisabled()
+    await user.click(screen.getByRole('button', { name: 'Back' }))
     await user.click(screen.getByRole('button', { name: 'Back' }))
     await user.click(screen.getByRole('button', { name: 'Back' }))
     expect(chip('Python')).toHaveAttribute('aria-pressed', 'true')
@@ -108,6 +112,7 @@ describe('section transitions', () => {
     await user.click(chip('Teamwork'))
     await user.click(next())
     await settle()
+    await user.click(chip('Ollama'))
     await user.click(next())
     await settle()
     expect(heading(/your profile/i)).toHaveFocus()
