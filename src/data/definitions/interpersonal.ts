@@ -8,6 +8,7 @@ export const INTERPERSONAL_DEFINITIONS: Record<string, string> = {
   'Giving feedback': 'Offering specific, kind and useful observations that help others improve.',
   'Receiving feedback': 'Listening openly to feedback and using it to grow rather than getting defensive.',
   'Explaining technical concepts': 'Making complex ideas understandable to people without a technical background.',
+  'Difficult conversations': 'Raising uncomfortable topics with care and honesty so problems get addressed rather than avoided.',
 
   // Collaboration
   Teamwork: 'Contributing effectively as part of a group and supporting colleagues to reach shared goals.',
@@ -28,6 +29,9 @@ export const INTERPERSONAL_DEFINITIONS: Record<string, string> = {
   Influencing: 'Persuading others and shaping decisions without relying on formal authority.',
   Facilitation: 'Running meetings and workshops so that everyone contributes and the group reaches an outcome.',
   'Hiring and interviewing': 'Assessing candidates fairly and attracting the right people to the team.',
+  'Change management': 'Guiding people and teams through transitions so new ways of working are adopted smoothly.',
+  'Managing up': 'Working effectively with your manager, setting expectations and surfacing issues early.',
+  'Performance management': 'Setting clear goals, giving ongoing feedback and helping people do their best work.',
 
   // Thinking and problem solving
   'Problem solving': 'Breaking down difficult problems and working methodically to find solutions.',
@@ -35,6 +39,9 @@ export const INTERPERSONAL_DEFINITIONS: Record<string, string> = {
   Creativity: 'Generating original ideas and approaches to problems.',
   'Analytical thinking': 'Examining information in detail to find patterns, causes and insights.',
   'Product thinking': 'Focusing on the problem being solved for users and the value delivered, not just the features built.',
+  'Systems thinking': 'Seeing how parts of a system interact and how changes in one place affect the whole.',
+  'Root cause analysis': 'Digging past symptoms to find and fix the underlying cause of a problem.',
+  'First-principles thinking': 'Breaking a problem down to its basic truths and reasoning up from there, instead of copying conventions.',
 
   // Personal effectiveness
   'Time management': 'Planning your time so that important work gets done without constant rushing.',

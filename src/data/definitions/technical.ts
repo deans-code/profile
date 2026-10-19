@@ -12,6 +12,11 @@ export const TECHNICAL_DEFINITIONS: Record<string, string> = {
   Swift: 'Apple’s language for building apps for iPhone, iPad, Mac and other Apple platforms.',
   PHP: 'A server-side scripting language that powers a large share of websites, including WordPress.',
   Ruby: 'An expressive, developer-friendly language best known for the Ruby on Rails web framework.',
+  Dart: 'Google’s language for building apps across mobile, web and desktop, especially with Flutter.',
+  Scala: 'A statically typed language that runs on the JVM, mixing object-oriented and functional styles, popular in big data and finance.',
+  C: 'A compact, low-level language that underpins operating systems, embedded systems and much of modern software.',
+  R: 'A statistical language widely used for data analysis, visualisation and research.',
+  Elixir: 'A concurrent, fault-tolerant language on the BEAM virtual machine, popular for real-time systems and web services.',
 
   // Web and frontend
   HTML: 'The markup language that defines the structure and content of web pages.',
@@ -19,15 +24,21 @@ export const TECHNICAL_DEFINITIONS: Record<string, string> = {
   React: 'A JavaScript library for building user interfaces from reusable components.',
   Angular: 'A full-featured TypeScript framework from Google for building large web applications.',
   Vue: 'A progressive JavaScript framework for building user interfaces, known for being approachable.',
+  'Next.js': 'A React framework for building full-stack web apps with server rendering, static generation and API routes.',
+  Svelte: 'A JavaScript framework that compiles components into efficient, dependency-light browser code.',
   'Web accessibility': 'Building sites and apps that people with disabilities can use, following standards such as WCAG.',
   'Responsive design': 'Designing pages that adapt their layout to any screen size or device.',
   'Web performance': 'Making web pages load and respond quickly, through techniques such as caching, compression and lean code.',
+  WebAssembly: 'A binary format that lets code written in many languages run at near-native speed in the browser.',
+  'Tailwind CSS': 'A utility-first CSS framework for building designs directly in markup.',
 
   // Backend and APIs
   'Node.js': 'A JavaScript runtime for running code outside the browser, commonly used for web servers and tooling.',
   '.NET': 'Microsoft’s cross-platform development platform for building web, cloud, desktop and mobile applications.',
   'Spring Boot': 'A Java framework that makes it quick to build production-ready web services and applications.',
   Django: 'A batteries-included Python web framework that encourages rapid, clean development.',
+  FastAPI: 'A modern Python framework for building APIs, using type hints with automatic documentation.',
+  Laravel: 'A popular PHP web framework known for elegant conventions and rapid development.',
   'REST APIs': 'Designing and building web services that expose resources over HTTP using standard methods and status codes.',
   GraphQL: 'A query language for APIs that lets clients request exactly the data they need.',
   gRPC: 'A high-performance framework for service-to-service calls using Protocol Buffers over HTTP/2.',
@@ -38,8 +49,10 @@ export const TECHNICAL_DEFINITIONS: Record<string, string> = {
   PostgreSQL: 'A powerful, open source relational database known for reliability and rich features.',
   MySQL: 'A widely used open source relational database, common in web applications.',
   'SQL Server': 'Microsoft’s relational database management system.',
+  SQLite: 'A lightweight, embedded relational database with no server process, used in apps, tests and local tools.',
   MongoDB: 'A popular document database that stores flexible, JSON-like records.',
   Redis: 'An in-memory data store used for caching, queues and fast lookups.',
+  ClickHouse: 'A fast columnar database built for analytics and real-time dashboards over large datasets.',
   'Data modelling': 'Designing how data is structured and related, so it is accurate, efficient and easy to use.',
   Elasticsearch: 'A search and analytics engine for fast full-text search across large amounts of data.',
 
@@ -48,6 +61,8 @@ export const TECHNICAL_DEFINITIONS: Record<string, string> = {
   iOS: 'Building apps for iPhone and iPad, typically with Swift.',
   'React Native': 'A framework for building native mobile apps for iOS and Android using React and JavaScript.',
   Flutter: 'Google’s toolkit for building apps for mobile, web and desktop from one Dart codebase.',
+  Expo: 'A platform for building and shipping React Native apps, with tooling, previews and over-the-air updates.',
+  '.NET MAUI': 'Microsoft’s cross-platform framework for building native mobile apps from one C# codebase.',
 
   // Cloud and DevOps
   AWS: 'Amazon Web Services, the largest cloud platform, offering computing, storage, databases and much more.',
@@ -55,8 +70,15 @@ export const TECHNICAL_DEFINITIONS: Record<string, string> = {
   'Google Cloud': 'Google’s cloud platform for computing, storage, data analytics and machine learning.',
   Docker: 'A tool for packaging an application and its dependencies into portable containers.',
   Kubernetes: 'A system for automating the deployment, scaling and management of containerised applications.',
+  Helm: 'A package manager for Kubernetes that installs and configures applications from reusable charts.',
   Terraform: 'A tool for defining and managing cloud infrastructure as code.',
+  'Infrastructure as code': 'Defining servers, networks and services in version-controlled files so environments are repeatable.',
   'CI/CD pipelines': 'Automated pipelines that build, test and deliver code changes continuously and reliably.',
+  'GitHub Actions': 'CI/CD automation built into GitHub, with pipelines defined as workflows in your repository.',
+  'GitLab CI': 'CI/CD pipelines defined in a GitLab project’s configuration file.',
+  Ansible: 'An agentless automation tool for provisioning and configuring servers with playbooks.',
+  Nginx: 'A high-performance web server and reverse proxy for serving sites and routing traffic to back ends.',
+  Serverless: 'Running code on managed platforms that scale automatically and charge only for usage, such as AWS Lambda.',
   Linux: 'The open source operating system that runs most servers and cloud workloads.',
   Git: 'The standard distributed version control system for tracking changes to code and collaborating on it.',
   'Shell scripting': 'Automating tasks by writing scripts for command-line shells such as Bash or PowerShell.',
@@ -68,23 +90,24 @@ export const TECHNICAL_DEFINITIONS: Record<string, string> = {
   'Jupyter notebooks': 'Interactive documents that mix code, results and notes, widely used for exploring data and experiments.',
   'Data pipelines': 'Automated flows that collect, clean, transform and move data between systems.',
   'Apache Airflow': 'A platform for scheduling and monitoring data workflows defined as code.',
+  dbt: 'A tool for transforming data in a warehouse using version-controlled SQL models and tests.',
   'Apache Kafka': 'A distributed event-streaming platform for moving large volumes of data between systems in real time.',
   'Message queues': 'Services that pass messages between applications asynchronously, such as RabbitMQ or SQS.',
+  RabbitMQ: 'A widely used message broker that routes messages between applications through queues and exchanges.',
   'Apache Spark': 'An engine for processing very large datasets in parallel across many machines.',
+  Databricks: 'A cloud platform for analytics and machine learning built around Apache Spark.',
   'Parquet and data formats': 'Working with efficient storage formats such as Parquet, Avro and JSON Lines for analytics and pipelines.',
 
-  // Compute and GPUs
+  // GPUs
   'GPU computing': 'Using graphics processors for highly parallel work such as numerical computing and model training or inference.',
   CUDA: 'NVIDIA’s platform and programming model for running general-purpose code on its GPUs.',
   'Cloud GPU instances': 'Renting GPU-equipped virtual machines from a cloud provider for compute-heavy workloads.',
-  Helm: 'A package manager for Kubernetes that installs and configures applications from reusable charts.',
-  Serverless: 'Running code on managed platforms that scale automatically and charge only for usage, such as AWS Lambda.',
-  'Infrastructure as code': 'Defining servers, networks and services in version-controlled files so environments are repeatable.',
 
   // Observability tooling
   'Observability platforms': 'Tools that collect metrics, logs and traces so teams can see how systems behave in production.',
   'Prometheus and Grafana': 'A popular open source pair for collecting metrics and building dashboards and alerts.',
   OpenTelemetry: 'An open standard and set of libraries for producing metrics, logs and traces from applications.',
   'Log aggregation': 'Collecting logs from many services into one searchable place, for example with Loki or the ELK stack.',
+  Sentry: 'A platform for tracking and diagnosing application errors in real time.',
   'Distributed tracing': 'Following a single request across many services to find where time is spent or errors occur.',
 }

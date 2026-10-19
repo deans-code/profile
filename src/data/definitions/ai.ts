@@ -12,6 +12,8 @@ export const AI_DEFINITIONS: Record<string, string> = {
   'Reviewing AI-generated code': 'Checking code written by an AI for correctness, security and fit before accepting it.',
   'AI-assisted refactoring': 'Using AI to restructure existing code safely while keeping behavior the same.',
   'AI-assisted debugging': 'Using AI to explain errors, form hypotheses and find the cause of bugs.',
+  'Human-in-the-loop review': 'Keeping a person checking AI decisions and outputs at key points, rather than letting an agent run fully unsupervised.',
+  'AI-assisted documentation': 'Using AI to draft, update and explain documentation such as READMEs, guides and comments.',
 
   // Frameworks and methodologies
   Superpowers: 'A skills-based workflow framework for coding agents that adds structured steps such as brainstorming, planning and test-driven implementation.',
@@ -25,11 +27,13 @@ export const AI_DEFINITIONS: Record<string, string> = {
 
   // Terminal (TUI and CLI) tools
   'Claude Code': 'Anthropic’s terminal-based coding agent that reads, edits and runs code in your project.',
+  'Cursor CLI': 'The command-line coding agent from the Cursor team that works on your codebase from the terminal.',
   'Codex CLI': 'OpenAI’s command-line coding agent that works with your local repository.',
   'Gemini CLI': 'Google’s open source command-line agent for working with Gemini models in your terminal.',
   'GitHub Copilot CLI': 'GitHub’s command-line assistant for explaining commands and carrying out coding tasks from the terminal.',
   Amp: 'A coding agent from Sourcegraph that works from the terminal and editor.',
   'Qwen Code': 'A command-line coding agent tuned for Alibaba’s Qwen models.',
+  Warp: 'A modern terminal application with built-in AI help and agents.',
 
   // Desktop apps and AI-first editors
   Cursor: 'An AI-first code editor, built on VS Code, with chat, inline edits and agents.',
@@ -37,7 +41,8 @@ export const AI_DEFINITIONS: Record<string, string> = {
   Zed: 'A fast, collaborative code editor with built-in AI assistance and agent support.',
   Kiro: 'An AI-first development environment built around specs, tasks and agent hooks.',
   'Google Antigravity': 'Google’s agent-first development environment where AI agents plan and carry out coding tasks.',
-  Warp: 'A modern terminal application with built-in AI help and agents.',
+  Replit: 'A cloud-based development platform where AI agents can build, run and host full applications in the browser.',
+  Lovable: 'A web app builder that turns natural-language prompts into full-stack applications.',
   'Claude desktop app': 'Anthropic’s desktop application for chatting with Claude, using tools and working with files.',
   'ChatGPT desktop app': 'OpenAI’s desktop application for chatting with models, including help with code.',
 
@@ -60,14 +65,17 @@ export const AI_DEFINITIONS: Record<string, string> = {
   Crush: 'An open source terminal coding agent with a rich text interface and support for many models.',
   OpenHands: 'An open source platform for AI software development agents that can write code and run commands.',
   'Open Interpreter': 'An open source tool that lets a language model run code on your computer through a chat interface.',
+  'SWE-agent': 'An open source research agent that autonomously works through software engineering issues in a repository.',
 
   // Closed-model providers
   Anthropic: 'The company behind the Claude family of models, available through its apps and API.',
   OpenAI: 'The company behind the GPT family of models and ChatGPT, available through its apps and API.',
-  'Google Gemini': 'Google’s family of models, available through its apps, API and cloud platform.',
+  'Google DeepMind': 'The Google team behind the Gemini family of models, available through its apps, API and cloud platform.',
+  'Meta (Llama)': 'Meta’s AI division, offering hosted models through its API as well as the Llama open-weight family.',
   xAI: 'The company behind the Grok family of models.',
   'Mistral AI': 'A European AI company offering both hosted and open-weight models.',
   Cohere: 'An AI company focused on enterprise language models, embeddings and search.',
+  'Amazon (Nova)': 'Amazon’s family of models for text, vision and audio, available through its API and Bedrock.',
 
   // Inference providers and gateways
   OpenRouter: 'A single API and account that routes requests to hundreds of models from many providers.',
@@ -75,6 +83,7 @@ export const AI_DEFINITIONS: Record<string, string> = {
   'Together AI': 'A cloud platform for running and fine-tuning open-weight models through an API.',
   Groq: 'A hosted inference service that runs models on custom chips for very fast responses.',
   Cerebras: 'A hosted inference service running models on wafer-scale chips for very fast output.',
+  SambaNova: 'A hosted inference service that runs large models on its own rack-scale hardware.',
   'Hugging Face Inference': 'Hosted access to many open models through Hugging Face’s inference services.',
   Replicate: 'A platform for running machine learning models through a simple API.',
   Baseten: 'A platform for deploying and serving models in production.',
@@ -94,6 +103,8 @@ export const AI_DEFINITIONS: Record<string, string> = {
   GLM: 'A family of open-weight models from Zhipu AI, with variants for coding and agents.',
   Kimi: 'A family of open-weight models from Moonshot AI, with long context and agent strengths.',
   Phi: 'Microsoft’s family of small open-weight models that perform well for their size.',
+  SmolLM: 'Hugging Face’s family of small open-weight models, fast and cheap to run.',
+  Olmoe: 'Ai2’s family of permissively licensed open-weight models.',
   'Choosing an open-weight model': 'Comparing open models by size, licence, benchmarks and hardware needs to pick one that suits a task.',
 
   // Local runtimes and tools
@@ -106,6 +117,8 @@ export const AI_DEFINITIONS: Record<string, string> = {
   MLX: 'Apple’s machine learning framework for running and tuning models efficiently on Apple Silicon.',
   llamafile: 'A way to package a model and runtime into a single executable file that runs on many systems.',
   'Open WebUI': 'A self-hosted web interface for chatting with local and remote models.',
+  GPT4All: 'A desktop app for running open-weight models locally, without a server setup.',
+  AnythingLLM: 'A desktop app for chatting with documents and data using local or remote models.',
 
   // Local hardware and optimisation
   'Running open-weight models on local hardware': 'Running models on your own computer or server for privacy, cost control or offline use.',
@@ -128,6 +141,8 @@ export const AI_DEFINITIONS: Record<string, string> = {
   'Plugins and marketplaces': 'Bundles of commands, skills and tools that can be shared and installed for AI coding tools.',
   'Tool and function calling': 'Letting a model request that your code run a function and use the result.',
   'Agent SDKs': 'Libraries for building your own agents with tools, memory and control over their loop.',
+  'Computer use / browser control': 'Letting an agent operate a computer or browser, clicking and typing to complete tasks like a person would.',
+  'Sandboxing and permissions': 'Constraining what an agent can read, write and run so its mistakes or misuse stay contained.',
 
   // Building AI applications
   'LLM application development': 'Building software that uses large language models, for example chat, search and agents.',
@@ -142,4 +157,6 @@ export const AI_DEFINITIONS: Record<string, string> = {
   'LLM observability': 'Tracing and monitoring model calls, costs, latency and quality in production.',
   'Prompt caching': 'Reusing the processed start of a prompt across requests to cut cost and delay.',
   'AI safety and red teaming': 'Testing AI systems for harmful, biased or exploitable behavior before and after release.',
+  LLMOps: 'The practices for deploying, monitoring and improving LLM systems in production, from cost to quality.',
+  'Model routing': 'Sending different requests to the best-suited model, balancing quality, cost and latency.',
 }

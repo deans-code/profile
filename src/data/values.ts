@@ -25,6 +25,7 @@ export const VALUE_CATEGORIES: ValueCategory[] = [
       'Responsibility',
       'Gratitude',
       'Dignity',
+      'Humor',
     ],
   },
   {
@@ -62,6 +63,7 @@ export const VALUE_CATEGORIES: ValueCategory[] = [
       'Vision',
       'Empowerment',
       'Shared success',
+      'Candor',
     ],
   },
   {
@@ -100,6 +102,7 @@ export const VALUE_CATEGORIES: ValueCategory[] = [
       'Attention to detail',
       'Professionalism',
       'Mastery',
+      'Decisiveness',
     ],
   },
   {
@@ -118,6 +121,9 @@ export const VALUE_CATEGORIES: ValueCategory[] = [
       'Entrepreneurship',
       'Success',
       'Boldness',
+      'Drive',
+      'Passion',
+      'Optimism',
     ],
   },
   {
@@ -168,6 +174,7 @@ export const VALUE_CATEGORIES: ValueCategory[] = [
       'Education',
       'Accessibility',
       'Philanthropy',
+      'Stewardship',
     ],
   },
 ]

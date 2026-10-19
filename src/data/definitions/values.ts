@@ -65,6 +65,7 @@ export const VALUE_DEFINITIONS: Record<string, string> = {
   Responsibility: 'Being dependable about your duties and the consequences of your choices.',
   Gratitude: 'Noticing and appreciating what others do for you and what you have.',
   Dignity: 'Treating yourself and everyone else as worthy of respect, whatever the circumstances.',
+  Humor: 'Using humour to ease tension, connect with people and keep a healthy perspective.',
 
   // Relationships and community
   Friendship: 'Valuing close, supportive bonds built on mutual care and shared time.',
@@ -80,6 +81,7 @@ export const VALUE_DEFINITIONS: Record<string, string> = {
   Vision: 'Having a clear picture of a better future and inspiring others to work toward it.',
   Empowerment: 'Giving people the trust, tools and authority to make decisions and act.',
   'Shared success': 'Celebrating and rewarding achievements as a group rather than only as individuals.',
+  Candor: 'Raising problems and ideas with honesty and directness, in a respectful way.',
 
   // Learning and growth
   Wisdom: 'Applying experience, judgement and perspective to make sound decisions.',
@@ -96,6 +98,7 @@ export const VALUE_DEFINITIONS: Record<string, string> = {
   'Attention to detail': 'Noticing the small things that make the difference between good and great work.',
   Professionalism: 'Conducting yourself with competence, reliability and courtesy at work.',
   Mastery: 'Striving for deep, lasting skill in your field through sustained practice.',
+  Decisiveness: 'Making clear decisions in a timely way, even with incomplete information.',
 
   // Drive and achievement
   Determination: 'Staying firmly resolved to reach a goal despite obstacles.',
@@ -104,6 +107,9 @@ export const VALUE_DEFINITIONS: Record<string, string> = {
   Entrepreneurship: 'Spotting opportunities and taking calculated risks to build something new.',
   Success: 'Striving to achieve the goals you have set and to reach a high standard.',
   Boldness: 'Being willing to take big steps and make daring choices.',
+  Drive: 'An inner engine that pushes you to start, persist and deliver.',
+  Passion: 'Feeling genuine enthusiasm and energy for your work.',
+  Optimism: 'Expecting good outcomes and seeing opportunities in setbacks.',
 
   // Freedom and autonomy
   Independence: 'Standing on your own feet and making your own decisions.',
@@ -134,4 +140,5 @@ export const VALUE_DEFINITIONS: Record<string, string> = {
   Education: 'Believing in the value of learning and in helping others to access it.',
   Accessibility: 'Making sure products, places and information can be used by everyone, including people with disabilities.',
   Philanthropy: 'Giving time, money or skills to improve the lives of others.',
+  Stewardship: 'Caring for what is entrusted to you, be it a codebase, a team or the wider world.',
 }
