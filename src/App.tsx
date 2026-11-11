@@ -1,7 +1,16 @@
 import { useReducer, useRef } from 'react'
 import { SECTIONS, SECTION_LABELS } from './data/skills'
 import type { Profile } from './export'
-import { MODES, STEPS, initialState, loadLanding, reducer, stepBlockedReason, type Step } from './state/profile'
+import {
+  MODES,
+  STEPS,
+  initialState,
+  loadLanding,
+  pageComplete,
+  reducer,
+  stepBlockedReason,
+  type Step,
+} from './state/profile'
 import { profileToState } from './load'
 import { DefinitionProvider } from './components/DefinitionPanel'
 import LoadProfile from './components/LoadProfile'
@@ -49,6 +58,15 @@ export default function App() {
               <h1>Profile Builder</h1>
               <LoadProfile hasProgress={hasProgress} onLoad={loadProfile} />
             </div>
+            <p className="intro">
+              Build a profile of what you value and what you can do. Choose up to five values, then pick skills on four
+              pages: technical development, engineering, interpersonal and AI engineering. On each skill page you
+              record both your previous experience and the experience you want, then download your profile at the end.
+            </p>
+            <p className="step-status" aria-live="polite">
+              Step {index + 1} of {STEPS.length}: <strong>{STEP_LABELS[state.step]}</strong>
+              {next && <span className="step-next"> · Next: {STEP_LABELS[next]}</span>}
+            </p>
             <nav aria-label="Steps">
               <ol className="stepper">
                 {STEPS.map((step) => {
@@ -58,6 +76,7 @@ export default function App() {
                       <button
                         type="button"
                         data-section={step}
+                        data-complete={step !== 'card' && step !== state.step && pageComplete(state, step) ? 'true' : undefined}
                         disabled={blocked}
                         aria-current={step === state.step ? 'step' : undefined}
                         onClick={() => navigate(step)}

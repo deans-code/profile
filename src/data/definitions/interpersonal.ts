@@ -49,13 +49,15 @@ export const INTERPERSONAL_DEFINITIONS: Record<string, string> = {
   Adaptability: 'Adjusting quickly and positively to change and uncertainty.',
   Resilience: 'Bouncing back from setbacks and staying effective under pressure.',
   'Continuous learning': 'Keeping your skills and knowledge up to date through ongoing study and practice.',
-  'Self-motivation': 'Driving yourself to start and finish work without needing to be pushed.',
   'Emotional intelligence': 'Recognising and managing your own emotions and understanding those of others.',
   Accountability: 'Taking responsibility for your actions and commitments, and following through on them.',
 
   // Business awareness
   'Customer focus': 'Understanding what customers need and letting that guide your decisions.',
   'Business acumen': 'Understanding how the business makes money and how your work contributes to its goals.',
-  'Cultural awareness': 'Understanding and respecting cultural differences when working with people.',
-  'Commercial awareness': 'Appreciating market, cost and competitive factors that affect business decisions.',
+  'Psychological safety': 'Helping create a team where people can speak up, ask questions and admit mistakes without fear of blame.',
+  'Pair and mob programming': 'Writing code together, in twos or as a whole team, to share knowledge and catch problems early.',
+  'Onboarding new team members': 'Helping new people become productive and feel welcome through clear guidance, context and support.',
+  'Knowledge sharing': 'Passing on what you know through documentation, talks and conversation so the team does not depend on one person.',
+  'Asynchronous communication': 'Communicating clearly in writing so others can respond in their own time without needing a meeting.',
 }

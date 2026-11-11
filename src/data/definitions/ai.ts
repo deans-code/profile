@@ -13,7 +13,6 @@ export const AI_DEFINITIONS: Record<string, string> = {
   'AI-assisted refactoring': 'Using AI to restructure existing code safely while keeping behavior the same.',
   'AI-assisted debugging': 'Using AI to explain errors, form hypotheses and find the cause of bugs.',
   'Human-in-the-loop review': 'Keeping a person checking AI decisions and outputs at key points, rather than letting an agent run fully unsupervised.',
-  'AI-assisted documentation': 'Using AI to draft, update and explain documentation such as READMEs, guides and comments.',
 
   // Frameworks and methodologies
   Superpowers: 'A skills-based workflow framework for coding agents that adds structured steps such as brainstorming, planning and test-driven implementation.',
@@ -31,8 +30,6 @@ export const AI_DEFINITIONS: Record<string, string> = {
   'Codex CLI': 'OpenAI’s command-line coding agent that works with your local repository.',
   'Gemini CLI': 'Google’s open source command-line agent for working with Gemini models in your terminal.',
   'GitHub Copilot CLI': 'GitHub’s command-line assistant for explaining commands and carrying out coding tasks from the terminal.',
-  Amp: 'A coding agent from Sourcegraph that works from the terminal and editor.',
-  'Qwen Code': 'A command-line coding agent tuned for Alibaba’s Qwen models.',
   Warp: 'A modern terminal application with built-in AI help and agents.',
 
   // Desktop apps and AI-first editors
@@ -62,10 +59,8 @@ export const AI_DEFINITIONS: Record<string, string> = {
   OpenCode: 'An open source, terminal-based AI coding agent that works with many model providers, including local models.',
   Aider: 'An open source command-line tool for pair programming with an AI that edits files in your git repository.',
   Goose: 'An open source, extensible AI agent that can run locally and automate engineering tasks.',
-  Crush: 'An open source terminal coding agent with a rich text interface and support for many models.',
   OpenHands: 'An open source platform for AI software development agents that can write code and run commands.',
   'Open Interpreter': 'An open source tool that lets a language model run code on your computer through a chat interface.',
-  'SWE-agent': 'An open source research agent that autonomously works through software engineering issues in a repository.',
 
   // Closed-model providers
   Anthropic: 'The company behind the Claude family of models, available through its apps and API.',
@@ -74,8 +69,6 @@ export const AI_DEFINITIONS: Record<string, string> = {
   'Meta (Llama)': 'Meta’s AI division, offering hosted models through its API as well as the Llama open-weight family.',
   xAI: 'The company behind the Grok family of models.',
   'Mistral AI': 'A European AI company offering both hosted and open-weight models.',
-  Cohere: 'An AI company focused on enterprise language models, embeddings and search.',
-  'Amazon (Nova)': 'Amazon’s family of models for text, vision and audio, available through its API and Bedrock.',
 
   // Inference providers and gateways
   OpenRouter: 'A single API and account that routes requests to hundreds of models from many providers.',
@@ -102,9 +95,6 @@ export const AI_DEFINITIONS: Record<string, string> = {
   'Mistral and Mixtral': 'Open-weight models from Mistral AI, including mixture-of-experts designs.',
   GLM: 'A family of open-weight models from Zhipu AI, with variants for coding and agents.',
   Kimi: 'A family of open-weight models from Moonshot AI, with long context and agent strengths.',
-  Phi: 'Microsoft’s family of small open-weight models that perform well for their size.',
-  SmolLM: 'Hugging Face’s family of small open-weight models, fast and cheap to run.',
-  Olmoe: 'Ai2’s family of permissively licensed open-weight models.',
   'Choosing an open-weight model': 'Comparing open models by size, licence, benchmarks and hardware needs to pick one that suits a task.',
 
   // Local runtimes and tools
@@ -113,12 +103,9 @@ export const AI_DEFINITIONS: Record<string, string> = {
   'LM Studio': 'A desktop app for discovering, downloading and chatting with local models, with a local API server.',
   vLLM: 'An open source, high-throughput engine for serving models on GPUs.',
   LocalAI: 'An open source, self-hosted alternative to hosted model APIs that runs models locally.',
-  Jan: 'An open source desktop app for running models offline on your own computer.',
   MLX: 'Apple’s machine learning framework for running and tuning models efficiently on Apple Silicon.',
   llamafile: 'A way to package a model and runtime into a single executable file that runs on many systems.',
   'Open WebUI': 'A self-hosted web interface for chatting with local and remote models.',
-  GPT4All: 'A desktop app for running open-weight models locally, without a server setup.',
-  AnythingLLM: 'A desktop app for chatting with documents and data using local or remote models.',
 
   // Local hardware and optimisation
   'Running open-weight models on local hardware': 'Running models on your own computer or server for privacy, cost control or offline use.',
@@ -159,4 +146,10 @@ export const AI_DEFINITIONS: Record<string, string> = {
   'AI safety and red teaming': 'Testing AI systems for harmful, biased or exploitable behavior before and after release.',
   LLMOps: 'The practices for deploying, monitoring and improving LLM systems in production, from cost to quality.',
   'Model routing': 'Sending different requests to the best-suited model, balancing quality, cost and latency.',
+  'Long-running autonomous agents': 'Setting up AI agents to work on larger tasks for extended periods with checkpoints, limits and review.',
+  'Parallel agent sessions': 'Running several AI agent sessions at once, often in separate branches or worktrees, and merging their results.',
+  'Building MCP servers': 'Creating Model Context Protocol servers that give AI tools access to your data, services and actions.',
+  'Prompt injection defence': 'Protecting AI applications and agents from malicious instructions hidden in content they read.',
+  'Token and cost management': 'Keeping AI usage affordable by managing context size, caching, model choice and spending limits.',
+  'Agent evaluation': 'Measuring how well an AI agent completes tasks, with test cases, scoring and regression checks.',
 }

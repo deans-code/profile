@@ -61,7 +61,6 @@ export const TECHNICAL_DEFINITIONS: Record<string, string> = {
   iOS: 'Building apps for iPhone and iPad, typically with Swift.',
   'React Native': 'A framework for building native mobile apps for iOS and Android using React and JavaScript.',
   Flutter: 'Google’s toolkit for building apps for mobile, web and desktop from one Dart codebase.',
-  Expo: 'A platform for building and shipping React Native apps, with tooling, previews and over-the-air updates.',
   '.NET MAUI': 'Microsoft’s cross-platform framework for building native mobile apps from one C# codebase.',
 
   // Cloud and DevOps
@@ -96,12 +95,10 @@ export const TECHNICAL_DEFINITIONS: Record<string, string> = {
   RabbitMQ: 'A widely used message broker that routes messages between applications through queues and exchanges.',
   'Apache Spark': 'An engine for processing very large datasets in parallel across many machines.',
   Databricks: 'A cloud platform for analytics and machine learning built around Apache Spark.',
-  'Parquet and data formats': 'Working with efficient storage formats such as Parquet, Avro and JSON Lines for analytics and pipelines.',
 
   // GPUs
   'GPU computing': 'Using graphics processors for highly parallel work such as numerical computing and model training or inference.',
   CUDA: 'NVIDIA’s platform and programming model for running general-purpose code on its GPUs.',
-  'Cloud GPU instances': 'Renting GPU-equipped virtual machines from a cloud provider for compute-heavy workloads.',
 
   // Observability tooling
   'Observability platforms': 'Tools that collect metrics, logs and traces so teams can see how systems behave in production.',
@@ -110,4 +107,10 @@ export const TECHNICAL_DEFINITIONS: Record<string, string> = {
   'Log aggregation': 'Collecting logs from many services into one searchable place, for example with Loki or the ELK stack.',
   Sentry: 'A platform for tracking and diagnosing application errors in real time.',
   'Distributed tracing': 'Following a single request across many services to find where time is spent or errors occur.',
+  'Deno and Bun': 'Modern JavaScript and TypeScript runtimes that offer faster tooling or built-in features compared with Node.js.',
+  'Playwright': 'A framework for automating and testing web apps across browsers with a single API.',
+  'Vite': 'A fast build tool and development server for modern web apps.',
+  'Docker Compose': 'Defining and running multi-container applications and local environments from a single file.',
+  'Cloudflare': 'Using Cloudflare services such as its CDN, DNS, security and edge computing platform.',
+  'Supabase': 'An open source backend platform built on PostgreSQL, offering database, authentication and storage.',
 }

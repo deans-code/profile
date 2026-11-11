@@ -81,6 +81,13 @@ export default function WordPicker({
       <h2 id={headingId}>{heading}</h2>
       <p className="hint">{hint}</p>
       {ASSISTANT_HELP[kind] && <AssistantLink {...ASSISTANT_HELP[kind]} />}
+      {mode && (
+        <p className="experience-intro">
+          Your profile is built from two kinds of experience: what you have <strong>already done</strong> (previous
+          experience) and what you <strong>want to do</strong> (desired experience). Fill in both, switching with the
+          options below.
+        </p>
+      )}
       {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
       <SelectionHelp limit={limit} unit={kind === 'values' ? 'values' : 'skills'} mode={mode} />
 

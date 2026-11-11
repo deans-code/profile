@@ -233,6 +233,44 @@ input[type='search'] {
   color: var(--accent-text);
 }
 
+/* Guidance: introduction, position and numbered route */
+.intro {
+  margin: 0.5rem 0;
+  max-width: 48rem;
+}
+
+.step-status {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+}
+
+.step-next {
+  color: var(--muted);
+}
+
+.stepper {
+  counter-reset: step;
+}
+
+.stepper button::before {
+  counter-increment: step;
+  content: counter(step) '. ';
+  font-weight: 600;
+}
+
+.stepper button[data-complete='true']::after {
+  content: ' ¹3';
+}
+
+.stepper button:disabled {
+  opacity: 0.55;
+}
+
+.experience-intro {
+  margin: 0.5rem 0;
+  max-width: 48rem;
+}
+
 /* Words: one size everywhere, laid out in a grid that grows with the screen */
 ul {
   list-style: none;

@@ -37,20 +37,17 @@ export const VALUE_DEFINITIONS: Record<string, string> = {
   Stability: 'Valuing steadiness and predictability in work and in the environment around you.',
   Freedom: 'Having the independence to choose your own path, methods and priorities.',
   Fun: 'Enjoying the work and bringing lightness and humour to the team.',
-  Recognition: 'Valuing having your contribution, and that of others, acknowledged and appreciated.',
   Community: 'Belonging to and contributing to a group of people with shared interests.',
   Service: 'Helping others and putting their needs ahead of your own convenience.',
   Adaptability: 'Adjusting readily to change and new circumstances.',
   Focus: 'Concentrating on what matters most and avoiding distraction.',
   Discipline: 'Sticking to commitments and good habits even when motivation fades.',
-  Balance: 'Weighing competing priorities sensibly instead of going to extremes.',
   Generosity: 'Freely giving your time, knowledge and support to others.',
   Patience: 'Staying calm and giving things the time they need to develop.',
   Compassion: 'Responding to other people’s difficulties with care and a wish to help.',
   Authenticity: 'Being true to yourself and presenting yourself honestly to others.',
   Ambition: 'A strong desire to achieve, progress and take on bigger challenges.',
   Efficiency: 'Achieving results with minimal waste of time, effort and resources.',
-  'Fairness in pay': 'Believing people should be rewarded equitably for their work and contribution.',
   'Continuous improvement': 'Making small, steady improvements to how you and your team work, all the time.',
   'Customer focus': 'Putting the needs and experience of the people you serve at the centre of decisions.',
   'Open source': 'Believing in sharing software and knowledge openly so that everyone can use and improve it.',
@@ -72,12 +69,10 @@ export const VALUE_DEFINITIONS: Record<string, string> = {
   Belonging: 'Feeling accepted as part of a group, and helping others feel the same.',
   Family: 'Putting importance on the people closest to you and the time you spend with them.',
   Forgiveness: 'Letting go of resentment and giving people the chance to put things right.',
-  Hospitality: 'Welcoming people warmly and making them feel at home.',
   Tolerance: 'Accepting people and views that differ from your own without judgement.',
 
   // Collaboration and leadership
   Communication: 'Sharing information and ideas clearly and listening well, so that people understand each other.',
-  Cooperation: 'Willingly working with others, compromising where needed, to get things done.',
   Vision: 'Having a clear picture of a better future and inspiring others to work toward it.',
   Empowerment: 'Giving people the trust, tools and authority to make decisions and act.',
   'Shared success': 'Celebrating and rewarding achievements as a group rather than only as individuals.',
@@ -85,7 +80,6 @@ export const VALUE_DEFINITIONS: Record<string, string> = {
 
   // Learning and growth
   Wisdom: 'Applying experience, judgement and perspective to make sound decisions.',
-  Knowledge: 'Valuing understanding and expertise, and the effort it takes to build it.',
   'Self-awareness': 'Understanding your own strengths, weaknesses, motives and effect on others.',
   Reflection: 'Taking time to think back on what happened and what you can learn from it.',
   Exploration: 'Seeking out new places, ideas and experiences with an open mind.',
@@ -105,21 +99,17 @@ export const VALUE_DEFINITIONS: Record<string, string> = {
   Initiative: 'Acting on your own to start things and solve problems without waiting to be asked.',
   Results: 'Focusing on achieving tangible outcomes rather than just activity.',
   Entrepreneurship: 'Spotting opportunities and taking calculated risks to build something new.',
-  Success: 'Striving to achieve the goals you have set and to reach a high standard.',
   Boldness: 'Being willing to take big steps and make daring choices.',
-  Drive: 'An inner engine that pushes you to start, persist and deliver.',
   Passion: 'Feeling genuine enthusiasm and energy for your work.',
   Optimism: 'Expecting good outcomes and seeing opportunities in setbacks.',
 
   // Freedom and autonomy
   Independence: 'Standing on your own feet and making your own decisions.',
-  Choice: 'Having real options and the ability to decide among them.',
   Flexibility: 'Being able to change how, when and where you work to suit circumstances.',
   'Self-reliance': 'Relying on your own abilities and resources rather than on others.',
   Individuality: 'Expressing what makes you unique and valuing that in others.',
   Privacy: 'Keeping control over your personal information and personal space.',
   'Self-direction': 'Setting your own goals and choosing the path to reach them.',
-  Spontaneity: 'Enjoying acting on impulse and being open to the unplanned.',
 
   // Wellbeing and balance
   Health: 'Looking after your physical and mental health as the basis for everything else.',
@@ -128,7 +118,6 @@ export const VALUE_DEFINITIONS: Record<string, string> = {
   Calm: 'Staying composed and steady, even when things are busy or stressful.',
   Mindfulness: 'Paying deliberate attention to the present moment without judgement.',
   Rest: 'Recognising the need to pause and recover so you can do your best.',
-  Comfort: 'Valuing ease, familiarity and a pleasant environment.',
   Contentment: 'Being satisfied with what you have, and who you are.',
 
   // Society and the world
@@ -141,4 +130,9 @@ export const VALUE_DEFINITIONS: Record<string, string> = {
   Accessibility: 'Making sure products, places and information can be used by everyone, including people with disabilities.',
   Philanthropy: 'Giving time, money or skills to improve the lives of others.',
   Stewardship: 'Caring for what is entrusted to you, be it a codebase, a team or the wider world.',
+  'Psychological safety': 'Feeling able to speak up, ask questions and admit mistakes without fear of blame, and helping others feel the same.',
+  'Intellectual honesty': 'Following the evidence where it leads, admitting what you do not know and changing your mind when you are wrong.',
+  'Rigour': 'Being careful and thorough, checking your reasoning and your work so that results can be trusted.',
+  'Sustainable pace': 'Working at a speed you and your team can keep up over the long term, rather than burning out on sprints.',
+  'Learning in public': 'Sharing what you are learning, including mistakes and half-formed ideas, so others can learn and give feedback.',
 }

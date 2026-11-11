@@ -293,7 +293,17 @@ describe('profiles saved before values were grouped', () => {
   it('restores every original value as a built-in value, not a custom one', () => {
     expect(ORIGINAL_VALUES).toHaveLength(60)
     const state = profileToState(ok(file({ values: ORIGINAL_VALUES.map((v) => v.toUpperCase()) })))
-    expect(state.customValues).toEqual([])
-    expect(state.selectedValues).toEqual(ORIGINAL_VALUES)
+    // Values since removed from the built-in list load as the user's own custom entries.
+    const removed = ['Recognition', 'Balance', 'Fairness in pay']
+    expect(state.customValues).toEqual(removed.map((v) => v.toUpperCase()))
+    expect(state.selectedValues).toEqual(
+      ORIGINAL_VALUES.map((v) => (removed.includes(v) ? v.toUpperCase() : v)),
+    )
+  })
+
+  it('keeps a removed built-in value as a custom value', () => {
+    const state = profileToState(ok(file({ values: ['Comfort', 'Respect'] })))
+    expect(state.customValues).toEqual(['Comfort'])
+    expect(state.selectedValues).toEqual(['Comfort', 'Respect'])
   })
 })

@@ -22,7 +22,6 @@ export const ENGINEERING_DEFINITIONS: Record<string, string> = {
   'Code review': 'Examining teammates’ changes to catch problems, share knowledge and maintain standards.',
   'Static analysis': 'Using tools that inspect code without running it to find bugs, vulnerabilities and style issues.',
   'Performance testing': 'Measuring how a system behaves under load to find slow spots and limits.',
-  'Exploratory testing': 'Investigating software freely, without a script, to uncover problems that planned tests miss.',
 
   // Reliability and operations
   Observability: 'Instrumenting systems with logs, metrics and traces so you can understand what they are doing.',
@@ -65,4 +64,11 @@ export const ENGINEERING_DEFINITIONS: Record<string, string> = {
   'Trunk-based development': 'A branching model where everyone works close to the main branch, with short-lived changes and frequent integration.',
   Refactoring: 'Improving the internal structure of code without changing what it does.',
   'Technical debt management': 'Recognising shortcuts taken in code and planning to pay them down before they slow the team.',
+  'Architecture decision records': 'Short documents that capture an important design decision, its context and the alternatives considered.',
+  'Platform engineering': 'Building internal platforms and tooling that let other teams ship and run software more easily and safely.',
+  'Supply chain security': 'Protecting the software you build from risks in dependencies, build systems and the way code is delivered.',
+  'Dependency management': 'Choosing, updating and auditing the libraries your software relies on so they stay secure and compatible.',
+  'Legacy system modernisation': 'Safely evolving or replacing older systems in steps, keeping the business running while you do.',
+  'Database migrations': 'Changing a database schema and its data in a controlled, repeatable and reversible way.',
+  'Cost optimisation (FinOps)': 'Understanding and reducing cloud and infrastructure spend without harming reliability or delivery speed.',
 }

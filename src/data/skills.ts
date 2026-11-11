@@ -22,11 +22,11 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
     },
     {
       category: 'Web and frontend',
-      skills: ['HTML', 'CSS', 'React', 'Next.js', 'Angular', 'Vue', 'Svelte', 'WebAssembly', 'Tailwind CSS', 'Web accessibility', 'Responsive design', 'Web performance'],
+      skills: ['HTML', 'CSS', 'React', 'Next.js', 'Angular', 'Vue', 'Svelte', 'WebAssembly', 'Tailwind CSS', 'Web accessibility', 'Responsive design', 'Web performance', 'Playwright', 'Vite'],
     },
     {
       category: 'Backend and APIs',
-      skills: ['Node.js', '.NET', 'Spring Boot', 'Django', 'FastAPI', 'Laravel', 'REST APIs', 'GraphQL', 'gRPC', 'WebSockets'],
+      skills: ['Node.js', '.NET', 'Spring Boot', 'Django', 'FastAPI', 'Laravel', 'REST APIs', 'GraphQL', 'gRPC', 'WebSockets', 'Deno and Bun'],
     },
     {
       category: 'Data',
@@ -43,6 +43,7 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Elasticsearch',
         'Vector databases',
         'Data analysis',
+        'Supabase',
       ],
     },
     {
@@ -58,20 +59,19 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'RabbitMQ',
         'Apache Spark',
         'Databricks',
-        'Parquet and data formats',
       ],
     },
     {
       category: 'Mobile',
-      skills: ['Android', 'iOS', 'React Native', 'Expo', 'Flutter', '.NET MAUI'],
+      skills: ['Android', 'iOS', 'React Native', 'Flutter', '.NET MAUI'],
     },
     {
       category: 'Cloud and DevOps',
-      skills: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Helm', 'Terraform', 'Infrastructure as code', 'CI/CD pipelines', 'GitHub Actions', 'GitLab CI', 'Ansible', 'Nginx', 'Serverless', 'Linux', 'Git', 'Shell scripting'],
+      skills: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Helm', 'Terraform', 'Infrastructure as code', 'CI/CD pipelines', 'GitHub Actions', 'GitLab CI', 'Ansible', 'Nginx', 'Serverless', 'Linux', 'Git', 'Shell scripting', 'Docker Compose', 'Cloudflare'],
     },
     {
       category: 'GPUs',
-      skills: ['GPU computing', 'CUDA', 'Cloud GPU instances'],
+      skills: ['GPU computing', 'CUDA', ],
     },
     {
       category: 'Observability tooling',
@@ -93,6 +93,7 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'API design',
         'Data architecture',
         'Resilience patterns',
+        'Database migrations',
       ],
     },
     {
@@ -107,7 +108,6 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Code review',
         'Static analysis',
         'Performance testing',
-        'Exploratory testing',
       ],
     },
     {
@@ -122,6 +122,7 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Chaos engineering',
         'Zero-downtime deployments',
         'Site reliability engineering',
+        'Platform engineering',
       ],
     },
     {
@@ -135,11 +136,12 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Secrets management',
         'Encryption and key management',
         'Compliance and governance',
+        'Supply chain security',
       ],
     },
     {
       category: 'Performance and scale',
-      skills: ['Algorithms and data structures', 'Performance optimisation', 'Scalability', 'Concurrency', 'Caching strategies', 'Query tuning'],
+      skills: ['Algorithms and data structures', 'Performance optimisation', 'Scalability', 'Concurrency', 'Caching strategies', 'Query tuning', 'Cost optimisation (FinOps)'],
     },
     {
       category: 'Delivery and process',
@@ -155,6 +157,9 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Trunk-based development',
         'Refactoring',
         'Technical debt management',
+        'Architecture decision records',
+        'Dependency management',
+        'Legacy system modernisation',
       ],
     },
   ],
@@ -171,6 +176,7 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Receiving feedback',
         'Explaining technical concepts',
         'Difficult conversations',
+        'Asynchronous communication',
       ],
     },
     {
@@ -184,6 +190,9 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Remote collaboration',
         'Building trust',
         'Empathy',
+        'Psychological safety',
+        'Pair and mob programming',
+        'Knowledge sharing',
       ],
     },
     {
@@ -200,6 +209,7 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Change management',
         'Managing up',
         'Performance management',
+        'Onboarding new team members',
       ],
     },
     {
@@ -214,14 +224,13 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Adaptability',
         'Resilience',
         'Continuous learning',
-        'Self-motivation',
         'Emotional intelligence',
         'Accountability',
       ],
     },
     {
       category: 'Business awareness',
-      skills: ['Customer focus', 'Business acumen', 'Cultural awareness', 'Commercial awareness'],
+      skills: ['Customer focus', 'Business acumen', ],
     },
   ],
   ai: [
@@ -241,7 +250,8 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'AI-assisted refactoring',
         'AI-assisted debugging',
         'Human-in-the-loop review',
-        'AI-assisted documentation',
+        'Long-running autonomous agents',
+        'Parallel agent sessions',
       ],
     },
     {
@@ -259,7 +269,7 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
     },
     {
       category: 'Terminal (TUI and CLI) tools',
-      skills: ['Claude Code', 'Cursor CLI', 'Codex CLI', 'Gemini CLI', 'GitHub Copilot CLI', 'Amp', 'Qwen Code', 'Warp'],
+      skills: ['Claude Code', 'Cursor CLI', 'Codex CLI', 'Gemini CLI', 'GitHub Copilot CLI', 'Warp'],
     },
     {
       category: 'Desktop apps and AI-first editors',
@@ -292,11 +302,11 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
     },
     {
       category: 'Open-source coding tools',
-      skills: ['OpenCode', 'Aider', 'Goose', 'Crush', 'OpenHands', 'Open Interpreter', 'SWE-agent'],
+      skills: ['OpenCode', 'Aider', 'Goose', 'OpenHands', 'Open Interpreter', ],
     },
     {
       category: 'Closed-model providers',
-      skills: ['Anthropic', 'OpenAI', 'Google DeepMind', 'Meta (Llama)', 'xAI', 'Mistral AI', 'Cohere', 'Amazon (Nova)'],
+      skills: ['Anthropic', 'OpenAI', 'Google DeepMind', 'Meta (Llama)', 'xAI', 'Mistral AI', ],
     },
     {
       category: 'Inference providers and gateways',
@@ -328,15 +338,12 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Mistral and Mixtral',
         'GLM',
         'Kimi',
-        'Phi',
-        'SmolLM',
-        'Olmoe',
         'Choosing an open-weight model',
       ],
     },
     {
       category: 'Local runtimes and tools',
-      skills: ['Ollama', 'llama.cpp', 'LM Studio', 'vLLM', 'LocalAI', 'Jan', 'MLX', 'llamafile', 'Open WebUI', 'GPT4All', 'AnythingLLM'],
+      skills: ['Ollama', 'llama.cpp', 'LM Studio', 'vLLM', 'LocalAI', 'MLX', 'llamafile', 'Open WebUI', ],
     },
     {
       category: 'Local hardware and optimisation',
@@ -366,6 +373,7 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Agent SDKs',
         'Computer use / browser control',
         'Sandboxing and permissions',
+        'Building MCP servers',
       ],
     },
     {
@@ -385,6 +393,9 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'AI safety and red teaming',
         'LLMOps',
         'Model routing',
+        'Prompt injection defence',
+        'Token and cost management',
+        'Agent evaluation',
       ],
     },
   ],
