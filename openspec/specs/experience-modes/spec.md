@@ -44,3 +44,10 @@ The instructions on each skill page SHALL state which option is active and that 
 #### Scenario: Instruction text
 - **WHEN** the user reads the instructions on any skill page
 - **THEN** they name the active option and say the other option has its own selections
+
+### Requirement: Options are introduced
+Each skill page SHALL introduce the two options with text above them, as defined by the page-guidance capability, so users know the profile records both what they have done and what they want to do.
+
+#### Scenario: Intro precedes options
+- **WHEN** the user reads a skill page from the top
+- **THEN** the experience intro is read before the Previous experience and Desired experience options
