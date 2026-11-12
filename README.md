@@ -22,8 +22,8 @@ The software runs entirely in the browser. No data leaves the user's device, unl
 - [x] Choose values once (no previous or desired option for values), and open every skill page on previous experience.
 - [x] Offer a link to ChatGPT, with a ready-made prompt, on the values and interpersonal pages to help discover more.
 - [x] Load a previously downloaded JSON profile and continue editing it.
-- [x] Provide a GitHub Actions workflow for deployment to GitHub Pages.
-- [x] Deploy to GitHub Pages and confirm the live site.
+- [x] Provide a GitHub Actions workflow that tests, builds and deploys to Cloudflare Pages.
+- [ ] Deploy to Cloudflare Pages and confirm the live site.
 
 ## :telescope: Future Gazing
 
@@ -61,11 +61,11 @@ No special hardware is required.
 
 No configuration is required. The application has no backend, accounts or secrets.
 
-The application is served under the `/profile/` base path, which is what GitHub Pages needs for a project site. To serve from the root instead (for example, on a custom domain or another static host), set `VITE_BASE` when building:
+The application is built for the root of its host (`/`), which is what Cloudflare Pages needs. To serve it from a sub-path instead (for example, a GitHub Pages project site at `/profile/`), set `VITE_BASE` when building:
 
 ```bash
-VITE_BASE=/ npm run build              # macOS, Linux, Git Bash
-$env:VITE_BASE = '/'; npm run build    # PowerShell
+VITE_BASE=/profile/ npm run build              # macOS, Linux, Git Bash
+$env:VITE_BASE = '/profile/'; npm run build    # PowerShell
 ```
 
 ### :wrench: Development Setup
@@ -156,20 +156,20 @@ Press `Escape`, use **Close** or click elsewhere to dismiss the description. Cus
 
 ## :ship: Deployment
 
-The site is a static build (`dist/`) hosted on GitHub Pages. `.github/workflows/deploy.yml` runs on every push to `main` (and can be run manually from the Actions tab). It installs dependencies, runs the tests, builds and deploys; a failing test stops the deployment.
+The site is a static build (`dist/`) hosted on Cloudflare Pages. `.github/workflows/deploy.yml` runs on every push to `main` (and can be run manually from the Actions tab). It installs dependencies, runs the tests, builds and deploys with Wrangler (direct upload); a failing test stops the deployment.
 
 ### One-time setup
 
-1. Push the repository to GitHub.
-2. In the repository, go to **Settings > Pages** and set **Source** to **GitHub Actions**.
-3. Push to `main`, or run the workflow manually. When it finishes the site is live at `https://<owner>.github.io/<repo>/`, which for this repository should be <https://deans-code.github.io/profile/>.
+1. In the repository, go to **Settings > Secrets and variables > Actions** and add `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`. The token needs **Account > Cloudflare Pages > Edit** permission.
+2. Push to `main`, or run the workflow manually. The first run creates the Cloudflare Pages project `profile` if it does not exist, and the run log prints the deployment URL (<https://profile.pages.dev> unless Cloudflare assigns a different name).
+3. If GitHub Pages was previously enabled, go to **Settings > Pages** and unpublish it. It is no longer used.
 
-> [!WARNING]
-> The `base` path in `vite.config.ts` defaults to `/profile/` and must match the repository name. If the repository is renamed, update it (or set `VITE_BASE` in the workflow's build step), otherwise the site loads without its scripts and styles.
+> [!NOTE]
+> The application is built for the root of its host (`base` is `/`). To serve from a sub-path, set `VITE_BASE` when building (see [System Configuration](#floppy_disk-system-configuration)).
 
 ### Other static hosts
 
-The build output is host-agnostic. For Cloudflare Pages, Netlify or similar, use `npm run build` as the build command, `dist` as the output directory, and set `VITE_BASE=/` so assets resolve from the root.
+The build output is host-agnostic. For Netlify or similar, use `npm run build` as the build command and `dist` as the output directory; set `VITE_BASE` if the site is not served from the root.
 
 ## :hammer_and_wrench: Architecture
 
@@ -205,5 +205,5 @@ This software is licensed under the [MIT](LICENSE) license.
 - [React](https://react.dev/)
 - [Vite](https://vite.dev/)
 - [Vitest](https://vitest.dev/)
-- [GitHub Pages](https://docs.github.com/en/pages)
+- [Cloudflare Pages direct upload with CI](https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/)
 - [OpenSpec](https://openspec.dev/)
