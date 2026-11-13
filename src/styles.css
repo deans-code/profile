@@ -733,3 +733,32 @@ main {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* Sources */
+.sources {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.sources h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.125rem;
+  color: var(--text);
+}
+
+.sources p {
+  margin: 0 0 0.5rem;
+}
+
+.sources ul {
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.sources a {
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}

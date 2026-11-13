@@ -18,15 +18,15 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
   technical: [
     {
       category: 'Languages',
-      skills: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C#', 'Go', 'Rust', 'C++', 'Kotlin', 'Swift', 'PHP', 'Ruby', 'Dart', 'Scala', 'C', 'R', 'Elixir'],
+      skills: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C#', 'Go', 'Rust', 'C++', 'Kotlin', 'Swift', 'PHP', 'Ruby', 'Dart', 'Scala', 'C', 'R', 'Elixir', 'PowerShell'],
     },
     {
       category: 'Web and frontend',
-      skills: ['HTML', 'CSS', 'React', 'Next.js', 'Angular', 'Vue', 'Svelte', 'WebAssembly', 'Tailwind CSS', 'Web accessibility', 'Responsive design', 'Web performance', 'Playwright', 'Vite'],
+      skills: ['HTML', 'CSS', 'React', 'Next.js', 'Angular', 'Vue', 'Svelte', 'WebAssembly', 'Tailwind CSS', 'Web accessibility', 'Responsive design', 'Web performance', 'Vite', 'jQuery'],
     },
     {
       category: 'Backend and APIs',
-      skills: ['Node.js', '.NET', 'Spring Boot', 'Django', 'FastAPI', 'Laravel', 'REST APIs', 'GraphQL', 'gRPC', 'WebSockets', 'Deno and Bun'],
+      skills: ['Node.js', '.NET', 'Spring Boot', 'Django', 'FastAPI', 'Laravel', 'REST APIs', 'GraphQL', 'gRPC', 'WebSockets', 'Deno and Bun', 'Express', 'ASP.NET Core', 'Keycloak', 'Auth0 and Okta'],
     },
     {
       category: 'Data',
@@ -44,6 +44,8 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
         'Vector databases',
         'Data analysis',
         'Supabase',
+        'MariaDB',
+        'OpenSearch',
       ],
     },
     {
@@ -67,7 +69,7 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
     },
     {
       category: 'Cloud and DevOps',
-      skills: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Helm', 'Terraform', 'Infrastructure as code', 'CI/CD pipelines', 'GitHub Actions', 'GitLab CI', 'Ansible', 'Nginx', 'Serverless', 'Linux', 'Git', 'Shell scripting', 'Docker Compose', 'Cloudflare'],
+      skills: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Helm', 'Terraform', 'Infrastructure as code', 'CI/CD pipelines', 'GitHub Actions', 'GitLab CI', 'Ansible', 'Nginx', 'Serverless', 'Linux', 'Git', 'Shell scripting', 'Docker Compose', 'Cloudflare', 'Firebase', 'Vercel', 'Hetzner Cloud', 'Podman', 'Service mesh'],
     },
     {
       category: 'GPUs',
@@ -75,7 +77,25 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
     },
     {
       category: 'Observability tooling',
-      skills: ['Observability platforms', 'Prometheus and Grafana', 'OpenTelemetry', 'Log aggregation', 'Sentry', 'Distributed tracing'],
+      skills: ['Observability platforms', 'Prometheus and Grafana', 'OpenTelemetry', 'Log aggregation', 'Sentry', 'Distributed tracing', 'Datadog'],
+    },
+    {
+      category: 'Testing and code quality tools',
+      skills: ['Playwright', 'Jest', 'Vitest', 'pytest', 'JUnit', 'Postman', 'ESLint', 'SonarQube'],
+    },
+    {
+      category: 'Editors, IDEs and package managers',
+      skills: [
+        'Visual Studio Code',
+        'Visual Studio',
+        'IntelliJ IDEA',
+        'Vim and Neovim',
+        'npm',
+        'pnpm',
+        'pip and uv',
+        'Homebrew',
+        'Make and Makefiles',
+      ],
     },
   ],
   engineering: [

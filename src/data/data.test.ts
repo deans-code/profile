@@ -123,3 +123,40 @@ describe('AI engineering catalog', () => {
     expect(names.length).toBeGreaterThanOrEqual(100)
   })
 })
+
+describe('technical catalog guided by surveys', () => {
+  const technical = CATALOGS.technical
+  const names = catalogSkillNames('technical')
+  const category = (name: string) => technical.find((c) => c.category === name)
+
+  it('offers the surveyed technologies', () => {
+    for (const name of [
+      'PowerShell', 'jQuery', 'Express', 'ASP.NET Core', 'MariaDB', 'OpenSearch', 'Firebase', 'Vercel',
+      'Podman', 'Service mesh', 'Datadog', 'npm', 'pnpm',
+    ]) {
+      expect(names).toContain(name)
+    }
+  })
+
+  it('has the testing and editors categories', () => {
+    expect(category('Testing and code quality tools')?.skills).toEqual(
+      expect.arrayContaining(['Playwright', 'Jest', 'Vitest', 'pytest', 'JUnit', 'Postman', 'ESLint', 'SonarQube']),
+    )
+    expect(category('Editors, IDEs and package managers')?.skills).toEqual(
+      expect.arrayContaining([
+        'Visual Studio Code', 'Visual Studio', 'IntelliJ IDEA', 'Vim and Neovim', 'npm', 'pnpm', 'pip and uv',
+        'Homebrew', 'Make and Makefiles',
+      ]),
+    )
+    expect(category('Editors, IDEs and package managers')?.skills).not.toContain('Cursor')
+  })
+
+  it('lists Playwright once, only under testing', () => {
+    expect(names.filter((n) => n === 'Playwright')).toHaveLength(1)
+    expect(category('Web and frontend')?.skills).not.toContain('Playwright')
+  })
+
+  it('does not duplicate Feature flags from Engineering', () => {
+    expect(names).not.toContain('Feature flags')
+  })
+})

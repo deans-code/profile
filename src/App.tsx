@@ -17,6 +17,7 @@ import LoadProfile from './components/LoadProfile'
 import ProfileCard from './components/ProfileCard'
 import SkillStep from './components/SkillStep'
 import ValuesStep from './components/ValuesStep'
+import { SOURCES, SOURCES_NOTE } from './data/sources'
 import { useStepNavigation } from './useStepNavigation'
 
 const STEP_LABELS: Record<Step, string> = {
@@ -134,6 +135,21 @@ export default function App() {
               </div>
             </footer>
           )}
+
+          <section className="sources" aria-labelledby="sources-heading">
+            <h2 id="sources-heading">Sources</h2>
+            <p>{SOURCES_NOTE}</p>
+            <ul>
+              {SOURCES.map((source) => (
+                <li key={source.url}>
+                  <a href={source.url} target="_blank" rel="noopener noreferrer">
+                    {source.title}
+                  </a>{' '}
+                  <span className="source-publisher">({source.publisher})</span>
+                </li>
+              ))}
+            </ul>
+          </section>
         </div>
       </DefinitionProvider>
     </div>
