@@ -402,14 +402,41 @@ ul {
 }
 
 .add-entry {
+  margin: 1.25rem 0;
+  padding: 0.875rem 1rem;
+  background: var(--tint);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--text);
+}
+
+.add-title {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.add-help {
+  margin: 0.125rem 0 0.5rem;
+  color: var(--text);
+}
+
+.add-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  margin: 1rem 0;
 }
 
 .add-entry input {
-  flex: 1;
-  max-width: 24rem;
+  flex: 1 1 14rem;
+  max-width: 28rem;
+  min-height: 44px;
+  border: 2px solid var(--accent);
+}
+
+.add-limit {
+  margin: 0.5rem 0 0;
+  font-weight: 600;
 }
 
 /* Skill categories as cards in a responsive grid */

@@ -95,6 +95,8 @@ export default function WordPicker({
       {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
       <SelectionHelp limit={limit} unit={kind === 'values' ? 'values' : 'skills'} mode={mode} />
 
+      <AddEntry label={addLabel} placeholder={addPlaceholder} full={full} onAdd={onAddCustom} />
+
       <div className="filter-block">
         <label htmlFor={filterId} className="filter-label">
           {filterLabel}
@@ -155,7 +157,6 @@ export default function WordPicker({
         })}
       </div>
 
-      <AddEntry label={addLabel} placeholder={addPlaceholder} full={full} onAdd={onAddCustom} />
       <SelectionStatus count={selected.length} limit={limit} />
     </section>
   )
