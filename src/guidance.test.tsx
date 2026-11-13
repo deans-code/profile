@@ -12,13 +12,13 @@ describe('page guidance', () => {
   it('shows the introduction above the steps on every page', async () => {
     const user = userEvent.setup()
     render(<App />)
-    const intro = screen.getByText(/Build a profile of what you value/)
+    const intro = screen.getByText(/Build a personal profile of what you value/)
     const nav = screen.getByRole('navigation', { name: 'Steps' })
     expect(intro.compareDocumentPosition(nav) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
 
     await user.click(screen.getByRole('button', { name: 'Respect' }))
     await user.click(next())
-    expect(screen.getByText(/Build a profile of what you value/)).toBeInTheDocument()
+    expect(screen.getByText(/Build a personal profile of what you value/)).toBeInTheDocument()
   })
 
   it('shows the position, the next step and completed steps', async () => {
@@ -30,7 +30,7 @@ describe('page guidance', () => {
     await user.click(next())
     expect(screen.getByText(/Step 2 of 6/)).toHaveTextContent('Technical development')
     const nav = within(screen.getByRole('navigation', { name: 'Steps' }))
-    expect(nav.getByRole('button', { name: 'Values' })).toHaveAttribute('data-complete', 'true')
+    expect(nav.getByRole('button', { name: /^Values/ })).toHaveAttribute('data-complete', 'true')
     expect(nav.getByRole('button', { name: 'Engineering' })).not.toHaveAttribute('data-complete')
   })
 
@@ -76,5 +76,34 @@ describe('curated options', () => {
 
   it('has no empty categories left in any section', () => {
     for (const s of SECTIONS) for (const c of CATALOGS[s]) expect(c.skills.length).toBeGreaterThan(0)
+  })
+})
+
+describe('clearer navigation and messages', () => {
+  it('names destinations on Back and Continue and shows the blocked reason as a callout', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    const footer = within(document.querySelector<HTMLElement>('footer.nav')!)
+    expect(footer.getByRole('button', { name: 'Continue to Technical development' })).toBeDisabled()
+    expect(footer.getByRole('status')).toHaveTextContent('Before you continue: Choose at least one value')
+    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    await user.click(next())
+    expect(footer.getByRole('button', { name: 'Back to Values' })).toBeEnabled()
+    expect(footer.getByRole('button', { name: 'Continue to Engineering' })).toBeEnabled()
+  })
+
+  it('shows badges, a check mark with text, a progress value and a page lead', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    expect(screen.getByRole('progressbar', { name: 'Steps complete' })).toHaveAttribute('value', '0')
+    expect(screen.getByText(/Pick up to five values/)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    await user.click(next())
+    const nav = within(screen.getByRole('navigation', { name: 'Steps' }))
+    const values = nav.getByRole('button', { name: /^Values/ })
+    expect(values).toHaveTextContent('✓')
+    expect(values).toHaveTextContent('(complete)')
+    expect(screen.getByRole('progressbar', { name: 'Steps complete' })).toHaveAttribute('value', '1')
+    expect(screen.getByText(/Pick the skills that apply/)).toBeInTheDocument()
   })
 })

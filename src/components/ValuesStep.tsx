@@ -14,6 +14,7 @@ export default function ValuesStep({ state, dispatch }: Props) {
       kind="values"
       headingId="values-heading"
       heading="What do you value?"
+      lead="Pick up to five values that matter most to you."
       hint="Select the values that describe you, or add your own."
       categories={VALUE_CATEGORIES.map((c) => ({ category: c.category, words: c.values }))}
       selected={state.selectedValues}

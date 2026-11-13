@@ -6,7 +6,7 @@ import { MAX_FILE_BYTES } from './load'
 const word = (name: string) => screen.getByRole('button', { name })
 // The AI engineering catalog has a "Continue" word, so look only in the footer.
 const next = () =>
-  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)$/i })
+  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)/i })
 const radio = (name: RegExp) => screen.getByRole('radio', { name })
 const picker = () => screen.getByLabelText('Choose a saved profile file') as HTMLInputElement
 const card = () => screen.getByRole('article', { name: 'Profile card' })
@@ -69,7 +69,7 @@ describe('Load saved profile', () => {
     render(<App />)
     await upload(user, legacyJson())
     // The AI engineering page is empty, so the app asks for a selection there.
-    expect((await screen.findAllByText(/Select at least one skill in: ai engineering/)).length).toBeGreaterThan(0)
+    expect((await screen.findAllByText(/Choose at least one skill on each of these pages first: ai engineering/)).length).toBeGreaterThan(0)
     expect(screen.getByRole('heading', { name: /ai engineering skills/i })).toBeInTheDocument()
     await user.click(word('Ollama'))
     await user.click(next())
@@ -192,7 +192,7 @@ describe('Load saved profile', () => {
       await user.click(next())
       await user.click(radio(/^Desired experience/))
       await user.click(word('Python'))
-      await user.click(screen.getByRole('button', { name: 'Back' }))
+      await user.click(screen.getByRole('button', { name: /^Back/ }))
       await user.click(word('Trust'))
       await upload(user, profileJson())
       expect(await screen.findByRole('group', { name: 'Confirm loading a profile' })).toBeInTheDocument()
@@ -239,7 +239,7 @@ describe('Load saved profile', () => {
       const values = Array.from({ length: 8 }, (_, i) => `Custom value ${i}`)
       await upload(user, profileJson({ values }))
       expect(
-        await screen.findByText(/Loaded profile\.json\. Deselect 3 words on the values page to continue \(limit 5\)/),
+        await screen.findByText(/Loaded profile\.json\. You have too many selected\. Deselect 3 words on the values page to continue \(limit 5\)/),
       ).toBeInTheDocument()
       expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
       expect(screen.getByText(/^8 of 5 selected/)).toHaveTextContent(/deselect 3 words/i)
@@ -266,7 +266,7 @@ describe('Load saved profile', () => {
           },
         }),
       )
-      expect(await screen.findByText(/Select at least one skill in: engineering, interpersonal/)).toBeInTheDocument()
+      expect(await screen.findByText(/Choose at least one skill on each of these pages first: engineering, interpersonal/)).toBeInTheDocument()
       await waitFor(() => expect(screen.getByRole('heading', { name: /engineering skills/i })).toBeInTheDocument())
     })
   })

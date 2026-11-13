@@ -111,7 +111,7 @@ describe('filter box guidance', () => {
     const user = userEvent.setup()
     render(<App />)
     await user.click(word('Integrity'))
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await user.click(screen.getByRole('button', { name: /^Continue/ }))
     expect(screen.getByLabelText('Filter skills')).toHaveAccessibleDescription(
       /Type part of a word to show only the technical development skills that match/,
     )

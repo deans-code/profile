@@ -309,7 +309,7 @@ describe('selection limit', () => {
 
     it('blocks moving forward, naming the page, count and limit, but not moving back', () => {
       expect(stepBlockedReason(over, 'technical')).toBe(
-        'Deselect 2 words on the values page to continue (limit 5).',
+        'You have too many selected. Deselect 2 words on the values page to continue (limit 5).',
       )
       expect(reducer(over, { type: 'goTo', step: 'technical' }).step).toBe('values')
       const onTechnical = { ...over, step: 'technical' as const }

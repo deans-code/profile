@@ -19,6 +19,8 @@ interface Props {
   headingId: string
   heading: string
   hint: string
+  /** One line saying what to do on this page. */
+  lead: string
   categories: WordCategory[]
   selected: string[]
   custom: string[]
@@ -47,6 +49,7 @@ export default function WordPicker({
   headingId,
   heading,
   hint,
+  lead,
   categories,
   selected,
   custom,
@@ -79,6 +82,7 @@ export default function WordPicker({
   return (
     <section aria-labelledby={headingId}>
       <h2 id={headingId}>{heading}</h2>
+      <p className="lead">{lead}</p>
       <p className="hint">{hint}</p>
       {ASSISTANT_HELP[kind] && <AssistantLink {...ASSISTANT_HELP[kind]} />}
       {mode && (

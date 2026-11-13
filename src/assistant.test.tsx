@@ -6,7 +6,7 @@ import { ASSISTANT_HELP, chatGptUrl } from './data/assistant'
 const word = (name: string) => screen.getByRole('button', { name })
 // The AI engineering catalog has a "Continue" word, so look only in the footer.
 const next = () =>
-  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)$/i })
+  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)/i })
 const link = () => screen.queryByRole('link', { name: /open chatgpt/i })
 
 async function goTo(user: ReturnType<typeof userEvent.setup>, step: 'technical' | 'engineering' | 'interpersonal') {

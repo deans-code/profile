@@ -7,7 +7,7 @@ import { TRANSITION_MS } from './useStepNavigation'
 const chip = (name: string) => screen.getByRole('button', { name })
 // The AI engineering catalog has a "Continue" word, so look only in the footer.
 const next = () =>
-  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)$/i })
+  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)/i })
 const stepView = (container: HTMLElement) => container.querySelector('.step-view')!
 const heading = (name: RegExp) => screen.getByRole('heading', { name })
 
@@ -42,7 +42,7 @@ describe('section transitions', () => {
     expect(stepView(container)).toHaveClass('enter-forward')
 
     await new Promise((r) => setTimeout(r, TRANSITION_MS + 50))
-    await user.click(screen.getByRole('button', { name: 'Back' }))
+    await user.click(screen.getByRole('button', { name: /^Back/ }))
     expect(stepView(container)).toHaveClass('enter-backward')
     expect(heading(/what do you value/i)).toBeInTheDocument()
   })
@@ -53,7 +53,7 @@ describe('section transitions', () => {
     await user.click(chip('Integrity'))
     await user.click(next())
     expect(heading(/technical development skills/i)).toHaveFocus()
-    await user.click(screen.getByRole('button', { name: 'Back' }))
+    await user.click(screen.getByRole('button', { name: /^Back/ }))
     expect(heading(/what do you value/i)).toHaveFocus()
   })
 
@@ -68,9 +68,9 @@ describe('section transitions', () => {
     await user.click(next())
     // Nothing is selected on the later pages, so the profile stays blocked.
     expect(next()).toBeDisabled()
-    await user.click(screen.getByRole('button', { name: 'Back' }))
-    await user.click(screen.getByRole('button', { name: 'Back' }))
-    await user.click(screen.getByRole('button', { name: 'Back' }))
+    await user.click(screen.getByRole('button', { name: /^Back/ }))
+    await user.click(screen.getByRole('button', { name: /^Back/ }))
+    await user.click(screen.getByRole('button', { name: /^Back/ }))
     expect(chip('Python')).toHaveAttribute('aria-pressed', 'true')
   })
 
@@ -78,7 +78,7 @@ describe('section transitions', () => {
     const user = userEvent.setup()
     render(<App />)
     const nav = within(screen.getByRole('navigation', { name: 'Steps' }))
-    await user.click(nav.getByRole('button', { name: 'Values' }))
+    await user.click(nav.getByRole('button', { name: /^Values/ }))
     expect(window.scrollTo).not.toHaveBeenCalled()
     expect(nav.getByRole('button', { name: 'Profile' })).toBeDisabled()
   })
@@ -96,7 +96,7 @@ describe('section transitions', () => {
     expect(heading(/technical development skills/i)).toHaveFocus()
     await settle()
 
-    await user.click(nav.getByRole('button', { name: 'Values' }))
+    await user.click(nav.getByRole('button', { name: /^Values/ }))
     expect(stepView(container)).toHaveClass('enter-backward')
     await settle()
 

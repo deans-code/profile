@@ -16,6 +16,7 @@ export default function SkillStep({ section, state, dispatch }: Props) {
       kind={section}
       headingId="skills-heading"
       heading={`${label} skills`}
+      lead="Pick the skills that apply, add your own, and switch between previous and desired experience."
       hint="Select the skills that apply, or add your own."
       categories={CATALOGS[section].map((c) => ({ category: c.category, words: c.skills }))}
       selected={state.selectedSkills[section][state.mode]}

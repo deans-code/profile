@@ -136,13 +136,13 @@ export function stepBlockedReason(state: ProfileState, step: Step): string | nul
   if (over) {
     const noun = over.over === 1 ? 'word' : 'words'
     const where = over.page === 'values' ? '' : ` under ${MODE_LABELS[over.mode]}`
-    return `Deselect ${over.over} ${noun}${where} on the ${pageLabel(over.page)} page to continue (limit ${limitFor(over.page)}).`
+    return `You have too many selected. Deselect ${over.over} ${noun}${where} on the ${pageLabel(over.page)} page to continue (limit ${limitFor(over.page)}).`
   }
-  if (!pageComplete(state, 'values')) return 'Select at least one value first.'
+  if (!pageComplete(state, 'values')) return 'Choose at least one value to unlock the next step.'
   if (step === 'card') {
     const missing = missingSections(state)
     if (missing.length > 0) {
-      return `Select at least one skill in: ${missing.map((s) => SECTION_LABELS[s].toLowerCase()).join(', ')}.`
+      return `Choose at least one skill on each of these pages first: ${missing.map((s) => SECTION_LABELS[s].toLowerCase()).join(', ')}.`
     }
   }
   return null

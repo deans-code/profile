@@ -5,7 +5,7 @@ import App from './App'
 const chip = (name: string) => screen.getByRole('button', { name })
 // The AI engineering catalog has a "Continue" word, so look only in the footer.
 const next = () =>
-  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)$/i })
+  within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)/i })
 
 describe('values step', () => {
   it('shows at least 100 unselected values', () => {
@@ -107,7 +107,7 @@ describe('skill steps', () => {
     expect(next()).toBeDisabled()
     expect(screen.getByRole('status')).toHaveTextContent(/engineering, interpersonal, ai engineering/)
 
-    for (let i = 0; i < 3; i++) await user.click(screen.getByRole('button', { name: 'Back' }))
+    for (let i = 0; i < 3; i++) await user.click(screen.getByRole('button', { name: /^Back/ }))
     expect(chip('Python')).toHaveAttribute('aria-pressed', 'true')
   })
 })
@@ -178,7 +178,7 @@ describe('experience options', () => {
     await user.click(radio(/^Desired experience/))
 
     // Back
-    await user.click(screen.getByRole('button', { name: 'Back' }))
+    await user.click(screen.getByRole('button', { name: /^Back/ }))
     expect(radio(/^Previous experience/)).toBeChecked()
     expect(radio(/^Desired experience/)).toHaveTextContent('Desired experience (1)')
     await user.click(radio(/^Desired experience/))
@@ -189,7 +189,7 @@ describe('experience options', () => {
     await user.click(nav.getByRole('button', { name: 'Interpersonal' }))
     expect(radio(/^Previous experience/)).toBeChecked()
     await user.click(radio(/^Desired experience/))
-    await user.click(nav.getByRole('button', { name: 'Technical development' }))
+    await user.click(nav.getByRole('button', { name: /^Technical development/i }))
     expect(radio(/^Previous experience/)).toBeChecked()
     expect(screen.getByRole('complementary', { name: 'How to use this step' })).toHaveTextContent(
       /choosing Previous experience/,
@@ -237,7 +237,7 @@ describe('profile card and downloads', () => {
   it('has no scoring step and no sliders anywhere', async () => {
     render(<App />)
     const steps = within(screen.getByRole('navigation', { name: 'Steps' })).getAllByRole('button')
-    expect(steps.map((b) => b.textContent)).toEqual([
+    expect(steps.map((b) => b.querySelector('.step-name')!.textContent)).toEqual([
       'Values',
       'Technical development',
       'Engineering',

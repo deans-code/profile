@@ -39,14 +39,14 @@ export default function LoadProfile({ hasProgress, onLoad }: Props) {
     setPending(null)
 
     if (file.size > MAX_FILE_BYTES) {
-      setStatus({ kind: 'error', text: `${file.name} is larger than 1 MB, so it is not a profile from this app.` })
+      setStatus({ kind: 'error', text: `${file.name} is larger than 1 MB, so it is not a profile from this app. Your profile is unchanged.` })
       return
     }
     let text: string
     try {
       text = await readText(file)
     } catch {
-      setStatus({ kind: 'error', text: `${file.name} could not be read.` })
+      setStatus({ kind: 'error', text: `${file.name} could not be read. Your profile is unchanged.` })
       return
     }
     const result = parseProfile(text)
@@ -97,6 +97,7 @@ export default function LoadProfile({ hasProgress, onLoad }: Props) {
       )}
 
       <p className={`load-status ${status?.kind ?? ''}`} aria-live="polite">
+        {status?.kind === 'error' && <strong>Could not load: </strong>}
         {status?.text}
       </p>
     </div>

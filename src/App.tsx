@@ -37,6 +37,9 @@ export default function App() {
   const contentRef = useRef<HTMLElement>(null)
   const { navigate, motion, setMotionFor } = useStepNavigation(state, dispatch, contentRef)
 
+  const isDone = (step: Step) => (step === 'card' ? state.step === 'card' : pageComplete(state, step))
+  const completeCount = STEPS.filter(isDone).length
+
   const hasProgress =
     state.selectedValues.length > 0 ||
     SECTIONS.some((s) => MODES.some((m) => state.selectedSkills[s][m].length > 0))
@@ -58,30 +61,44 @@ export default function App() {
               <h1>Profile Builder</h1>
               <LoadProfile hasProgress={hasProgress} onLoad={loadProfile} />
             </div>
-            <p className="intro">
-              Build a profile of what you value and what you can do. Choose up to five values, then pick skills on four
-              pages: technical development, engineering, interpersonal and AI engineering. On each skill page you
-              record both your previous experience and the experience you want, then download your profile at the end.
-            </p>
+            <p className="intro">Build a personal profile of what you value and what you can do.</p>
+            <ol className="how-it-works" aria-label="How it works">
+              <li>
+                <strong>Choose up to five values</strong> that matter most to you.
+              </li>
+              <li>
+                <strong>Pick skills on four pages</strong>: technical development, engineering, interpersonal and AI
+                engineering, for both previous and desired experience.
+              </li>
+              <li>
+                <strong>Download your profile</strong> at the end.
+              </li>
+            </ol>
             <p className="step-status" aria-live="polite">
               Step {index + 1} of {STEPS.length}: <strong>{STEP_LABELS[state.step]}</strong>
               {next && <span className="step-next"> · Next: {STEP_LABELS[next]}</span>}
             </p>
+            <progress className="step-progress" aria-label="Steps complete" max={STEPS.length} value={completeCount} />
             <nav aria-label="Steps">
               <ol className="stepper">
-                {STEPS.map((step) => {
+                {STEPS.map((step, i) => {
                   const blocked = stepBlockedReason(state, step) !== null
+                  const showDone = isDone(step) && step !== state.step
                   return (
                     <li key={step}>
                       <button
                         type="button"
                         data-section={step}
-                        data-complete={step !== 'card' && step !== state.step && pageComplete(state, step) ? 'true' : undefined}
+                        data-complete={showDone ? 'true' : undefined}
                         disabled={blocked}
                         aria-current={step === state.step ? 'step' : undefined}
                         onClick={() => navigate(step)}
                       >
-                        {STEP_LABELS[step]}
+                        <span className="step-badge" aria-hidden="true">
+                          {showDone ? '✓' : i + 1}
+                        </span>
+                        <span className="step-name">{STEP_LABELS[step]}</span>
+                        {showDone && <span className="visually-hidden"> (complete)</span>}
                       </button>
                     </li>
                   )
@@ -103,16 +120,16 @@ export default function App() {
           {state.step !== 'card' && (
             <footer className="nav">
               <button type="button" className="secondary" disabled={!prev} onClick={() => prev && navigate(prev)}>
-                Back
+                {prev ? `Back to ${STEP_LABELS[prev]}` : 'Back'}
               </button>
               <div className="nav-next">
                 {nextBlocked && (
                   <p className="blocked" role="status">
-                    {nextBlocked}
+                    <strong>Before you continue:</strong> {nextBlocked}
                   </p>
                 )}
                 <button type="button" disabled={!next || nextBlocked !== null} onClick={() => next && navigate(next)}>
-                  {next === 'card' ? 'Finish' : 'Continue'}
+                  {next === 'card' ? 'Finish and view profile' : next ? `Continue to ${STEP_LABELS[next]}` : 'Continue'}
                 </button>
               </div>
             </footer>
