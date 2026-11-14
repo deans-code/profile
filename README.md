@@ -110,10 +110,12 @@ npm run preview
 The Technical development catalog is guided by these reports:
 
 - [Stack Overflow Developer Survey 2026: Technology](https://survey.stackoverflow.co/2026/technology/data), by Stack Overflow.
-- [The State of Developer Ecosystem 2026: Tools and trends](https://devecosystem.jetbrains.com/tools-and-trends), by JetBrains. Only part of this page could be read (its charts did not load), so it contributed mainly databases and cloud providers.
-- [State of Cloud Native Development, Q1 2026](https://www.cncf.io/wp-content/uploads/2026/03/State-of-Cloud-Native-Development-Q1-2026.pdf), by SlashData with the Cloud Native Computing Foundation, sponsored by the Continuous Delivery Foundation (licensed CC BY-NoDerivatives 4.0). It describes practices rather than products, so it contributed entries such as service mesh.
+- [The State of Developer Ecosystem 2026: Tools and trends](https://devecosystem.jetbrains.com/tools-and-trends), by JetBrains. Only part of this page could be read (its charts did not load), so it contributed databases, cloud providers and JetBrains IDEs.
+- [State of Cloud Native Development, Q1 2026](https://www.cncf.io/wp-content/uploads/2026/03/State-of-Cloud-Native-Development-Q1-2026.pdf), by SlashData with the Cloud Native Computing Foundation, sponsored by the Continuous Delivery Foundation (licensed CC BY-NoDerivatives 4.0). It describes practices rather than products, so it contributed technologies such as service meshes, API gateways and observability tools; its practices are held for the Engineering tab.
 
-**Selection rule.** A technology is offered when it has at least 10% usage in a ranked list in the Stack Overflow survey, or is named in the JetBrains or CNCF reports, and is not already on another page. Entries that were already in the catalog stay, so saved profiles keep loading. The reports guide which technologies appear; their data is not reproduced in the app.
+**Selection rule.** The Technical development catalog was rebuilt from these sources, one source at a time. A technology is offered when it has at least 5% usage in a ranked list in the Stack Overflow survey, or is named as in current use by the JetBrains or CNCF reports, and is not already offered on another page. Every option records all the sources that support it, and its description panel (right-click) lists them. Options that no source supports are not offered; a saved profile that contains one still loads it as a custom entry. Security operations vendors, AI-assisted tools and LLM vendors from the Stack Overflow lists are left for the Engineering and AI engineering tabs. The sources guide which technologies appear; their data is not reproduced in the app.
+
+Source files live in `src/data/catalog/technical/`, one per source, each with the date it was read.
 
 ## :paperclip: Usage
 

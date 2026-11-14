@@ -33,9 +33,7 @@ export const AI_DEFINITIONS: Record<string, string> = {
   Warp: 'A modern terminal application with built-in AI help and agents.',
 
   // Desktop apps and AI-first editors
-  Cursor: 'An AI-first code editor, built on VS Code, with chat, inline edits and agents.',
   Windsurf: 'An AI-first code editor with an agent that works across your codebase.',
-  Zed: 'A fast, collaborative code editor with built-in AI assistance and agent support.',
   Kiro: 'An AI-first development environment built around specs, tasks and agent hooks.',
   'Google Antigravity': 'Google’s agent-first development environment where AI agents plan and carry out coding tasks.',
   Replit: 'A cloud-based development platform where AI agents can build, run and host full applications in the browser.',

@@ -1,3 +1,5 @@
+import { TECHNICAL } from './catalog/technical'
+
 export type Section = 'technical' | 'engineering' | 'interpersonal' | 'ai'
 
 export const SECTIONS: Section[] = ['technical', 'engineering', 'interpersonal', 'ai']
@@ -15,89 +17,7 @@ export interface SkillCategory {
 }
 
 export const CATALOGS: Record<Section, SkillCategory[]> = {
-  technical: [
-    {
-      category: 'Languages',
-      skills: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C#', 'Go', 'Rust', 'C++', 'Kotlin', 'Swift', 'PHP', 'Ruby', 'Dart', 'Scala', 'C', 'R', 'Elixir', 'PowerShell'],
-    },
-    {
-      category: 'Web and frontend',
-      skills: ['HTML', 'CSS', 'React', 'Next.js', 'Angular', 'Vue', 'Svelte', 'WebAssembly', 'Tailwind CSS', 'Web accessibility', 'Responsive design', 'Web performance', 'Vite', 'jQuery'],
-    },
-    {
-      category: 'Backend and APIs',
-      skills: ['Node.js', '.NET', 'Spring Boot', 'Django', 'FastAPI', 'Laravel', 'REST APIs', 'GraphQL', 'gRPC', 'WebSockets', 'Deno and Bun', 'Express', 'ASP.NET Core', 'Keycloak', 'Auth0 and Okta'],
-    },
-    {
-      category: 'Data',
-      skills: [
-        'SQL',
-        'PostgreSQL',
-        'MySQL',
-        'SQL Server',
-        'SQLite',
-        'MongoDB',
-        'Redis',
-        'ClickHouse',
-        'Data modelling',
-        'Elasticsearch',
-        'Vector databases',
-        'Data analysis',
-        'Supabase',
-        'MariaDB',
-        'OpenSearch',
-      ],
-    },
-    {
-      category: 'Data tooling and pipelines',
-      skills: [
-        'NumPy and pandas',
-        'Jupyter notebooks',
-        'Data pipelines',
-        'Apache Airflow',
-        'dbt',
-        'Apache Kafka',
-        'Message queues',
-        'RabbitMQ',
-        'Apache Spark',
-        'Databricks',
-      ],
-    },
-    {
-      category: 'Mobile',
-      skills: ['Android', 'iOS', 'React Native', 'Flutter', '.NET MAUI'],
-    },
-    {
-      category: 'Cloud and DevOps',
-      skills: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Helm', 'Terraform', 'Infrastructure as code', 'CI/CD pipelines', 'GitHub Actions', 'GitLab CI', 'Ansible', 'Nginx', 'Serverless', 'Linux', 'Git', 'Shell scripting', 'Docker Compose', 'Cloudflare', 'Firebase', 'Vercel', 'Hetzner Cloud', 'Podman', 'Service mesh'],
-    },
-    {
-      category: 'GPUs',
-      skills: ['GPU computing', 'CUDA', ],
-    },
-    {
-      category: 'Observability tooling',
-      skills: ['Observability platforms', 'Prometheus and Grafana', 'OpenTelemetry', 'Log aggregation', 'Sentry', 'Distributed tracing', 'Datadog'],
-    },
-    {
-      category: 'Testing and code quality tools',
-      skills: ['Playwright', 'Jest', 'Vitest', 'pytest', 'JUnit', 'Postman', 'ESLint', 'SonarQube'],
-    },
-    {
-      category: 'Editors, IDEs and package managers',
-      skills: [
-        'Visual Studio Code',
-        'Visual Studio',
-        'IntelliJ IDEA',
-        'Vim and Neovim',
-        'npm',
-        'pnpm',
-        'pip and uv',
-        'Homebrew',
-        'Make and Makefiles',
-      ],
-    },
-  ],
+  technical: TECHNICAL.categories,
   engineering: [
     {
       category: 'Architecture and design',
@@ -294,9 +214,7 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
     {
       category: 'Desktop apps and AI-first editors',
       skills: [
-        'Cursor',
         'Windsurf',
-        'Zed',
         'Kiro',
         'Google Antigravity',
         'Replit',

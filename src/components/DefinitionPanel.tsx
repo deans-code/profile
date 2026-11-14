@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { getSources } from '../data/attribution'
 import { getDefinition, type TermKind } from '../data/definitions'
 
 interface OpenTerm {
@@ -85,6 +86,7 @@ function Panel({ term, onClose }: { term: OpenTerm; onClose: (returnFocus?: bool
   const ref = useRef<HTMLDivElement>(null)
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null)
   const definition = getDefinition(term.kind, term.name)
+  const sources = getSources(term.kind, term.name)
 
   // Place below the word, flip above when there is no room, and clamp to the viewport.
   // Closes instead when the word has left the page or is completely off screen.
@@ -158,6 +160,20 @@ function Panel({ term, onClose }: { term: OpenTerm; onClose: (returnFocus?: bool
     >
       <p className="definition-term">{term.name}</p>
       <p className="definition-text">{definition}</p>
+      {sources.length > 0 && (
+        <div className="definition-sources">
+          <p className="definition-sources-label">Sourced from</p>
+          <ul>
+            {sources.map((source) => (
+              <li key={source.id}>
+                <a href={source.url} target="_blank" rel="noopener noreferrer">
+                  {source.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <button type="button" className="secondary definition-close" onClick={() => onClose(true)}>
         Close
       </button>

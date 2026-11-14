@@ -59,14 +59,8 @@ describe('technical development catalog', () => {
     expect(names.filter((n) => banned.some((b) => norm(n).includes(b)))).toEqual([])
   })
 
-  it('has hands-on skills an AI engineering team relies on', () => {
-    for (const needle of ['gpu', 'cuda', 'jupyter', 'pandas', 'vector', 'pipelines', 'observability', 'kubernetes']) {
-      expect(names.some((n) => norm(n).includes(needle))).toBe(true)
-    }
-  })
-
-  it('keeps the original names that remain', () => {
-    for (const name of ['TypeScript', 'Python', 'Docker', 'Kubernetes', 'Data analysis', 'SQL']) {
+  it('offers widely used technologies in each category', () => {
+    for (const name of ['TypeScript', 'Python', 'SQL', 'Docker', 'Kubernetes', 'PostgreSQL', 'React', 'npm', 'Visual Studio Code']) {
       expect(names).toContain(name)
     }
   })
@@ -124,39 +118,29 @@ describe('AI engineering catalog', () => {
   })
 })
 
-describe('technical catalog guided by surveys', () => {
+describe('technical catalog sourced from surveys', () => {
   const technical = CATALOGS.technical
   const names = catalogSkillNames('technical')
   const category = (name: string) => technical.find((c) => c.category === name)
 
   it('offers the surveyed technologies', () => {
-    for (const name of [
-      'PowerShell', 'jQuery', 'Express', 'ASP.NET Core', 'MariaDB', 'OpenSearch', 'Firebase', 'Vercel',
-      'Podman', 'Service mesh', 'Datadog', 'npm', 'pnpm',
-    ]) {
+    for (const name of ['PowerShell', 'jQuery', 'Express', 'ASP.NET Core', 'MariaDB', 'OpenSearch', 'Firebase', 'Vercel', 'Podman', 'Datadog', 'pnpm']) {
       expect(names).toContain(name)
     }
   })
 
-  it('has the testing and editors categories', () => {
-    expect(category('Testing and code quality tools')?.skills).toEqual(
+  it('groups tools into their categories', () => {
+    expect(category('Testing and code quality')?.skills).toEqual(
       expect.arrayContaining(['Playwright', 'Jest', 'Vitest', 'pytest', 'JUnit', 'Postman', 'ESLint', 'SonarQube']),
     )
-    expect(category('Editors, IDEs and package managers')?.skills).toEqual(
-      expect.arrayContaining([
-        'Visual Studio Code', 'Visual Studio', 'IntelliJ IDEA', 'Vim and Neovim', 'npm', 'pnpm', 'pip and uv',
-        'Homebrew', 'Make and Makefiles',
-      ]),
+    expect(category('Editors and IDEs')?.skills).toEqual(
+      expect.arrayContaining(['Visual Studio Code', 'Visual Studio', 'IntelliJ IDEA', 'Vim', 'Neovim']),
     )
-    expect(category('Editors, IDEs and package managers')?.skills).not.toContain('Cursor')
+    expect(category('Package managers')?.skills).toEqual(expect.arrayContaining(['npm', 'pnpm', 'pip', 'uv', 'Homebrew']))
   })
 
   it('lists Playwright once, only under testing', () => {
     expect(names.filter((n) => n === 'Playwright')).toHaveLength(1)
-    expect(category('Web and frontend')?.skills).not.toContain('Playwright')
-  })
-
-  it('does not duplicate Feature flags from Engineering', () => {
-    expect(names).not.toContain('Feature flags')
+    expect(category('Web frameworks and technologies')?.skills).not.toContain('Playwright')
   })
 })

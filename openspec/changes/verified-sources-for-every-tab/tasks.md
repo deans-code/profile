@@ -1,17 +1,17 @@
 ## 1. Source registry and attribution structure
 
-- [ ] 1.1 Replace the flat list in `src/data/sources.ts` with a source registry (id, title, publisher, url, year) and a per-tab ordered list `TAB_SOURCES` for values, technical, engineering, interpersonal and ai, seeded with the sources already listed. Verify: type-check passes and a test reads the registry and each tab's list.
-- [ ] 1.2 Create `src/data/attribution.ts` mapping each tab and option name to `{ sources, checked }` with a `getAttribution(kind, name)` lookup. Verify: unit test for lookup, case-insensitive like definitions, and undefined for custom names.
-- [ ] 1.3 Add integrity tests (spec: catalog-verification): every built-in option on every tab has at least one source on its tab's list and a check date, no attribution for options not in the catalog, no source listed on a tab that supports no option there, each source has title, publisher, url and year, no option on more than one tab. Verify: tests run and currently fail only where data is missing.
-- [ ] 1.4 Render the per-tab Sources section in `src/App.tsx` from `TAB_SOURCES[state.step]` (none on the Profile page), with the existing note and `target="_blank" rel="noopener noreferrer"` links; update `src/styles.css` if needed. Verify: UI test shows different sources on Technical and Interpersonal, and none on Profile.
-- [ ] 1.5 Add "Sourced from" to `Panel` in `src/components/DefinitionPanel.tsx`: a list of links to every recorded source, in tab order, shown for right-click, keyboard and long-press. Verify: tests cover one source, several sources, keyboard-reachable links, Escape/outside-click/Close still work, selection unchanged, and export contains no sources.
+- [x] 1.1 Replace the flat list in `src/data/sources.ts` with a source registry (id, title, publisher, url, year) and a per-tab ordered list `TAB_SOURCES` for values, technical, engineering, interpersonal and ai, seeded with the sources already listed. Verify: type-check passes and a test reads the registry and each tab's list.
+- [x] 1.2 Create `src/data/attribution.ts` mapping each tab and option name to `{ sources, checked }` with a `getAttribution(kind, name)` lookup. Verify: unit test for lookup, case-insensitive like definitions, and undefined for custom names.
+- [x] 1.3 Add integrity tests (spec: catalog-verification): every built-in option on every tab has at least one source on its tab's list and a check date, no attribution for options not in the catalog, no source listed on a tab that supports no option there, each source has title, publisher, url and year, no option on more than one tab. Verify: tests run and currently fail only where data is missing.
+- [x] 1.4 Render the per-tab Sources section in `src/App.tsx` from `TAB_SOURCES[state.step]` (none on the Profile page), with the existing note and `target="_blank" rel="noopener noreferrer"` links; update `src/styles.css` if needed. Verify: UI test shows different sources on Technical and Interpersonal, and none on Profile.
+- [x] 1.5 Add "Sourced from" to `Panel` in `src/components/DefinitionPanel.tsx`: a list of links to every recorded source, in tab order, shown for right-click, keyboard and long-press. Verify: tests cover one source, several sources, keyboard-reachable links, Escape/outside-click/Close still work, selection unchanged, and export contains no sources.
 
 ## 2. Technical development tab
 
-- [ ] 2.1 Fetch and vet the candidate sources for the tab (reachable, current, terms permit linking), and record accepted ones in the registry with year. Verify: at least three accepted, each address opens, rejects and reasons noted in the README.
-- [ ] 2.2 Check every existing technical option against those sources; record supporting sources and the check date in `attribution.ts`; remove unsupported options; fix out-of-date names and descriptions. Verify: integrity tests pass for the technical tab and a list of removals and renames is in the README.
-- [ ] 2.3 Add technologies the sources show to be widely used that are missing, to the right category with a description and attribution. Verify: integrity tests pass; each addition cites at least one source that names it.
-- [ ] 2.4 Confirm saved profiles with removed technical options still load as custom entries. Verify: a test loads a profile containing a removed name and finds it among custom entries.
+- [x] 2.1 Fetch and vet the candidate sources for the tab (reachable, current, terms permit linking), and record accepted ones in the registry with year. Verify: at least three accepted, each address opens, rejects and reasons noted in the README.
+- [x] 2.2 Check every existing technical option against those sources; record supporting sources and the check date in `attribution.ts`; remove unsupported options; fix out-of-date names and descriptions. Verify: integrity tests pass for the technical tab and a list of removals and renames is in the README.
+- [x] 2.3 Add technologies the sources show to be widely used that are missing, to the right category with a description and attribution. Verify: integrity tests pass; each addition cites at least one source that names it.
+- [x] 2.4 Confirm saved profiles with removed technical options still load as custom entries. Verify: a test loads a profile containing a removed name and finds it among custom entries.
 
 ## 3. Engineering tab
 

@@ -159,7 +159,7 @@ describe('definition panel', () => {
     await user.click(word('Integrity'))
     await user.click(screen.getByRole('button', { name: /^Continue/ }))
     await user.pointer({ keys: '[MouseRight]', target: word('Python') })
-    expect(panel()).toHaveTextContent(/readable, general-purpose/i)
+    expect(panel()).toHaveTextContent(/readable general-purpose/i)
   })
 })
 

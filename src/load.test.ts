@@ -149,6 +149,21 @@ describe('parseProfile', () => {
     })
   })
 
+  it('loads technical options removed when the catalog was rebuilt from sources as custom entries', () => {
+    const text = file({
+      skills: {
+        technical: lists(['Python', 'Deno and Bun', 'Docker Compose'], ['Expo']),
+        engineering: lists([]),
+        interpersonal: lists([]),
+        ai: lists([]),
+      },
+    })
+    const state = profileToState(ok(text))
+    expect(state.selectedSkills.technical.experience).toEqual(['Python', 'Deno and Bun', 'Docker Compose'])
+    expect(state.customSkills.technical).toEqual(expect.arrayContaining(['Deno and Bun', 'Docker Compose', 'Expo']))
+    expect(state.customSkills.technical).not.toContain('Python')
+  })
+
   describe('rejections', () => {
     it('not JSON', () => expect(error('hello world')).toMatch(/not valid JSON/))
     it('empty text', () => expect(error('')).toMatch(/not valid JSON/))
