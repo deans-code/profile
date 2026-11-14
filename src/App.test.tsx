@@ -8,23 +8,23 @@ const next = () =>
   within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(continue|finish)/i })
 
 describe('values step', () => {
-  it('shows at least 100 unselected values', () => {
+  it('shows at least 60 unselected values', () => {
     render(<App />)
     const chips = within(screen.getByRole('main'))
       .getAllByRole('button')
       .filter((b) => b.hasAttribute('aria-pressed'))
-    expect(chips.length).toBeGreaterThanOrEqual(100)
+    expect(chips.length).toBeGreaterThanOrEqual(60)
     expect(chips.every((c) => c.getAttribute('aria-pressed') === 'false')).toBe(true)
   })
 
   it('toggles a value with click and keyboard, updating the count', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Integrity'))
-    expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'true')
+    await user.click(chip('Fairness'))
+    expect(chip('Fairness')).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByText('1 of 5 selected')).toBeInTheDocument()
-    await user.click(chip('Integrity'))
-    expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'false')
+    await user.click(chip('Fairness'))
+    expect(chip('Fairness')).toHaveAttribute('aria-pressed', 'false')
 
     chip('Honesty').focus()
     await user.keyboard('{Enter}')
@@ -44,10 +44,10 @@ describe('values step', () => {
     await user.click(add)
     expect(chip('Grit')).toHaveAttribute('aria-pressed', 'true')
 
-    await user.type(input, ' integrity ')
+    await user.type(input, ' fairness ')
     await user.click(add)
-    expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getAllByRole('button', { name: /^integrity$/i })).toHaveLength(1)
+    expect(chip('Fairness')).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getAllByRole('button', { name: /^fairness$/i })).toHaveLength(1)
 
     await user.click(screen.getByRole('button', { name: 'Remove Grit' }))
     expect(screen.queryByRole('button', { name: 'Grit' })).not.toBeInTheDocument()
@@ -58,7 +58,7 @@ describe('values step', () => {
     render(<App />)
     expect(next()).toBeDisabled()
     expect(screen.getByRole('status')).toHaveTextContent(/at least one value/i)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     expect(next()).toBeEnabled()
   })
 })
@@ -67,7 +67,7 @@ describe('skill steps', () => {
   async function toTechnical() {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     return user
   }
@@ -119,7 +119,7 @@ describe('experience options', () => {
     const user = userEvent.setup()
     render(<App />)
     expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument()
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     for (let page = 0; page < 4; page++) {
       await user.click(next())
       expect(screen.getByRole('radiogroup', { name: 'Experience option' })).toBeInTheDocument()
@@ -131,7 +131,7 @@ describe('experience options', () => {
   it('keeps previous and desired selections apart, with a count on each option', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     await user.click(chip('Python'))
     await user.click(chip('Go'))
@@ -154,7 +154,7 @@ describe('experience options', () => {
   it('switches with the arrow keys', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     radio(/^Previous experience/).focus()
     await user.keyboard('{ArrowRight}')
@@ -167,7 +167,7 @@ describe('experience options', () => {
   it('opens every page on previous experience, keeping the desired words and count', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     await user.click(radio(/^Desired experience/))
     await user.click(chip('Python'))
@@ -199,7 +199,7 @@ describe('experience options', () => {
   it('adds a custom entry to the active option only', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     await user.click(radio(/^Desired experience/))
     await user.type(screen.getByLabelText(/add your own technical development skill/i), 'Zig')
@@ -215,7 +215,7 @@ describe('profile card and downloads', () => {
   async function toCard() {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     await user.click(chip('Python'))
     await user.click(radio(/^Desired experience/))
@@ -254,7 +254,7 @@ describe('profile card and downloads', () => {
     expect(within(card).getAllByText('Previous experience').length).toBeGreaterThan(0)
     expect(within(card).getAllByText('Desired experience').length).toBeGreaterThan(0)
     const values = within(card).getByRole('heading', { name: 'Values' }).parentElement!
-    expect(within(values).getByText('Integrity')).toBeInTheDocument()
+    expect(within(values).getByText('Fairness')).toBeInTheDocument()
     expect(within(values).queryByText('Previous experience')).not.toBeInTheDocument()
     expect(within(values).queryByText('Desired experience')).not.toBeInTheDocument()
     expect(within(card).getByText('Python')).toBeInTheDocument()
@@ -265,7 +265,7 @@ describe('profile card and downloads', () => {
     expect(card.querySelector('.bar, .score')).toBeNull()
 
     await user.click(screen.getByRole('button', { name: 'Edit' }))
-    expect(chip('Integrity')).toHaveAttribute('aria-pressed', 'true')
+    expect(chip('Fairness')).toHaveAttribute('aria-pressed', 'true')
     expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument()
   })
 
@@ -303,7 +303,7 @@ describe('profile card and downloads', () => {
 
     expect(names).toEqual(['profile.json', 'profile.md'])
     const json = JSON.parse(await created[0].text())
-    expect(json.values).toEqual(['Integrity'])
+    expect(json.values).toEqual(['Fairness'])
     expect(json.skills.technical).toEqual({ experience: ['Python'], desired: ['Rust'] })
     expect(json.skills.ai).toEqual({ experience: ['Claude Code'], desired: ['OpenRouter'] })
     const md = await created[1].text()
@@ -336,7 +336,7 @@ describe('instructions', () => {
     const user = userEvent.setup()
     render(<App />)
     expect(help()).toHaveTextContent(/up to 5 values/i)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     for (const [section, word] of [
       ['technical', 'Python'],
       ['engineering', 'Continuous integration'],
@@ -377,7 +377,7 @@ describe('uniform words and section colours', () => {
   it('renders skills with the same class as values', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     const skills = screen.getAllByRole('button').filter((b) => b.hasAttribute('aria-pressed'))
     expect(new Set(skills.map((b) => b.className))).toEqual(new Set(['chip']))
@@ -397,7 +397,7 @@ describe('uniform words and section colours', () => {
       'ai',
       'card',
     ])
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     expect(root()).toHaveAttribute('data-section', 'technical')
   })
@@ -407,9 +407,9 @@ describe('end to end with definitions', () => {
   it('opening descriptions along the way does not change the exported profile', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.pointer({ keys: '[MouseRight]', target: chip('Integrity') })
+    await user.pointer({ keys: '[MouseRight]', target: chip('Fairness') })
     await user.click(screen.getByRole('button', { name: 'Close' }))
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     await user.pointer({ keys: '[MouseRight]', target: chip('Python') })
     await user.click(screen.getByRole('button', { name: 'Close' }))
@@ -426,7 +426,7 @@ describe('end to end with definitions', () => {
     await user.click(next())
 
     const card = screen.getByRole('article', { name: 'Profile card' })
-    expect(within(card).getByText('Integrity')).toBeInTheDocument()
+    expect(within(card).getByText('Fairness')).toBeInTheDocument()
     expect(within(card).getByText('Python')).toBeInTheDocument()
     expect(within(card).getByText('Claude Code')).toBeInTheDocument()
     expect(within(card).getAllByText('Previous experience')).toHaveLength(4)
@@ -446,7 +446,7 @@ describe('end to end with many skills', () => {
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
     render(<App />)
 
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
 
     const pickSome = async (count: number) => {

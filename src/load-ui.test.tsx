@@ -16,7 +16,7 @@ const lists = (experience: string[], desired: string[] = []) => ({ experience, d
 const profileJson = (overrides: Record<string, unknown> = {}) =>
   JSON.stringify({
     exportedAt: '2026-01-02T03:04:05.000Z',
-    values: ['Integrity', 'Grit'],
+    values: ['Fairness', 'Grit'],
     skills: {
       technical: lists(['Python', 'Zig']),
       engineering: lists(['Continuous integration']),
@@ -30,7 +30,7 @@ const profileJson = (overrides: Record<string, unknown> = {}) =>
 const legacyJson = () =>
   JSON.stringify({
     exportedAt: '2026-01-02T03:04:05.000Z',
-    values: ['Integrity'],
+    values: ['Fairness'],
     skills: {
       technical: [{ name: 'Python', score: 9 }],
       engineering: [{ name: 'Continuous integration', score: 6 }],
@@ -46,7 +46,7 @@ describe('Load saved profile', () => {
     const user = userEvent.setup()
     render(<App />)
     expect(screen.getByRole('button', { name: 'Load saved profile' })).toBeInTheDocument()
-    await user.click(word('Integrity'))
+    await user.click(word('Fairness'))
     await user.click(next())
     expect(screen.getByRole('button', { name: 'Load saved profile' })).toBeInTheDocument()
   })
@@ -56,7 +56,7 @@ describe('Load saved profile', () => {
     render(<App />)
     await upload(user, profileJson())
     expect(await screen.findByRole('heading', { name: 'Your profile' })).toBeInTheDocument()
-    for (const name of ['Integrity', 'Grit', 'Python', 'Zig', 'Claude Code', 'OpenRouter']) {
+    for (const name of ['Fairness', 'Grit', 'Python', 'Zig', 'Claude Code', 'OpenRouter']) {
       expect(within(card()).getByText(name)).toBeInTheDocument()
     }
     expect(within(card()).getAllByText('Desired experience')).toHaveLength(1)
@@ -86,10 +86,10 @@ describe('Load saved profile', () => {
     await user.click(screen.getByRole('button', { name: 'Edit' }))
 
     // Values: loaded values selected, custom restored.
-    expect(word('Integrity')).toHaveAttribute('aria-pressed', 'true')
+    expect(word('Fairness')).toHaveAttribute('aria-pressed', 'true')
     expect(word('Grit')).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByText(/^2 of 5 selected/)).toBeInTheDocument()
-    await user.click(word('Trust'))
+    await user.click(word('Kindness'))
     await user.click(next())
 
     // Technical: loaded skills selected (built-in and custom).
@@ -108,27 +108,27 @@ describe('Load saved profile', () => {
     await user.click(radio(/^Desired experience/))
     expect(word('OpenRouter')).toHaveAttribute('aria-pressed', 'true')
     await user.click(next())
-    expect(within(card()).getByText('Trust')).toBeInTheDocument()
+    expect(within(card()).getByText('Kindness')).toBeInTheDocument()
     expect(within(card()).getByText('Go')).toBeInTheDocument()
   })
 
   it('merges the values of a file saved with two options into one list', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await upload(user, profileJson({ values: lists(['Integrity'], ['Curiosity', 'integrity']) }))
+    await upload(user, profileJson({ values: lists(['Fairness'], ['Curiosity', 'fairness']) }))
     await screen.findByRole('heading', { name: 'Your profile' })
     const values = within(card()).getByRole('heading', { name: 'Values' }).parentElement!
-    expect(within(values).getAllByRole('listitem').map((li) => li.textContent)).toEqual(['Curiosity', 'Integrity'])
+    expect(within(values).getAllByRole('listitem').map((li) => li.textContent)).toEqual(['Curiosity', 'Fairness'])
   })
 
   it('matches built-in entries ignoring case and restores others as custom', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await upload(user, profileJson({ values: ['integrity'] }))
+    await upload(user, profileJson({ values: ['fairness'] }))
     await screen.findByRole('heading', { name: 'Your profile' })
-    expect(within(card()).getByText('Integrity')).toBeInTheDocument()
+    expect(within(card()).getByText('Fairness')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Edit' }))
-    expect(screen.getAllByRole('button', { name: /^integrity$/i })).toHaveLength(1)
+    expect(screen.getAllByRole('button', { name: /^fairness$/i })).toHaveLength(1)
   })
 
   describe('rejections leave the current profile unchanged', () => {
@@ -160,10 +160,10 @@ describe('Load saved profile', () => {
     it('keeps existing selections after a rejected file', async () => {
       const user = userEvent.setup()
       render(<App />)
-      await user.click(word('Integrity'))
+      await user.click(word('Fairness'))
       await upload(user, 'nope')
       await screen.findByText(/not valid JSON/)
-      expect(word('Integrity')).toHaveAttribute('aria-pressed', 'true')
+      expect(word('Fairness')).toHaveAttribute('aria-pressed', 'true')
       expect(screen.queryByRole('group', { name: /confirm/i })).not.toBeInTheDocument()
     })
   })
@@ -172,7 +172,7 @@ describe('Load saved profile', () => {
     it('asks to confirm, and Replace loads the file', async () => {
       const user = userEvent.setup()
       render(<App />)
-      await user.click(word('Trust'))
+      await user.click(word('Kindness'))
       await upload(user, profileJson())
       const confirm = await screen.findByRole('group', { name: 'Confirm loading a profile' })
       expect(confirm).toHaveTextContent('Replace your current profile with profile.json?')
@@ -181,19 +181,19 @@ describe('Load saved profile', () => {
 
       await user.click(screen.getByRole('button', { name: 'Replace' }))
       expect(await screen.findByRole('heading', { name: 'Your profile' })).toBeInTheDocument()
-      expect(within(card()).queryByText('Trust')).not.toBeInTheDocument()
-      expect(within(card()).getByText('Integrity')).toBeInTheDocument()
+      expect(within(card()).queryByText('Kindness')).not.toBeInTheDocument()
+      expect(within(card()).getByText('Fairness')).toBeInTheDocument()
     })
 
     it('counts a desired-only skill selection as progress to replace', async () => {
       const user = userEvent.setup()
       render(<App />)
-      await user.click(word('Trust'))
+      await user.click(word('Kindness'))
       await user.click(next())
       await user.click(radio(/^Desired experience/))
       await user.click(word('Python'))
       await user.click(screen.getByRole('button', { name: /^Back/ }))
-      await user.click(word('Trust'))
+      await user.click(word('Kindness'))
       await upload(user, profileJson())
       expect(await screen.findByRole('group', { name: 'Confirm loading a profile' })).toBeInTheDocument()
     })
@@ -201,11 +201,11 @@ describe('Load saved profile', () => {
     it('Cancel leaves the profile and page unchanged', async () => {
       const user = userEvent.setup()
       render(<App />)
-      await user.click(word('Trust'))
+      await user.click(word('Kindness'))
       await upload(user, profileJson())
       await user.click(await screen.findByRole('button', { name: 'Cancel' }))
       expect(screen.getByText(/Load cancelled/)).toBeInTheDocument()
-      expect(word('Trust')).toHaveAttribute('aria-pressed', 'true')
+      expect(word('Kindness')).toHaveAttribute('aria-pressed', 'true')
       expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
     })
 
@@ -225,11 +225,11 @@ describe('Load saved profile', () => {
     await user.upload(picker(), file)
     await screen.findByRole('heading', { name: 'Your profile' })
     await user.click(screen.getByRole('button', { name: 'Edit' }))
-    await user.click(word('Trust'))
+    await user.click(word('Kindness'))
     await user.upload(picker(), file)
     await user.click(await screen.findByRole('button', { name: 'Replace' }))
     await screen.findByRole('heading', { name: 'Your profile' })
-    expect(within(card()).queryByText('Trust')).not.toBeInTheDocument()
+    expect(within(card()).queryByText('Kindness')).not.toBeInTheDocument()
   })
 
   describe('over-limit and incomplete files', () => {
@@ -284,7 +284,7 @@ describe('end to end: build, download, load, edit, download', () => {
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
 
     const first = render(<App />)
-    await user.click(word('Integrity'))
+    await user.click(word('Fairness'))
     await user.type(screen.getByLabelText('Add your own value'), 'Grit')
     await user.click(screen.getByRole('button', { name: 'Add' }))
     await user.click(next())
@@ -315,11 +315,11 @@ describe('end to end: build, download, load, edit, download', () => {
     expect(strip(reloaded)).toEqual(strip(original))
 
     await user.click(screen.getByRole('button', { name: 'Edit' }))
-    await user.click(word('Trust'))
+    await user.click(word('Kindness'))
     for (let i = 0; i < 5; i++) await user.click(next())
     await user.click(screen.getByRole('button', { name: 'Download JSON' }))
     const edited = JSON.parse(await blobs[2].text())
-    expect(edited.values).toEqual(['Grit', 'Integrity', 'Trust'])
+    expect(edited.values).toEqual(['Fairness', 'Grit', 'Kindness'])
     expect(edited.skills.technical).toEqual(lists(['Python'], ['Rust']))
     expect(edited.skills.ai).toEqual(lists(['Claude Code'], ['OpenRouter']))
   })

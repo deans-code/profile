@@ -10,7 +10,7 @@ const next = () =>
 const link = () => screen.queryByRole('link', { name: /open chatgpt/i })
 
 async function goTo(user: ReturnType<typeof userEvent.setup>, step: 'technical' | 'engineering' | 'interpersonal') {
-  await user.click(word('Integrity'))
+  await user.click(word('Fairness'))
   const picks = ['Python', 'Continuous integration', 'Teamwork and collaboration']
   const order = ['technical', 'engineering', 'interpersonal']
   await user.click(next())
@@ -77,7 +77,7 @@ describe('ChatGPT link', () => {
   it('does not include anything the user has selected or typed', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(word('Integrity'))
+    await user.click(word('Fairness'))
     await user.type(screen.getByLabelText('Add your own value'), 'MyPrivateValue')
     await user.click(screen.getByRole('button', { name: 'Add' }))
     const href = link()!.getAttribute('href')!

@@ -16,7 +16,7 @@ describe('section transitions', () => {
     const user = userEvent.setup()
     render(<App />)
     expect(window.scrollTo).not.toHaveBeenCalled()
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     expect(window.scrollTo).toHaveBeenCalledTimes(1)
     expect(window.scrollTo).toHaveBeenLastCalledWith({ top: 0, behavior: 'auto' })
@@ -26,7 +26,7 @@ describe('section transitions', () => {
     motion.reduced = false
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     expect(window.scrollTo).toHaveBeenLastCalledWith({ top: 0, behavior: 'smooth' })
   })
@@ -37,7 +37,7 @@ describe('section transitions', () => {
     const { container } = render(<App />)
     expect(stepView(container)).toHaveClass('enter-none')
 
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     expect(stepView(container)).toHaveClass('enter-forward')
 
@@ -50,7 +50,7 @@ describe('section transitions', () => {
   it('moves focus to the new section heading', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     expect(heading(/technical development skills/i)).toHaveFocus()
     await user.click(screen.getByRole('button', { name: /^Back/ }))
@@ -60,7 +60,7 @@ describe('section transitions', () => {
   it('keeps selections and gating intact across transitions', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(next())
     await user.click(chip('Python'))
     await user.click(next())
@@ -90,7 +90,7 @@ describe('section transitions', () => {
     const nav = within(screen.getByRole('navigation', { name: 'Steps' }))
     const settle = () => new Promise((r) => setTimeout(r, TRANSITION_MS + 50))
 
-    await user.click(chip('Integrity'))
+    await user.click(chip('Fairness'))
     await user.click(nav.getByRole('button', { name: 'Technical development' }))
     expect(stepView(container)).toHaveClass('enter-forward')
     expect(heading(/technical development skills/i)).toHaveFocus()
@@ -129,7 +129,7 @@ describe('rapid activation', () => {
     vi.useFakeTimers()
     try {
       render(<App />)
-      fireEvent.click(chip('Integrity'))
+      fireEvent.click(chip('Fairness'))
       const button = next()
       fireEvent.click(button)
       fireEvent.click(next())

@@ -19,7 +19,7 @@ vi.mock('../data/attribution', async (importOriginal) => {
   return {
     ...actual,
     getSources: (kind: string, name: string) =>
-      kind === 'values' && name === 'Integrity' ? mocked.sources.map((id) => ({ id, title: `Source ${id}`, publisher: `Publisher ${id}`, url: `https://example.org/${id}`, year: 2026 })) : [],
+      kind === 'values' && name === 'Fairness' ? mocked.sources.map((id) => ({ id, title: `Source ${id}`, publisher: `Publisher ${id}`, url: `https://example.org/${id}`, year: 2026 })) : [],
   }
 })
 
@@ -31,20 +31,20 @@ describe('definition panel sources', () => {
     mocked.sources = ['one']
     const user = userEvent.setup()
     render(<App />)
-    await user.pointer({ keys: '[MouseRight]', target: word('Integrity') })
+    await user.pointer({ keys: '[MouseRight]', target: word('Fairness') })
     expect(within(panel()).getByText('Sourced from')).toBeInTheDocument()
     const link = within(panel()).getByRole('link', { name: fake('one').title })
     expect(link).toHaveAttribute('href', fake('one').url)
     expect(link).toHaveAttribute('target', '_blank')
-    expect(word('Integrity')).toHaveAttribute('aria-pressed', 'false')
+    expect(word('Fairness')).toHaveAttribute('aria-pressed', 'false')
   })
 
   it('lists every source, reachable by keyboard, and still closes on Escape', async () => {
     mocked.sources = ['one', 'two', 'three']
     const user = userEvent.setup()
     render(<App />)
-    word('Integrity').focus()
-    fireEvent.keyDown(word('Integrity'), { key: '?' })
+    word('Fairness').focus()
+    fireEvent.keyDown(word('Fairness'), { key: '?' })
     const links = within(panel()).getAllByRole('link')
     expect(links.map((l) => l.getAttribute('href'))).toEqual(mocked.sources.map((id) => fake(id).url))
     await user.tab()
@@ -57,7 +57,7 @@ describe('definition panel sources', () => {
     mocked.sources = []
     const user = userEvent.setup()
     render(<App />)
-    await user.pointer({ keys: '[MouseRight]', target: word('Integrity') })
+    await user.pointer({ keys: '[MouseRight]', target: word('Fairness') })
     expect(within(panel()).queryByText('Sourced from')).toBeNull()
   })
 })

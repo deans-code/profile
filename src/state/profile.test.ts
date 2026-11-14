@@ -47,16 +47,16 @@ describe('experience modes', () => {
   })
 
   it('keeps values in one list whatever the mode', () => {
-    const s = run([desired, { type: 'toggleValue', name: 'Integrity' }])
-    expect(s.selectedValues).toEqual(['Integrity'])
-    expect(selectedFor(s, 'values')).toEqual(['Integrity'])
-    expect(selectedFor(s, 'values', 'experience')).toEqual(['Integrity'])
-    expect(pageComplete(run([desired, { type: 'toggleValue', name: 'Integrity' }]), 'values')).toBe(true)
+    const s = run([desired, { type: 'toggleValue', name: 'Fairness' }])
+    expect(s.selectedValues).toEqual(['Fairness'])
+    expect(selectedFor(s, 'values')).toEqual(['Fairness'])
+    expect(selectedFor(s, 'values', 'experience')).toEqual(['Fairness'])
+    expect(pageComplete(run([desired, { type: 'toggleValue', name: 'Fairness' }]), 'values')).toBe(true)
   })
 
   it('opens every page on previous experience, keeping desired selections', () => {
     const s = run([
-      { type: 'toggleValue', name: 'Integrity' },
+      { type: 'toggleValue', name: 'Fairness' },
       { type: 'goTo', step: 'technical' },
       desired,
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
@@ -93,9 +93,9 @@ describe('experience modes', () => {
 
 describe('values', () => {
   it('selects and deselects', () => {
-    const s1 = run([{ type: 'toggleValue', name: 'Integrity' }])
-    expect(s1.selectedValues).toEqual(['Integrity'])
-    expect(run([{ type: 'toggleValue', name: 'Integrity' }], s1).selectedValues).toEqual([])
+    const s1 = run([{ type: 'toggleValue', name: 'Fairness' }])
+    expect(s1.selectedValues).toEqual(['Fairness'])
+    expect(run([{ type: 'toggleValue', name: 'Fairness' }], s1).selectedValues).toEqual([])
   })
 
   it('adds a custom value as selected', () => {
@@ -109,9 +109,9 @@ describe('values', () => {
   })
 
   it('selects the existing value instead of adding a duplicate', () => {
-    const s = run([{ type: 'addCustomValue', text: ' integrity ' }])
+    const s = run([{ type: 'addCustomValue', text: ' fairness ' }])
     expect(s.customValues).toEqual([])
-    expect(s.selectedValues).toEqual(['Integrity'])
+    expect(s.selectedValues).toEqual(['Fairness'])
   })
 
   it('does not duplicate a custom value', () => {
@@ -163,7 +163,7 @@ describe('skills', () => {
 })
 
 describe('step gating', () => {
-  const withValue = run([{ type: 'toggleValue', name: 'Integrity' }])
+  const withValue = run([{ type: 'toggleValue', name: 'Fairness' }])
   const oneSection = run([{ type: 'toggleSkill', section: 'technical', name: 'Python' }], withValue)
   const complete = run(
     [
@@ -183,7 +183,7 @@ describe('step gating', () => {
   it('accepts a profile that only has desired selections', () => {
     const s = run([
       desired,
-      { type: 'toggleValue', name: 'Integrity' },
+      { type: 'toggleValue', name: 'Fairness' },
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
       { type: 'toggleSkill', section: 'engineering', name: 'Continuous integration' },
       { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork and collaboration' },
@@ -212,7 +212,7 @@ describe('step gating', () => {
       ],
       complete,
     )
-    expect(s.selectedValues).toEqual(['Integrity'])
+    expect(s.selectedValues).toEqual(['Fairness'])
     expect(s.selectedSkills.technical).toEqual(exp(['Python']))
   })
 })
@@ -319,7 +319,7 @@ describe('selection limit', () => {
     it('does not block later steps for a skill page holding more than ten', () => {
       const s: ProfileState = {
         ...initialState,
-        selectedValues: ['Integrity'],
+        selectedValues: ['Fairness'],
         selectedSkills: {
           technical: exp(technical.slice(0, 40)),
           engineering: exp(['Continuous integration']),
@@ -348,7 +348,7 @@ describe('selection limit', () => {
 describe('loadProfile', () => {
   const values = COMMON_VALUES.map((v) => v.name)
   const complete: LoadedProfile = {
-    selectedValues: ['Integrity'],
+    selectedValues: ['Fairness'],
     customValues: [],
     selectedSkills: {
       technical: exp(['Python']),
@@ -360,11 +360,11 @@ describe('loadProfile', () => {
   }
 
   it('replaces everything at once, resets the mode and lands on the profile card when complete', () => {
-    const before = run([desired, { type: 'toggleValue', name: 'Trust' }, { type: 'toggleSkill', section: 'technical', name: 'Go' }])
+    const before = run([desired, { type: 'toggleValue', name: 'Kindness' }, { type: 'toggleSkill', section: 'technical', name: 'Go' }])
     const s = reducer(before, { type: 'loadProfile', profile: complete })
     expect(s.step).toBe('card')
     expect(s.mode).toBe('experience')
-    expect(s.selectedValues).toEqual(['Integrity'])
+    expect(s.selectedValues).toEqual(['Fairness'])
     expect(s.selectedSkills.technical).toEqual(exp(['Python']))
     expect(s.selectedSkills.engineering).toEqual(des(['Continuous integration']))
   })

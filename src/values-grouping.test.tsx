@@ -26,7 +26,7 @@ describe('grouped values', () => {
   it('filters case-insensitively, hides empty categories and keeps selections', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(word('Integrity'))
+    await user.click(word('Fairness'))
     await user.type(screen.getByLabelText('Filter values'), 'RES')
     const shown = main()
       .getAllByRole('button')
@@ -38,7 +38,7 @@ describe('grouped values', () => {
     expect(word('Respect')).toBeInTheDocument()
 
     await user.clear(screen.getByLabelText('Filter values'))
-    expect(word('Integrity')).toHaveAttribute('aria-pressed', 'true')
+    expect(word('Fairness')).toHaveAttribute('aria-pressed', 'true')
   })
 
   it('says when nothing matches the filter', async () => {
@@ -75,12 +75,12 @@ describe('grouped values', () => {
   it('opens a description on right-click without changing the selection, including for new values', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.pointer({ keys: '[MouseRight]', target: word('Integrity') })
-    expect(screen.getByRole('dialog')).toHaveAccessibleName(/Integrity/)
+    await user.pointer({ keys: '[MouseRight]', target: word('Fairness') })
+    expect(screen.getByRole('dialog')).toHaveAccessibleName(/Fairness/)
     await user.keyboard('{Escape}')
-    await user.pointer({ keys: '[MouseRight]', target: word('Mindfulness') })
-    expect(screen.getByRole('dialog')).toHaveTextContent(/present moment/i)
-    expect(word('Mindfulness')).toHaveAttribute('aria-pressed', 'false')
+    await user.pointer({ keys: '[MouseRight]', target: word('Zest') })
+    expect(screen.getByRole('dialog')).toHaveTextContent(/energy/i)
+    expect(word('Zest')).toHaveAttribute('aria-pressed', 'false')
   })
 })
 
@@ -110,7 +110,7 @@ describe('filter box guidance', () => {
   it('also guides on skill pages', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(word('Integrity'))
+    await user.click(word('Fairness'))
     await user.click(screen.getByRole('button', { name: /^Continue/ }))
     expect(screen.getByLabelText('Filter skills')).toHaveAccessibleDescription(
       /Type part of a word to show only the technical development skills that match/,

@@ -1,5 +1,6 @@
 import { buildProfile, toJson } from './export'
 import { MAX_ENTRIES, MAX_FILE_BYTES, MAX_NAME_LENGTH, parseProfile, profileToState } from './load'
+import { COMMON_VALUES } from './data/values'
 import { initialState, reducer, type Action } from './state/profile'
 
 const run = (actions: Action[]) => actions.reduce(reducer, initialState)
@@ -10,7 +11,7 @@ const lists = (experience: string[], desired: string[] = []) => ({ experience, d
 const file = (overrides: Record<string, unknown> = {}) =>
   JSON.stringify({
     exportedAt: '2026-01-02T03:04:05.000Z',
-    values: ['Integrity', 'Curiosity'],
+    values: ['Fairness', 'Curiosity'],
     skills: {
       technical: lists(['Python']),
       engineering: lists([], ['Continuous integration']),
@@ -24,7 +25,7 @@ const file = (overrides: Record<string, unknown> = {}) =>
 const legacyFile = (overrides: Record<string, unknown> = {}) =>
   JSON.stringify({
     exportedAt: '2026-01-02T03:04:05.000Z',
-    values: ['Integrity'],
+    values: ['Fairness'],
     skills: {
       technical: [{ name: 'Python', score: 8 }],
       engineering: [{ name: 'Continuous integration', score: 5 }],
@@ -47,7 +48,7 @@ const error = (text: string) => {
 describe('parseProfile', () => {
   it('reads a valid file', () => {
     expect(ok(file())).toEqual({
-      values: ['Integrity', 'Curiosity'],
+      values: ['Fairness', 'Curiosity'],
       skills: {
         technical: lists(['Python']),
         engineering: lists([], ['Continuous integration']),
@@ -59,7 +60,7 @@ describe('parseProfile', () => {
 
   it('round-trips with toJson', () => {
     const state = run([
-      { type: 'toggleValue', name: 'Integrity' },
+      { type: 'toggleValue', name: 'Fairness' },
       { type: 'addCustomValue', text: 'Grit "quoted" *star*' },
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
       { type: 'addCustomSkill', section: 'technical', text: 'C# & café' },
@@ -81,7 +82,7 @@ describe('parseProfile', () => {
     const p = ok(
       file({
         extra: { anything: true },
-        values: ['  Integrity ', 'integrity', 'Trust'],
+        values: ['  Fairness ', 'fairness', 'Trust'],
         skills: {
           technical: lists(['Python', ' python ']),
           engineering: lists([]),
@@ -90,7 +91,7 @@ describe('parseProfile', () => {
         },
       }),
     )
-    expect(p.values).toEqual(['Integrity', 'Trust'])
+    expect(p.values).toEqual(['Fairness', 'Trust'])
     expect(p.skills.technical.experience).toEqual(['Python'])
     expect(p.skills.engineering).toEqual(lists([]))
   })
@@ -102,24 +103,24 @@ describe('parseProfile', () => {
 
   describe('values in the format with two options', () => {
     it('merges both lists into one, without duplicates ignoring case', () => {
-      const p = ok(file({ values: { experience: ['Integrity'], desired: ['Curiosity', 'integrity'] } }))
-      expect(p.values).toEqual(['Integrity', 'Curiosity'])
+      const p = ok(file({ values: { experience: ['Fairness'], desired: ['Curiosity', 'fairness'] } }))
+      expect(p.values).toEqual(['Fairness', 'Curiosity'])
     })
 
     it('treats a missing list as empty', () => {
-      expect(ok(file({ values: { experience: ['Integrity'] } })).values).toEqual(['Integrity'])
+      expect(ok(file({ values: { experience: ['Fairness'] } })).values).toEqual(['Fairness'])
     })
 
     it('checks the entries of each list', () => {
       expect(error(file({ values: { experience: [], desired: [3] } }))).toMatch(/not text/)
-      expect(error(file({ values: { experience: 'Integrity' } }))).toMatch(/not a list/)
+      expect(error(file({ values: { experience: 'Fairness' } }))).toMatch(/not a list/)
     })
   })
 
   describe('files from before experience options', () => {
     it('loads values and skills as previous experience, ignoring scores, with an empty AI page', () => {
       expect(ok(legacyFile())).toEqual({
-        values: ['Integrity'],
+        values: ['Fairness'],
         skills: {
           technical: lists(['Python']),
           engineering: lists(['Continuous integration']),
@@ -188,7 +189,7 @@ describe('parseProfile', () => {
       ).toMatch(/not text/))
     it('empty names', () => expect(error(file({ values: ['  '] }))).toMatch(/empty name/))
     it('values that are neither a list nor an object', () =>
-      expect(error(file({ values: 'Integrity' }))).toMatch(/values list is not in a form/))
+      expect(error(file({ values: 'Fairness' }))).toMatch(/values list is not in a form/))
     it('legacy entries that are not skills', () =>
       expect(
         error(legacyFile({ skills: { technical: [{ name: 'Python' }, 5], engineering: [], interpersonal: [] } })),
@@ -214,7 +215,7 @@ describe('profileToState', () => {
   it('restores built-ins with their spelling and others as custom entries, in the right option', () => {
     const p = ok(
       file({
-        values: ['integrity', 'Grit'],
+        values: ['fairness', 'Grit'],
         skills: {
           technical: lists(['python'], ['Zig']),
           engineering: lists([]),
@@ -224,7 +225,7 @@ describe('profileToState', () => {
       }),
     )
     const s = { ...initialState, ...profileToState(p) }
-    expect(s.selectedValues).toEqual(['Integrity', 'Grit'])
+    expect(s.selectedValues).toEqual(['Fairness', 'Grit'])
     expect(s.customValues).toEqual(['Grit'])
     expect(s.selectedSkills.technical).toEqual(lists(['Python'], ['Zig']))
     expect(s.customSkills.technical).toEqual(['Zig'])
@@ -305,15 +306,14 @@ const ORIGINAL_VALUES = [
 ]
 
 describe('profiles saved before values were grouped', () => {
-  it('restores every original value as a built-in value, not a custom one', () => {
+  it('restores values that are still built in with their spelling and the rest as custom values', () => {
     expect(ORIGINAL_VALUES).toHaveLength(60)
+    const builtIn = new Map(COMMON_VALUES.map((v) => [v.name.toLowerCase(), v.name]))
     const state = profileToState(ok(file({ values: ORIGINAL_VALUES.map((v) => v.toUpperCase()) })))
-    // Values since removed from the built-in list load as the user's own custom entries.
-    const removed = ['Recognition', 'Balance', 'Fairness in pay']
+    const removed = ORIGINAL_VALUES.filter((v) => !builtIn.has(v.toLowerCase()))
+    expect(removed.length).toBeGreaterThan(0)
     expect(state.customValues).toEqual(removed.map((v) => v.toUpperCase()))
-    expect(state.selectedValues).toEqual(
-      ORIGINAL_VALUES.map((v) => (removed.includes(v) ? v.toUpperCase() : v)),
-    )
+    expect(state.selectedValues).toEqual(ORIGINAL_VALUES.map((v) => builtIn.get(v.toLowerCase()) ?? v.toUpperCase()))
   })
 
   it('keeps a removed built-in value as a custom value', () => {

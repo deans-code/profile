@@ -30,11 +30,11 @@
 
 ## 6. Values tab
 
-- [ ] 6.1 Vet and register at least three sources for Values (published value frameworks and surveys). Verify: each address opens; rejects noted.
-- [ ] 6.2 Check, attribute and prune every value; correct descriptions; keep the grouping tests passing. Verify: integrity and values-grouping tests pass; removals listed in the README.
+- [x] 6.1 Vet and register at least three sources for Values (published value frameworks and surveys). Verify: each address opens; rejects noted.
+- [x] 6.2 Check, attribute and prune every value; correct descriptions; keep the grouping tests passing. Verify: integrity and values-grouping tests pass; removals listed in the README.
 
 ## 7. Documentation and final checks
 
-- [ ] 7.1 Update `README.md`: sources per tab with links, publishers and years, the inclusion and verification rules, how to refresh a tab's sources, and the list of removed, renamed and added options. Verify: every source URL in the README appears in the registry and the reverse, enforced by a test.
-- [ ] 7.2 Run `npm test` and `npm run build`. Verify: both pass.
+- [x] 7.1 Update `README.md`: sources per tab with links, publishers and years, the inclusion and verification rules, how to refresh a tab's sources, and the list of removed, renamed and added options. Verify: every source URL in the README appears in the registry and the reverse, enforced by a test.
+- [x] 7.2 Run `npm test` and `npm run build`. Verify: both pass.
 - [ ] 7.3 Walk each tab in the browser: Sources list is correct, right-click an option with one source and one with several, check links open, panel behaves on keyboard and touch. Verify: no wrong, broken or missing source links; no layout overlap at large text size.

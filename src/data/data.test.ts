@@ -4,8 +4,8 @@ import { COMMON_VALUES, VALUE_CATEGORIES } from './values'
 const norm = (s: string) => s.trim().toLowerCase()
 
 describe('values data', () => {
-  it('has at least 100 values, unique ignoring case', () => {
-    expect(COMMON_VALUES.length).toBeGreaterThanOrEqual(100)
+  it('has at least 60 values, unique ignoring case', () => {
+    expect(COMMON_VALUES.length).toBeGreaterThanOrEqual(60)
     const names = COMMON_VALUES.map((v) => norm(v.name))
     expect(new Set(names).size).toBe(names.length)
   })

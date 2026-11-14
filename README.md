@@ -107,6 +107,19 @@ npm run preview
 
 ## :bookmark: Sources
 
+### Values
+
+The Values catalog was rebuilt from published value frameworks, one at a time. These describe values rather than usage, so they are attributed the same way:
+
+- [VIA Character Strengths](https://www.viacharacter.org/character-strengths), by the VIA Institute on Character: the 24 strengths in six virtue categories. VIA allows personal, non-commercial use and reserves its rights, so only the names are used with descriptions written for this app.
+- [Theory of basic human values](https://en.wikipedia.org/wiki/Theory_of_basic_human_values), Wikipedia's summary of Shalom Schwartz's theory (Schwartz 1992; Schwartz et al. 2012): the ten basic values in four groups. Schwartz's own paper could not be read (its PDF refused automated access), and the nineteen refined values are not listed on the article, so they are not used.
+- [Rokeach Value Survey](https://en.wikipedia.org/wiki/Rokeach_Value_Survey), Wikipedia's summary of Milton Rokeach, The Nature of Human Values (1973): 18 terminal and 18 instrumental values.
+- [The 2020 Scrum Guide](https://scrumguides.org/scrum-guide.html): its five values (commitment, focus, openness, respect, courage).
+
+Considered and not used: the Barrett Values Centre (its list is part of a paid assessment).
+
+Source files live in `src/data/catalog/values/`.
+
 ### Technical development
 
 The catalog is guided by these reports:
@@ -161,6 +174,18 @@ The AI engineering catalog was rebuilt the same way, one source at a time. A mod
 - [DORA capabilities catalog](https://dora.dev/capabilities/), by DORA, Google Cloud: organisational readiness for AI.
 
 Options with several supporting sources list all of them in their description (right-click). Source files live in `src/data/catalog/ai/`.
+
+### Verifying and refreshing the sources
+
+Each tab's options come from one data file per source (`src/data/catalog/<tab>/<source>.ts`). Each file records the date the source was read, the options it supports (with a description for any option it introduces) and any options an earlier source already added, which then gain this source. To refresh a tab:
+
+1. Re-read the source and update or add its file, setting the `checked` date.
+2. Add or remove sources in `src/data/sources.ts` (the registry and the per-tab order) and in the tab's `index.ts`.
+3. Run `npm test`. The tests fail if an option has no source, cites a source that is not on its tab, has no description, appears on two tabs, or if a listed source supports nothing or a tab has fewer than three sources.
+
+A source qualifies when it has an identifiable publisher, is current (within about two years, or a standing framework), can be read at its address, and permits being linked and credited. Sources that refuse automated access, or whose licence forbids reuse, are cited by name and link only, and some were not used (see each tab above).
+
+Because the catalogs were rebuilt, many options from earlier versions are no longer offered. A saved profile that contains one still loads, and the option appears as a custom entry.
 
 ## :paperclip: Usage
 

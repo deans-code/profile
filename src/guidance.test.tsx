@@ -50,11 +50,11 @@ describe('page guidance', () => {
 describe('curated options', () => {
   const values = COMMON_VALUES.map((v) => v.name)
 
-  it('drops weak values and adds strong ones, each with a description', () => {
-    for (const w of ['Comfort', 'Spontaneity', 'Hospitality', 'Cooperation', 'Knowledge', 'Balance', 'Success', 'Recognition', 'Drive', 'Choice', 'Fairness in pay']) {
+  it('drops values no source supports and adds sourced ones, each with a description', () => {
+    for (const w of ['Comfort', 'Spontaneity', 'Hospitality', 'Cooperation', 'Knowledge', 'Balance', 'Success', 'Recognition', 'Drive', 'Choice', 'Fairness in pay', 'Psychological safety']) {
       expect(values).not.toContain(w)
     }
-    for (const w of ['Psychological safety', 'Intellectual honesty', 'Rigour', 'Sustainable pace', 'Learning in public']) {
+    for (const w of ['Fairness', 'Honesty', 'Self-direction', 'Self-respect', 'Commitment']) {
       expect(values).toContain(w)
       expect(getDefinition('values', w)).toBeTruthy()
     }

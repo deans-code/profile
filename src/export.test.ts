@@ -4,7 +4,7 @@ import { initialState, reducer, type Action } from './state/profile'
 const run = (actions: Action[]) => actions.reduce(reducer, initialState)
 
 const state = run([
-  { type: 'toggleValue', name: 'Integrity' },
+  { type: 'toggleValue', name: 'Fairness' },
   { type: 'addCustomValue', text: 'Craft "quality" *always*' },
   { type: 'toggleSkill', section: 'technical', name: 'Python' },
   { type: 'toggleSkill', section: 'technical', name: 'Go' },
@@ -23,7 +23,7 @@ describe('buildProfile', () => {
   it('sorts each list alphabetically, keeps skill options apart and has one values list', () => {
     expect(profile.skills.technical).toEqual({ experience: ['C# & café', 'Go', 'Python'], desired: ['Python'] })
     expect(profile.skills.ai).toEqual({ experience: [], desired: ['Claude Code', 'OpenRouter'] })
-    expect(profile.values).toEqual(['Craft "quality" *always*', 'Curiosity', 'Integrity'])
+    expect(profile.values).toEqual(['Craft "quality" *always*', 'Curiosity', 'Fairness'])
   })
 })
 
@@ -33,7 +33,7 @@ describe('toJson', () => {
 
   it('has the documented structure', () => {
     expect(json.exportedAt).toBe('2026-01-02T03:04:05.000Z')
-    expect(json.values).toEqual(['Craft "quality" *always*', 'Curiosity', 'Integrity'])
+    expect(json.values).toEqual(['Craft "quality" *always*', 'Curiosity', 'Fairness'])
     expect(Object.keys(json.skills)).toEqual(['technical', 'engineering', 'interpersonal', 'ai'])
     expect(json.skills.engineering).toEqual({ experience: ['Continuous integration'], desired: [] })
     expect(json.skills.ai).toEqual({ experience: [], desired: ['Claude Code', 'OpenRouter'] })
@@ -67,7 +67,7 @@ describe('toMarkdown', () => {
   it('lists values once, without option headings', () => {
     const values = md.slice(md.indexOf('## Values'), md.indexOf('## Technical development'))
     expect(values).toContain('- Curiosity')
-    expect(values).toContain('- Integrity')
+    expect(values).toContain('- Fairness')
     expect(values).not.toContain('###')
   })
 

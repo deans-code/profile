@@ -38,10 +38,20 @@ describe('sources', () => {
     expect(controls.compareDocumentPosition(section) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
-  it('shows only the sources for its own tab', () => {
+  it('shows only the sources for its own tab', async () => {
+    const user = userEvent.setup()
     render(<App />)
-    // Values has no sources listed yet, so the section is absent rather than showing another tab's.
-    expect(screen.queryByRole('region', { name: 'Sources' })).toBeNull()
+    const valuesLinks = within(screen.getByRole('region', { name: 'Sources' }))
+      .getAllByRole('link')
+      .map((l) => l.getAttribute('href'))
+    expect(valuesLinks).toEqual(sourcesFor('values').map((s) => s.url))
+    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    await user.click(next())
+    const technicalLinks = within(screen.getByRole('region', { name: 'Sources' }))
+      .getAllByRole('link')
+      .map((l) => l.getAttribute('href'))
+    expect(technicalLinks).toEqual(sourcesFor('technical').map((s) => s.url))
+    expect(technicalLinks).not.toEqual(valuesLinks)
   })
 
   it('is listed in the README', () => {

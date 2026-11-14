@@ -38,7 +38,7 @@ describe('add your own at the top', () => {
     const user = userEvent.setup()
     render(<App />)
     expect(screen.queryByText(/Limit reached: deselect a word to add another/)).not.toBeInTheDocument()
-    for (const v of ['Respect', 'Integrity', 'Honesty', 'Courage', 'Humility']) {
+    for (const v of ['Respect', 'Fairness', 'Honesty', 'Courage', 'Humility']) {
       await user.click(screen.getByRole('button', { name: v }))
     }
     const form = document.querySelector<HTMLElement>('form.add-entry')!

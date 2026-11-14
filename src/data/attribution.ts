@@ -1,6 +1,7 @@
 import { AI } from './catalog/ai'
 import { ENGINEERING } from './catalog/engineering'
 import { INTERPERSONAL } from './catalog/interpersonal'
+import { VALUES } from './catalog/values'
 import { TECHNICAL } from './catalog/technical'
 import type { TermKind } from './definitions'
 import { SOURCE_REGISTRY, TAB_SOURCES, type Source, type SourceId } from './sources'
@@ -14,7 +15,7 @@ export interface Attribution {
 
 /** Supporting sources per tab and option name. Filled in tab by tab as each is verified. */
 export const ATTRIBUTION: Record<TermKind, Record<string, Attribution>> = {
-  values: {},
+  values: VALUES.attribution,
   technical: TECHNICAL.attribution,
   engineering: ENGINEERING.attribution,
   interpersonal: INTERPERSONAL.attribution,

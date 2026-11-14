@@ -33,7 +33,7 @@ describe('definitions', () => {
   })
 
   it('looks up case-insensitively and returns undefined for custom terms', () => {
-    expect(getDefinition('values', ' integrity ')).toBeTruthy()
+    expect(getDefinition('values', ' fairness ')).toBeTruthy()
     expect(getDefinition('values', 'My own value')).toBeUndefined()
   })
 

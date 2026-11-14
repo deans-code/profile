@@ -10,15 +10,15 @@ describe('definition panel', () => {
   it('opens on right-click without changing selection, showing the definition', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.pointer({ keys: '[MouseRight]', target: word('Integrity') })
-    expect(panel()).toHaveAccessibleName('Description of Integrity')
-    expect(panel()).toHaveTextContent(/principles/i)
-    expect(word('Integrity')).toHaveAttribute('aria-pressed', 'false')
+    await user.pointer({ keys: '[MouseRight]', target: word('Fairness') })
+    expect(panel()).toHaveAccessibleName('Description of Fairness')
+    expect(panel()).toHaveTextContent(/fair/i)
+    expect(word('Fairness')).toHaveAttribute('aria-pressed', 'false')
   })
 
   it('prevents the browser context menu for built-in words', () => {
     render(<App />)
-    const notPrevented = fireEvent.contextMenu(word('Integrity'))
+    const notPrevented = fireEvent.contextMenu(word('Fairness'))
     expect(notPrevented).toBe(false)
   })
 
@@ -73,23 +73,23 @@ describe('definition panel', () => {
     const user = userEvent.setup()
     render(<App />)
     await user.pointer({ keys: '[MouseRight]', target: word('Respect') })
-    await user.pointer({ keys: '[MouseRight]', target: word('Trust') })
+    await user.pointer({ keys: '[MouseRight]', target: word('Kindness') })
     expect(screen.getAllByRole('dialog')).toHaveLength(1)
-    expect(panel()).toHaveAccessibleName('Description of Trust')
+    expect(panel()).toHaveAccessibleName('Description of Kindness')
   })
 
   it('opens on touch long-press without toggling selection', () => {
     vi.useFakeTimers()
     try {
       render(<App />)
-      const el = word('Quality')
+      const el = word('Curiosity')
       fireEvent.pointerDown(el, { pointerType: 'touch' })
       act(() => {
         vi.advanceTimersByTime(LONG_PRESS_MS + 10)
       })
       fireEvent.pointerUp(el, { pointerType: 'touch' })
       fireEvent.click(el)
-      expect(panel()).toHaveAccessibleName('Description of Quality')
+      expect(panel()).toHaveAccessibleName('Description of Curiosity')
       expect(el).toHaveAttribute('aria-pressed', 'false')
 
       // A normal tap afterwards still toggles.
@@ -106,7 +106,7 @@ describe('definition panel', () => {
     vi.useFakeTimers()
     try {
       render(<App />)
-      const el = word('Quality')
+      const el = word('Curiosity')
       fireEvent.pointerDown(el, { pointerType: 'touch' })
       act(() => {
         vi.advanceTimersByTime(LONG_PRESS_MS - 100)
@@ -156,7 +156,7 @@ describe('definition panel', () => {
   it('works for skills in every section', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(word('Integrity'))
+    await user.click(word('Fairness'))
     await user.click(screen.getByRole('button', { name: /^Continue/ }))
     await user.pointer({ keys: '[MouseRight]', target: word('Python') })
     expect(panel()).toHaveTextContent(/readable general-purpose/i)
@@ -175,15 +175,15 @@ describe('long-press does not swallow later selections', () => {
     vi.useFakeTimers()
     try {
       render(<App />)
-      const el = word('Quality')
+      const el = word('Curiosity')
       await longPress(el)
-      expect(panel()).toHaveAccessibleName('Description of Quality')
+      expect(panel()).toHaveAccessibleName('Description of Curiosity')
       fireEvent.pointerUp(el, { pointerType: 'touch' }) // released with no click
       await act(async () => {
         vi.advanceTimersByTime(CLICK_SUPPRESS_MS + 10)
       })
-      fireEvent.click(word('Trust'))
-      expect(word('Trust')).toHaveAttribute('aria-pressed', 'true')
+      fireEvent.click(word('Kindness'))
+      expect(word('Kindness')).toHaveAttribute('aria-pressed', 'true')
       fireEvent.click(el)
       expect(el).toHaveAttribute('aria-pressed', 'true')
     } finally {
@@ -195,7 +195,7 @@ describe('long-press does not swallow later selections', () => {
     vi.useFakeTimers()
     try {
       render(<App />)
-      const el = word('Quality')
+      const el = word('Curiosity')
       await longPress(el)
       fireEvent.pointerUp(el, { pointerType: 'touch' })
       fireEvent.pointerDown(el, { pointerType: 'mouse' })
@@ -210,7 +210,7 @@ describe('long-press does not swallow later selections', () => {
     vi.useFakeTimers()
     try {
       render(<App />)
-      const el = word('Quality')
+      const el = word('Curiosity')
       await longPress(el)
       fireEvent.pointerUp(el, { pointerType: 'touch' })
       fireEvent.click(el)
@@ -278,7 +278,7 @@ describe('panel stays attached and closes when its word goes', () => {
   it('closes when the section changes by keyboard', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(word('Integrity'))
+    await user.click(word('Fairness'))
     word('Honesty').focus()
     await user.keyboard('?')
     expect(panel()).toBeInTheDocument()
@@ -291,7 +291,7 @@ describe('panel stays attached and closes when its word goes', () => {
   it('closes when a filter removes the word from view', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(word('Integrity'))
+    await user.click(word('Fairness'))
     await user.click(screen.getByRole('button', { name: /^Continue/ }))
     word('Python').focus()
     await user.keyboard('?')
@@ -307,14 +307,14 @@ describe('word and panel association', () => {
   it('flags words that have definitions and links the open panel to its word', async () => {
     const user = userEvent.setup()
     render(<App />)
-    expect(word('Integrity')).toHaveAttribute('aria-haspopup', 'dialog')
-    expect(word('Integrity')).not.toHaveAttribute('aria-describedby')
-    await user.pointer({ keys: '[MouseRight]', target: word('Integrity') })
+    expect(word('Fairness')).toHaveAttribute('aria-haspopup', 'dialog')
+    expect(word('Fairness')).not.toHaveAttribute('aria-describedby')
+    await user.pointer({ keys: '[MouseRight]', target: word('Fairness') })
     const dialog = screen.getByRole('dialog')
-    expect(word('Integrity')).toHaveAttribute('aria-describedby', dialog.id)
+    expect(word('Fairness')).toHaveAttribute('aria-describedby', dialog.id)
     expect(word('Honesty')).not.toHaveAttribute('aria-describedby')
     await user.keyboard('{Escape}')
-    expect(word('Integrity')).not.toHaveAttribute('aria-describedby')
+    expect(word('Fairness')).not.toHaveAttribute('aria-describedby')
   })
 
   it('does not advertise a definition on custom words', async () => {

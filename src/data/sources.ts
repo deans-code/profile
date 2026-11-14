@@ -104,11 +104,32 @@ export const SOURCE_REGISTRY: Record<SourceId, Source> = {
     url: 'https://scrumguides.org/scrum-guide.html',
     year: 2020,
   },
+  'via-character-strengths': {
+    id: 'via-character-strengths',
+    title: 'VIA Character Strengths',
+    publisher: 'VIA Institute on Character',
+    url: 'https://www.viacharacter.org/character-strengths',
+    year: 2026,
+  },
+  'schwartz-basic-values': {
+    id: 'schwartz-basic-values',
+    title: 'Theory of basic human values (Schwartz), as summarised on Wikipedia',
+    publisher: 'Wikipedia contributors, citing Shalom H. Schwartz (1992, 2012)',
+    url: 'https://en.wikipedia.org/wiki/Theory_of_basic_human_values',
+    year: 2026,
+  },
+  'rokeach-value-survey': {
+    id: 'rokeach-value-survey',
+    title: 'Rokeach Value Survey, as summarised on Wikipedia',
+    publisher: 'Wikipedia contributors, citing Milton Rokeach (1973)',
+    url: 'https://en.wikipedia.org/wiki/Rokeach_Value_Survey',
+    year: 2025,
+  },
 }
 
 /** The sources shown under each tab, in display order. The Profile page has none. */
 export const TAB_SOURCES: Record<TermKind, SourceId[]> = {
-  values: [],
+  values: ['via-character-strengths', 'schwartz-basic-values', 'rokeach-value-survey', 'scrum-guide-2020'],
   technical: ['stack-overflow-2026', 'jetbrains-2026', 'cncf-2026', 'thoughtworks-radar-35', 'octoverse-2026'],
   engineering: ['dora-2025', 'owasp-top10-2025', 'thoughtworks-radar-35', 'cncf-2026', 'octoverse-2026'],
   interpersonal: ['dora-2025', 'nace-career-readiness', 'sfia-9', 'scrum-guide-2020'],
