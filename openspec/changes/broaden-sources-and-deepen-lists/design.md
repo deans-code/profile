@@ -1,0 +1,41 @@
+## Context
+
+The catalog is built from one data file per source per tab under `src/data/catalog/{values,technical,engineering,interpersonal,ai}/`, merged by `mergeContributions` (first source sets category and description; later sources add themselves). Sources are registered in `src/data/sources.ts` (`SOURCE_REGISTRY`, `TAB_SOURCES`), attribution is derived from the contributions, and `src/data/attribution.test.ts` enforces integrity and at least three sources per tab. Current group sizes (observed): Values has 13 groups of 2 to 18 (Openness to change 2, Self-transcendence 2, Humanity 3, Justice 3, Self-enhancement 3, Conservation 3, Working together 5, Wisdom 5, Transcendence 5, Courage 4, Temperance 4); Technical has Game development 1, Messaging and integration 4, Identity and access 4, Build and delivery tools 5; Engineering has Reliability and operations 4; Interpersonal has groups of 2 to 8; AI has Local runtimes 1, Building AI applications 2, Open-weight models 3, Organisational readiness 3, AI safety 5. This change builds on `verified-sources-for-every-tab`, which should be applied and archived first.
+
+## Goals / Non-Goals
+
+**Goals:** at least six sources per tab; every source read in full for its tab; groups of six or more; a Values tab organised by where values apply and covering work, delivery, teams, others, isolation, change, learning, business, personal and world values.
+**Non-Goals:** fetching at run time, showing statistics, changing the profile format, or adding any option no source supports.
+
+## Decisions
+
+1. **Candidate additional sources** (each must be fetched and read before it is listed; failures are recorded in the README):
+   - Values: Agile Manifesto and its twelve principles (2001); Extreme Programming values via Wikipedia "Extreme programming"; ACM/IEEE-CS Software Engineering Code of Ethics (1999); ACM Code of Ethics (2018); Wikipedia "Value (ethics)", "Core value", "Work ethic" and "List of virtues"; Hofstede cultural dimensions via Wikipedia; Self-determination theory via Wikipedia; Google re:Work "Project Aristotle" team-effectiveness findings; Lean and DevOps values (CALMS) via Wikipedia "Lean software development" and "DevOps".
+   - Technical: State of JS / State of CSS surveys, TIOBE index, PYPL index, Wikipedia "List of programming languages", "Comparison of ..." articles for frameworks, databases and build tools, Hugging Face trending where relevant, Libraries.io or npm download rankings where terms allow.
+   - Engineering: SWEBOK Guide v4 (IEEE Computer Society), ISO/IEC 25010 via its public summary, Google SRE books (free online), Twelve-Factor App, Wikipedia "Software design pattern", "SOLID", "List of software development philosophies", "Software architecture", the Agile Manifesto, the Microsoft Azure and AWS Well-Architected frameworks (as architecture pillars).
+   - Interpersonal: O*NET (US Department of Labor, open licence) skills and work styles; ESCO skills taxonomy (European Commission); Wikipedia "Soft skills", "Emotional intelligence", "Team composition" (Belbin), "Tuckman's stages", "Thomas-Kilmann conflict modes"; Google Project Aristotle; Stack Overflow survey (working practices).
+   - AI engineering: Hugging Face model and task pages, LMArena and Artificial Analysis leaderboards, NIST AI Risk Management Framework, OWASP Top 10 for LLM Applications, Model Context Protocol specification, Wikipedia "List of large language models" and "Retrieval-augmented generation", MLCommons.
+   Rejected up front: sources that refuse automated access (WEF, PMI, Mind), undated or unnamed-publisher blogs, vendor marketing pages, paywalled reports, and any source whose terms forbid linking.
+2. **Age rule.** The age filter changes from "recent" to "still in use": a source is rejected only if superseded, withdrawn, or showing tools no longer used. Each registry entry keeps its `year`; frameworks use the edition year. Technology inclusion still needs 5% usage or two sources, so old sources cannot reintroduce dead tools.
+3. **Wikipedia sources.** Registered like any source with the article title, `en.wikipedia.org` URL and the edit date in the year/title text; the per-source data file header records the edit date and CC BY-SA 4.0, as Rokeach and Schwartz already do. Descriptions are written for the app, never copied. Where an article merely summarises a paper the paper is not cited as read (see Schwartz precedent).
+4. **Reading a source in full.** Each source file lists every item the source names that passes the tab rule, not a sample. Where a source is large (for example a language list) the 5% / two-source rule for technologies and a "named by the source as a distinct skill, practice, value or technique" rule for the rest decide inclusion. The per-source file header states what was read and what was left out and why.
+5. **Group merging.** A group of fewer than six options is merged into its closest neighbour and renamed so the name describes everything in it (for example Technical: Game development, Messaging and integration and Identity and access become part of broader groups such as "Application platforms and services"; AI: Local runtimes joins Inference platforms and gateways, Open-weight models joins Model providers). A test enforces six or more per group, with an explicit exceptions list (empty by default) for any group the README justifies keeping. Because categories are set by the first source to name an option, the merge is done by renaming categories in the per-source files so every source agrees, and a test checks each category name is used consistently.
+6. **Values by context.** The Values categories become the contexts: Doing good work; Building and delivering with computers; Working in a team; Working with others; Working alone and remotely; Adopting new ways of working; Learning and growth; Business and organisation; Personal character; Society, nature and the world; What I expect from others. Existing options (VIA, Schwartz, Rokeach, Scrum) are re-homed into these groups by meaning; each source file keeps its attribution while category names change. Schwartz and Rokeach group names are no longer shown, so the existing values-grouping tests are rewritten for the new groups. A value appears once, in the best-fitting context.
+7. **Size targets are floors, not quotas.** Tests enforce the floors from the spec (150, 250, 120, 100, 120) so regressions are caught; if a tab cannot reach its floor honestly from the sources read, the shortfall is reported and the floor lowered in the spec before it is merged, never padded.
+8. **Process.** Work one tab at a time and one source at a time, as in the previous change: fetch, read, record, run the integrity tests, commit per tab. Large reads (Wikipedia lists, SWEBOK) may be delegated to subagents that return names only, which are then written into the per-source files by hand-checked data.
+
+## Risks / Trade-offs
+
+- Breadth invites padding and duplicates → every option needs a naming source; the integrity test and the README read-in-full rule keep it honest; near-duplicate names are merged by choosing one canonical name and recording the others in the descriptions.
+- Wikipedia lists change and vary in quality → pin the edit date, prefer articles with citations, and attribute only items the article actually lists.
+- Merging groups changes where options appear and how profiles read when exported → export uses option names and the group heading; the README notes the new headings and the load path is unchanged.
+- Test hard-codes (group names, counts) break → update them in the same task as the data change they cover.
+- Fetch failures and refusals → record in the README and substitute.
+
+## Migration Plan
+
+1. Apply and archive `verified-sources-for-every-tab`. 2. Add the test changes first (min group size, six sources, size floors) so they fail where data is short. 3. Rework Values, then Interpersonal, Engineering, AI, Technical, one tab per commit. 4. Update the README. Roll back by reverting commits; no stored data changes.
+
+## Open Questions
+
+- The final per-tab source list is settled as each candidate is fetched; the floors in the spec can only be lowered by editing the spec.
