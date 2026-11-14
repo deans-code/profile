@@ -20,7 +20,7 @@ const profileJson = (overrides: Record<string, unknown> = {}) =>
     skills: {
       technical: lists(['Python', 'Zig']),
       engineering: lists(['Continuous integration']),
-      interpersonal: lists(['Teamwork']),
+      interpersonal: lists(['Teamwork and collaboration']),
       ai: lists(['Claude Code'], ['OpenRouter']),
     },
     ...overrides,
@@ -34,7 +34,7 @@ const legacyJson = () =>
     skills: {
       technical: [{ name: 'Python', score: 9 }],
       engineering: [{ name: 'Continuous integration', score: 6 }],
-      interpersonal: [{ name: 'Teamwork', score: 7 }],
+      interpersonal: [{ name: 'Teamwork and collaboration', score: 7 }],
     },
   })
 
@@ -99,7 +99,7 @@ describe('Load saved profile', () => {
     await user.click(next())
     expect(word('Continuous integration')).toHaveAttribute('aria-pressed', 'true')
     await user.click(next())
-    expect(word('Teamwork')).toHaveAttribute('aria-pressed', 'true')
+    expect(word('Teamwork and collaboration')).toHaveAttribute('aria-pressed', 'true')
     await user.click(next())
 
     // AI engineering: both options restored.
@@ -295,7 +295,7 @@ describe('end to end: build, download, load, edit, download', () => {
     await user.click(next())
     await user.click(word('Continuous integration'))
     await user.click(next())
-    await user.click(word('Teamwork'))
+    await user.click(word('Teamwork and collaboration'))
     await user.click(next())
     await user.click(word('Claude Code'))
     await user.click(radio(/^Desired experience/))

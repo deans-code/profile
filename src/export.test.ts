@@ -13,7 +13,7 @@ const state = run([
   { type: 'toggleValue', name: 'Curiosity' },
   { type: 'setMode', mode: 'desired' },
   { type: 'toggleSkill', section: 'technical', name: 'Python' },
-  { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
+  { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork and collaboration' },
   { type: 'toggleSkill', section: 'ai', name: 'OpenRouter' },
   { type: 'toggleSkill', section: 'ai', name: 'Claude Code' },
 ])

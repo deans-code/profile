@@ -11,7 +11,7 @@ const link = () => screen.queryByRole('link', { name: /open chatgpt/i })
 
 async function goTo(user: ReturnType<typeof userEvent.setup>, step: 'technical' | 'engineering' | 'interpersonal') {
   await user.click(word('Integrity'))
-  const picks = ['Python', 'Continuous integration', 'Teamwork']
+  const picks = ['Python', 'Continuous integration', 'Teamwork and collaboration']
   const order = ['technical', 'engineering', 'interpersonal']
   await user.click(next())
   for (let i = 0; i < order.indexOf(step); i++) {
@@ -89,7 +89,7 @@ describe('ChatGPT link', () => {
     const user = userEvent.setup()
     render(<App />)
     await goTo(user, 'interpersonal')
-    await user.click(word('Teamwork'))
+    await user.click(word('Teamwork and collaboration'))
     await user.click(next())
     expect(link()).not.toBeInTheDocument()
     await user.click(word('Claude Code'))

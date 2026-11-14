@@ -224,7 +224,7 @@ describe('profile card and downloads', () => {
     await user.click(next())
     await user.click(chip('Continuous integration'))
     await user.click(next())
-    await user.click(chip('Teamwork'))
+    await user.click(chip('Teamwork and collaboration'))
     await user.click(next())
     await user.click(chip('Claude Code'))
     await user.click(radio(/^Desired experience/))
@@ -340,7 +340,7 @@ describe('instructions', () => {
     for (const [section, word] of [
       ['technical', 'Python'],
       ['engineering', 'Continuous integration'],
-      ['interpersonal', 'Teamwork'],
+      ['interpersonal', 'Teamwork and collaboration'],
       ['ai', 'Claude Code'],
     ]) {
       await user.click(next())
@@ -417,7 +417,7 @@ describe('end to end with definitions', () => {
     await user.click(next())
     await user.click(chip('Continuous integration'))
     await user.click(next())
-    await user.click(chip('Teamwork'))
+    await user.click(chip('Teamwork and collaboration'))
     await user.click(next())
     await user.pointer({ keys: '[MouseRight]', target: chip('Claude Code') })
     expect(screen.getByRole('dialog')).toHaveAccessibleName('Description of Claude Code')

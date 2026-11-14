@@ -20,8 +20,8 @@
 
 ## 4. Interpersonal tab
 
-- [ ] 4.1 Vet and register at least three sources for Interpersonal. Verify: each address opens; rejects noted.
-- [ ] 4.2 Check, attribute, correct and prune every Interpersonal option; add missing sourced options with descriptions. Verify: integrity tests pass for the tab; removals and additions listed in the README.
+- [x] 4.1 Vet and register at least three sources for Interpersonal. Verify: each address opens; rejects noted.
+- [x] 4.2 Check, attribute, correct and prune every Interpersonal option; add missing sourced options with descriptions. Verify: integrity tests pass for the tab; removals and additions listed in the README.
 
 ## 5. AI engineering tab
 

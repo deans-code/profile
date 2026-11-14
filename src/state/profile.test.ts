@@ -168,7 +168,7 @@ describe('step gating', () => {
   const complete = run(
     [
       { type: 'toggleSkill', section: 'engineering', name: 'Continuous integration' },
-      { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
+      { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork and collaboration' },
       { type: 'toggleSkill', section: 'ai', name: 'Claude Code' },
     ],
     oneSection,
@@ -186,7 +186,7 @@ describe('step gating', () => {
       { type: 'toggleValue', name: 'Integrity' },
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
       { type: 'toggleSkill', section: 'engineering', name: 'Continuous integration' },
-      { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
+      { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork and collaboration' },
       { type: 'toggleSkill', section: 'ai', name: 'Claude Code' },
     ])
     expect(stepBlockedReason(s, 'card')).toBeNull()
@@ -323,7 +323,7 @@ describe('selection limit', () => {
         selectedSkills: {
           technical: exp(technical.slice(0, 40)),
           engineering: exp(['Continuous integration']),
-          interpersonal: exp(['Teamwork']),
+          interpersonal: exp(['Teamwork and collaboration']),
           ai: exp(['Claude Code']),
         },
       }
@@ -353,7 +353,7 @@ describe('loadProfile', () => {
     selectedSkills: {
       technical: exp(['Python']),
       engineering: des(['Continuous integration']),
-      interpersonal: exp(['Teamwork']),
+      interpersonal: exp(['Teamwork and collaboration']),
       ai: exp(['Claude Code']),
     },
     customSkills: { technical: [], engineering: [], interpersonal: [], ai: [] },

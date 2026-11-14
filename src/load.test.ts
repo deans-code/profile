@@ -14,7 +14,7 @@ const file = (overrides: Record<string, unknown> = {}) =>
     skills: {
       technical: lists(['Python']),
       engineering: lists([], ['Continuous integration']),
-      interpersonal: lists(['Teamwork']),
+      interpersonal: lists(['Teamwork and collaboration']),
       ai: lists(['Claude Code'], ['OpenRouter']),
     },
     ...overrides,
@@ -28,7 +28,7 @@ const legacyFile = (overrides: Record<string, unknown> = {}) =>
     skills: {
       technical: [{ name: 'Python', score: 8 }],
       engineering: [{ name: 'Continuous integration', score: 5 }],
-      interpersonal: [{ name: 'Teamwork', score: 7 }],
+      interpersonal: [{ name: 'Teamwork and collaboration', score: 7 }],
     },
     ...overrides,
   })
@@ -51,7 +51,7 @@ describe('parseProfile', () => {
       skills: {
         technical: lists(['Python']),
         engineering: lists([], ['Continuous integration']),
-        interpersonal: lists(['Teamwork']),
+        interpersonal: lists(['Teamwork and collaboration']),
         ai: lists(['Claude Code'], ['OpenRouter']),
       },
     })
@@ -66,7 +66,7 @@ describe('parseProfile', () => {
       { type: 'toggleSkill', section: 'engineering', name: 'Continuous integration' },
       { type: 'setMode', mode: 'desired' },
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
-      { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
+      { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork and collaboration' },
       { type: 'toggleSkill', section: 'ai', name: 'Claude Code' },
       { type: 'addCustomSkill', section: 'ai', text: 'My own tool' },
     ])
@@ -123,7 +123,7 @@ describe('parseProfile', () => {
         skills: {
           technical: lists(['Python']),
           engineering: lists(['Continuous integration']),
-          interpersonal: lists(['Teamwork']),
+          interpersonal: lists(['Teamwork and collaboration']),
           ai: lists([]),
         },
       })
@@ -235,7 +235,7 @@ describe('profileToState', () => {
   it('keeps sections separate', () => {
     const s = { ...initialState, ...profileToState(ok(file())) }
     expect(s.customSkills.engineering).toEqual([])
-    expect(s.selectedSkills.interpersonal).toEqual(lists(['Teamwork']))
+    expect(s.selectedSkills.interpersonal).toEqual(lists(['Teamwork and collaboration']))
     expect(s.selectedSkills.engineering).toEqual(lists([], ['Continuous integration']))
   })
 })

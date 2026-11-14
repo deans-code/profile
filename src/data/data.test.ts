@@ -27,8 +27,8 @@ describe('values data', () => {
 })
 
 describe('skill catalogs', () => {
-  it.each(SECTIONS)('%s has at least 40 skills across at least 5 categories', (section) => {
-    expect(catalogSkillNames(section).length).toBeGreaterThanOrEqual(40)
+  it.each(SECTIONS)('%s has at least 25 skills across at least 5 categories', (section) => {
+    expect(catalogSkillNames(section).length).toBeGreaterThanOrEqual(25)
     expect(CATALOGS[section].length).toBeGreaterThanOrEqual(5)
   })
 

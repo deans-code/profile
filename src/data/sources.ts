@@ -83,6 +83,27 @@ export const SOURCE_REGISTRY: Record<SourceId, Source> = {
     url: 'https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/',
     year: 2026,
   },
+  'nace-career-readiness': {
+    id: 'nace-career-readiness',
+    title: 'Career Readiness Competencies',
+    publisher: 'National Association of Colleges and Employers (NACE)',
+    url: 'https://www.naceweb.org/career-readiness/competencies/career-readiness-defined/',
+    year: 2025,
+  },
+  'sfia-9': {
+    id: 'sfia-9',
+    title: 'SFIA 9: Skills Framework for the Information Age',
+    publisher: 'SFIA Foundation',
+    url: 'https://sfia-online.org/en/the-sfia-framework/sfia-9',
+    year: 2024,
+  },
+  'scrum-guide-2020': {
+    id: 'scrum-guide-2020',
+    title: 'The 2020 Scrum Guide',
+    publisher: 'Ken Schwaber and Jeff Sutherland',
+    url: 'https://scrumguides.org/scrum-guide.html',
+    year: 2020,
+  },
 }
 
 /** The sources shown under each tab, in display order. The Profile page has none. */
@@ -90,7 +111,7 @@ export const TAB_SOURCES: Record<TermKind, SourceId[]> = {
   values: [],
   technical: ['stack-overflow-2026', 'jetbrains-2026', 'cncf-2026', 'thoughtworks-radar-35', 'octoverse-2026'],
   engineering: ['dora-2025', 'owasp-top10-2025', 'thoughtworks-radar-35', 'cncf-2026', 'octoverse-2026'],
-  interpersonal: [],
+  interpersonal: ['dora-2025', 'nace-career-readiness', 'sfia-9', 'scrum-guide-2020'],
   ai: ['stack-overflow-2026', 'jetbrains-ai-2026', 'openrouter-rankings-2026', 'thoughtworks-radar-35', 'stanford-ai-index-2026', 'octoverse-2026', 'dora-2025'],
 }
 

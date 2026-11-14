@@ -1,5 +1,6 @@
 import { AI } from './catalog/ai'
 import { ENGINEERING } from './catalog/engineering'
+import { INTERPERSONAL } from './catalog/interpersonal'
 import { TECHNICAL } from './catalog/technical'
 
 export type Section = 'technical' | 'engineering' | 'interpersonal' | 'ai'
@@ -21,76 +22,7 @@ export interface SkillCategory {
 export const CATALOGS: Record<Section, SkillCategory[]> = {
   technical: TECHNICAL.categories,
   engineering: ENGINEERING.categories,
-  interpersonal: [
-    {
-      category: 'Communication',
-      skills: [
-        'Written communication',
-        'Verbal communication',
-        'Active listening',
-        'Presentation skills',
-        'Storytelling',
-        'Giving feedback',
-        'Receiving feedback',
-        'Explaining technical concepts',
-        'Difficult conversations',
-        'Asynchronous communication',
-      ],
-    },
-    {
-      category: 'Collaboration',
-      skills: [
-        'Teamwork',
-        'Cross-functional collaboration',
-        'Conflict resolution',
-        'Negotiation',
-        'Stakeholder management',
-        'Remote collaboration',
-        'Building trust',
-        'Empathy',
-        'Psychological safety',
-        'Pair and mob programming',
-        'Knowledge sharing',
-      ],
-    },
-    {
-      category: 'Leadership',
-      skills: [
-        'Mentoring',
-        'Coaching',
-        'Delegation',
-        'Decision making',
-        'Team leadership',
-        'Influencing',
-        'Facilitation',
-        'Hiring and interviewing',
-        'Change management',
-        'Managing up',
-        'Performance management',
-        'Onboarding new team members',
-      ],
-    },
-    {
-      category: 'Thinking and problem solving',
-      skills: ['Problem solving', 'Critical thinking', 'Creativity', 'Analytical thinking', 'Product thinking', 'Systems thinking', 'Root cause analysis', 'First-principles thinking'],
-    },
-    {
-      category: 'Personal effectiveness',
-      skills: [
-        'Time management',
-        'Prioritisation',
-        'Adaptability',
-        'Resilience',
-        'Continuous learning',
-        'Emotional intelligence',
-        'Accountability',
-      ],
-    },
-    {
-      category: 'Business awareness',
-      skills: ['Customer focus', 'Business acumen', ],
-    },
-  ],
+  interpersonal: INTERPERSONAL.categories,
   ai: AI.categories,
 }
 

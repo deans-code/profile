@@ -109,7 +109,7 @@ describe('section transitions', () => {
     await user.click(chip('Continuous integration'))
     await user.click(next())
     await settle()
-    await user.click(chip('Teamwork'))
+    await user.click(chip('Teamwork and collaboration'))
     await user.click(next())
     await settle()
     await user.click(chip('Claude Code'))

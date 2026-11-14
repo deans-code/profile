@@ -134,6 +134,19 @@ The Engineering catalog was rebuilt from these sources, one at a time:
 
 Source files live in `src/data/catalog/engineering/`.
 
+### Interpersonal
+
+The Interpersonal catalog was rebuilt from published skills frameworks, since there are no usage surveys for these skills:
+
+- [DORA capabilities catalog](https://dora.dev/capabilities/), by DORA, Google Cloud (CC BY 4.0): its people and culture capabilities, such as a generative culture, learning culture, transformational leadership and customer feedback.
+- [Career Readiness Competencies](https://www.naceweb.org/career-readiness/competencies/career-readiness-defined/), by the National Association of Colleges and Employers (NACE). NACE allows non-commercial use only; the app uses just the competency names with its own descriptions and credits NACE. The page shows no edition date and marks Equity and Inclusion as under review.
+- [SFIA 9](https://sfia-online.org/en/the-sfia-framework/sfia-9), by the SFIA Foundation (October 2024): the names of its generic attributes (such as collaboration, communication and adaptability). SFIA is licensed and copying is prohibited, so only names are used and the individual skills directory was not read.
+- [The 2020 Scrum Guide](https://scrumguides.org/scrum-guide.html), by Ken Schwaber and Jeff Sutherland (CC BY-SA 4.0): self-managing teams, facilitation, coaching and inspecting and adapting. It is a standing framework, so its 2020 edition is still current.
+
+Considered and not used: the World Economic Forum Future of Jobs Report and the PMI Pulse of the Profession (both refuse automated access, so they could not be read), and LinkedIn's most in-demand skills article (the latest readable edition is from February 2024, older than the two-year limit).
+
+Source files live in `src/data/catalog/interpersonal/`.
+
 ### AI engineering
 
 The AI engineering catalog was rebuilt the same way, one source at a time. A model provider, tool or practice is offered when a source names it as in current use or leading:
