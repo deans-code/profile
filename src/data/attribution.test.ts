@@ -82,3 +82,25 @@ describe.each(KINDS.filter((k) => TAB_SOURCES[k].length > 0))('%s attribution in
     for (const id of TAB_SOURCES[kind]) expect(used.has(id), `${id} supports nothing`).toBe(true)
   })
 })
+
+describe('source citation integrity', () => {
+  it.each(KINDS)('%s shows exactly the sources that at least one of its options cites', (kind) => {
+    const cited = new Set(Object.values(ATTRIBUTION[kind]).flatMap((a) => a.sources))
+    expect(sourcesFor(kind).map((s) => s.id).filter((id) => !cited.has(id)), `${kind} shows uncited sources`).toEqual([])
+    expect([...cited].filter((id) => !TAB_SOURCES[kind].includes(id)), `${kind} cites unlisted sources`).toEqual([])
+  })
+
+  it('has no per-source data file that contributes no option', () => {
+    const files = import.meta.glob<Record<string, unknown>>('./catalog/*/*.ts', { eager: true })
+    const sourceFiles = Object.entries(files).filter(([path]) => !path.endsWith('/index.ts') && !path.endsWith('/types.ts'))
+    expect(sourceFiles.length).toBeGreaterThan(50)
+    for (const [path, mod] of sourceFiles) {
+      for (const value of Object.values(mod)) {
+        const c = value as { source?: string; categories?: Record<string, Record<string, string>> }
+        if (!c || typeof c !== 'object' || !c.categories) continue
+        const n = Object.values(c.categories).reduce((sum, options) => sum + Object.keys(options).length, 0)
+        expect(n, `${path} contributes no option`).toBeGreaterThan(0)
+      }
+    }
+  })
+})

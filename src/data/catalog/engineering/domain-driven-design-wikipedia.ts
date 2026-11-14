@@ -10,12 +10,12 @@ export const domainDrivenDesignWikipedia: SourceContribution = {
   categories: {
     'Architecture and design': {
       'Domain-driven design': '',
+      CQRS: '',
       'Bounded contexts': 'Drawing explicit boundaries around where each domain model applies.',
       'Ubiquitous language': 'Using the same business words in conversation, requirements and code.',
       'Context mapping': 'Mapping how bounded contexts relate and integrate with each other.',
       'Aggregates and domain events': 'Modelling consistency boundaries and the things that happen in the domain.',
       'Event storming': 'Exploring a business domain by mapping its events with the people involved.',
-      CQRS: '',
       'Event sourcing': 'Storing every change as an event and rebuilding state from them.',
     },
     'Design principles and patterns': {

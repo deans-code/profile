@@ -14,6 +14,8 @@ export const softwareTestingWikipedia: SourceContribution = {
     Testing: {
       'Test automation': '',
       'Mutation testing': '',
+      'Contract testing': '',
+      'Usability testing': '',
       'Unit testing': 'Testing small pieces of code in isolation.',
       'Integration testing': 'Testing that separate parts work together.',
       'End-to-end testing': 'Testing a whole flow through the real system, as a user would.',
@@ -26,9 +28,7 @@ export const softwareTestingWikipedia: SourceContribution = {
       'Load and stress testing': 'Pushing a system toward and past its limits to see how it behaves.',
       'Security testing': 'Testing that the system resists attack and protects data.',
       'Accessibility testing': 'Checking that people with different abilities can use the software.',
-      'Usability testing': '',
       'Property-based testing': 'Checking that general properties hold across many generated inputs.',
-      'Contract testing': '',
       'Fuzz testing': 'Feeding unexpected random inputs to find crashes and weaknesses.',
       'Boundary value analysis': 'Testing at the edges of valid input ranges, where bugs concentrate.',
       'Equivalence partitioning': 'Grouping inputs that should behave alike and testing one from each.',

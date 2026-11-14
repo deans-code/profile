@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
-import { SOURCE_REGISTRY, sourcesFor } from './data/sources'
+import { ATTRIBUTION } from './data/attribution'
+import { SOURCE_REGISTRY, TAB_SOURCES, sourcesFor } from './data/sources'
 
 const next = () => within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(Continue|Finish)/ })
 
@@ -52,6 +53,23 @@ describe('sources', () => {
       .map((l) => l.getAttribute('href'))
     expect(technicalLinks).toEqual(sourcesFor('technical').map((s) => s.url))
     expect(technicalLinks).not.toEqual(valuesLinks)
+  })
+
+  it('shows on each tab only sources that one of its options cites', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    const shown = () =>
+      within(screen.getByRole('region', { name: 'Sources' }))
+        .getAllByRole('link')
+        .map((l) => l.getAttribute('href'))
+    const cited = (kind: 'values' | 'technical') => {
+      const ids = new Set(Object.values(ATTRIBUTION[kind]).flatMap((a) => a.sources))
+      return TAB_SOURCES[kind].filter((id) => ids.has(id)).map((id) => SOURCE_REGISTRY[id].url)
+    }
+    expect(shown()).toEqual(cited('values'))
+    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    await user.click(next())
+    expect(shown()).toEqual(cited('technical'))
   })
 
   it('is listed in the README', () => {

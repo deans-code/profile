@@ -17,6 +17,14 @@ import { thoughtworksRadar35Technical } from './thoughtworks-radar-35'
 import { tiobe2026 } from './tiobe-2026'
 import { unitTestingFrameworksWikipedia } from './unit-testing-frameworks-wikipedia'
 import { versionControlWikipedia } from './version-control-wikipedia'
+import { openTelemetryDocs } from './opentelemetry-docs'
+import { cncfProjects } from './cncf-projects'
+import { prometheusOverview } from './prometheus-overview'
+import { grafanaDocs } from './grafana-docs'
+import { networkMonitoringWikipedia } from './network-monitoring-wikipedia'
+import { observabilityWikipedia } from './observability-wikipedia'
+import { apmWikipedia } from './apm-wikipedia'
+import { logManagementWikipedia } from './log-management-wikipedia'
 
 /** Sources are merged in the order they are read; add each new source's file here. */
-export const TECHNICAL = mergeContributions([stackOverflow2026, jetbrains2026, cncf2026, thoughtworksRadar35Technical, octoverse2026Technical, tiobe2026, stateOfCss2025, ciSoftwareWikipedia, buildAutomationWikipedia, versionControlWikipedia, unitTestingFrameworksWikipedia, messageBrokerWikipedia, gameEnginesWikipedia, singleSignOnWikipedia, rdbmsComparisonWikipedia, nosqlWikipedia, serverSideFrameworksWikipedia, javascriptFrameworksWikipedia])
+export const TECHNICAL = mergeContributions([stackOverflow2026, jetbrains2026, cncf2026, thoughtworksRadar35Technical, octoverse2026Technical, tiobe2026, stateOfCss2025, ciSoftwareWikipedia, buildAutomationWikipedia, versionControlWikipedia, unitTestingFrameworksWikipedia, messageBrokerWikipedia, gameEnginesWikipedia, singleSignOnWikipedia, rdbmsComparisonWikipedia, nosqlWikipedia, serverSideFrameworksWikipedia, javascriptFrameworksWikipedia, openTelemetryDocs, cncfProjects, prometheusOverview, grafanaDocs, networkMonitoringWikipedia, observabilityWikipedia, apmWikipedia, logManagementWikipedia])

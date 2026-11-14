@@ -9,9 +9,9 @@ export const azureWellArchitected: SourceContribution = {
   checked: '2026-11-14',
   categories: {
     'Cloud-native and platform practices': {
+      'Performance efficiency': '',
       'Cost optimisation': 'Spending on cloud resources according to what the workload needs.',
       'Operational excellence': 'Running and monitoring systems well and improving how they are run.',
-      'Performance efficiency': '',
     },
   },
 }

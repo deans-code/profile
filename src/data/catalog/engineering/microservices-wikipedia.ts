@@ -10,13 +10,18 @@ export const microservicesWikipedia: SourceContribution = {
   categories: {
     'Architecture and design': {
       'Microservices architecture': '',
-      'Hexagonal architecture': '',
-      'Architectural fitness functions': '',
-      'Bounded contexts': '',
       'Circuit breaker pattern': '',
+      'Architectural fitness functions': '',
+      'Modular monolith': '',
+      'Bounded contexts': '',
       'Service discovery': 'Letting services find each other without fixed addresses.',
       'Service mesh': 'Handling service-to-service communication, security and observability in a shared layer.',
-      'Modular monolith': '',
+    },
+    'Clean and decoupled architecture': {
+      'Hexagonal architecture': '',
+    },
+    'Microservice and integration patterns': {
+      'Cell-based architecture': 'Splitting a system into self-contained cells that can fail and scale independently.',
     },
     'Design principles and patterns': {
       'Loose coupling': '',

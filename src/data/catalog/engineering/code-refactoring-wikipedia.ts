@@ -18,9 +18,9 @@ export const codeRefactoringWikipedia: SourceContribution = {
       'Code maintainability': '',
       Refactoring: '',
       'Code smells': '',
+      'Legacy code modernisation': '',
       'Static analysis': 'Examining code without running it to find defects and complexity.',
       'Cyclomatic complexity': 'Measuring how many paths run through code as a guide to how hard it is to test.',
-      'Legacy code modernisation': '',
     },
   },
 }

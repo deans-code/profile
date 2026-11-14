@@ -9,9 +9,9 @@ export const awsWellArchitected: SourceContribution = {
   checked: '2026-11-14',
   categories: {
     'Cloud-native and platform practices': {
+      'Performance efficiency': '',
       'Cost optimisation': '',
       'Operational excellence': '',
-      'Performance efficiency': '',
       Sustainability: 'Reducing the environmental impact of the workloads you run.',
     },
   },
