@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Profile Builder</title>
+    <script>
+      // Apply saved accessibility choices before first paint to avoid a flash of the wrong theme.
+      try {
+        var p = JSON.parse(localStorage.getItem('profile-builder-preferences') || 'null') || {}
+        var r = document.documentElement
+        if (p.theme === 'light' || p.theme === 'dark') r.setAttribute('data-theme', p.theme)
+        if (['large', 'larger', 'largest'].indexOf(p.textSize) >= 0) r.setAttribute('data-text-size', p.textSize)
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

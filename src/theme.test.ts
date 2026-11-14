@@ -13,12 +13,19 @@ function declarations(block: string): Tokens {
   return out
 }
 
-/** Splits the stylesheet at the dark-mode media query: [light part, dark part]. */
-const [lightCss, darkCss] = css.split('@media (prefers-color-scheme: dark)')
+/** Splits the stylesheet into the light palette, the system-dark media query and the explicit dark theme. */
+const [lightCss, afterMedia] = css.split('@media (prefers-color-scheme: dark)')
+const [darkCss, explicitRaw] = afterMedia.split('/* Explicit dark theme')
+const explicitDarkCss = explicitRaw.split('\n* {')[0]
 
-function base(part: string): Tokens {
-  const m = part.match(/:root\s*\{([^}]*)\}/)
-  return declarations(m![1])
+const SYSTEM_DARK_ROOT = ":root:not([data-theme='light'])"
+const EXPLICIT_DARK_ROOT = ":root[data-theme='dark']"
+
+function base(part: string, root = ':root'): Tokens {
+  const start = part.indexOf(`${root} {`)
+  if (start < 0) throw new Error(`no ${root} block`)
+  const open = part.indexOf('{', start)
+  return declarations(part.slice(open + 1, part.indexOf('}', open)))
 }
 
 function section(part: string, name: string): Tokens {
@@ -43,7 +50,7 @@ function contrast(a: string, b: string): number {
 
 const themes = [
   { name: 'light', base: () => base(lightCss), sec: (n: string) => section(lightCss, n) },
-  { name: 'dark', base: () => ({ ...base(lightCss), ...base(darkCss) }), sec: (n: string) => section(darkCss, n) },
+  { name: 'dark', base: () => ({ ...base(lightCss), ...base(darkCss, SYSTEM_DARK_ROOT) }), sec: (n: string) => section(darkCss, n) },
 ]
 
 describe.each(themes)('$name theme palette', (theme) => {
@@ -75,6 +82,23 @@ describe.each(themes)('$name theme palette', (theme) => {
   it('has readable muted text and visible borders', () => {
     expect(contrast(b['--muted'], b['--bg'])).toBeGreaterThanOrEqual(4.5)
     expect(contrast(b['--muted'], b['--surface'])).toBeGreaterThanOrEqual(4.5)
+  })
+})
+
+describe('explicit theme selectors', () => {
+  it('explicit dark mirrors the system dark palette', () => {
+    expect(base(explicitDarkCss, EXPLICIT_DARK_ROOT)).toEqual(base(darkCss, SYSTEM_DARK_ROOT))
+    for (const name of SECTIONS) expect(section(explicitDarkCss, name)).toEqual(section(darkCss, name))
+  })
+
+  it('defines the three larger text sizes', () => {
+    expect(css).toMatch(/\[data-text-size='large'\]\s*\{\s*font-size:\s*112\.5%/)
+    expect(css).toMatch(/\[data-text-size='larger'\]\s*\{\s*font-size:\s*125%/)
+    expect(css).toMatch(/\[data-text-size='largest'\]\s*\{\s*font-size:\s*150%/)
+  })
+
+  it('sizes controls in rem so they scale with text', () => {
+    expect(css).not.toMatch(/min-(height|width):\s*44px/)
   })
 })
 

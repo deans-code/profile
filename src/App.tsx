@@ -12,6 +12,7 @@ import {
   type Step,
 } from './state/profile'
 import { profileToState } from './load'
+import AccessibilityOptions from './components/AccessibilityOptions'
 import { DefinitionProvider } from './components/DefinitionPanel'
 import LoadProfile from './components/LoadProfile'
 import ProfileCard from './components/ProfileCard'
@@ -60,7 +61,10 @@ export default function App() {
           <header>
             <div className="header-row">
               <h1>Profile Builder</h1>
-              <LoadProfile hasProgress={hasProgress} onLoad={loadProfile} />
+              <div className="header-tools">
+                <AccessibilityOptions />
+                <LoadProfile hasProgress={hasProgress} onLoad={loadProfile} />
+              </div>
             </div>
             <p className="intro">Build a personal profile of what you value and what you can do.</p>
             <ol className="how-it-works" aria-label="How it works">

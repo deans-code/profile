@@ -164,6 +164,15 @@ Click a word to select or deselect it. To see what it means:
 
 Press `Escape`, use **Close** or click elsewhere to dismiss the description. Custom words have no description, so right-clicking them shows the browser's normal menu.
 
+### Accessibility options
+
+The **Accessibility** button at the top of every page opens two choices:
+
+- **Theme**: Match system (the default, follows your operating system), Light or Dark.
+- **Text size**: Default, Large, Larger or Largest.
+
+Changes apply immediately. They are saved in your browser (`localStorage`, key `profile-builder-preferences`) and applied before the page first paints on your next visit. They are not part of the downloaded profile.
+
 ## :ship: Deployment
 
 The site is a static build (`dist/`) hosted on Cloudflare Pages. `.github/workflows/deploy.yml` runs on every push to `main` (and can be run manually from the Actions tab). It installs dependencies, runs the tests, builds and deploys with Wrangler (direct upload); a failing test stops the deployment.
@@ -171,7 +180,7 @@ The site is a static build (`dist/`) hosted on Cloudflare Pages. `.github/workfl
 ### One-time setup
 
 1. In the repository, go to **Settings > Secrets and variables > Actions** and add `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`. The token needs **Account > Cloudflare Pages > Edit** permission.
-2. Push to `main`, or run the workflow manually. The first run creates the Cloudflare Pages project `profile` if it does not exist, and the run log prints the deployment URL (<https://profile.pages.dev> unless Cloudflare assigns a different name).
+2. Push to `main`, or run the workflow manually. The workflow does not create the Pages project, so create it once first with `npx wrangler pages project create profile --production-branch=main` (or in the Cloudflare dashboard). The run log prints the deployment URL (<https://profile.pages.dev> unless Cloudflare assigns a different name).
 3. If GitHub Pages was previously enabled, go to **Settings > Pages** and unpublish it. It is no longer used.
 
 > [!NOTE]

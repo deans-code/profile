@@ -48,7 +48,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #12161d;
     --surface: #1b212b;
     --text: #e8ecf2;
@@ -56,41 +56,106 @@
     --border: #3a4455;
   }
 
-  [data-section='values'] {
+  :root:not([data-theme='light']) [data-section='values'] {
     --accent: #8fb0ff;
     --accent-text: #0b1020;
     --tint: #1f2f58;
   }
 
-  [data-section='technical'] {
+  :root:not([data-theme='light']) [data-section='technical'] {
     --accent: #4dd4c6;
     --accent-text: #0b1020;
     --tint: #14403d;
   }
 
-  [data-section='engineering'] {
+  :root:not([data-theme='light']) [data-section='engineering'] {
     --accent: #f5b04c;
     --accent-text: #0b1020;
     --tint: #4a3510;
   }
 
-  [data-section='interpersonal'] {
+  :root:not([data-theme='light']) [data-section='interpersonal'] {
     --accent: #c9a0ff;
     --accent-text: #0b1020;
     --tint: #3a2760;
   }
 
-  [data-section='ai'] {
+  :root:not([data-theme='light']) [data-section='ai'] {
     --accent: #ff8fa6;
     --accent-text: #0b1020;
     --tint: #55202f;
   }
 
-  [data-section='card'] {
+  :root:not([data-theme='light']) [data-section='card'] {
     --accent: #6fdc8c;
     --accent-text: #0b1020;
     --tint: #163a21;
   }
+}
+
+/* Explicit dark theme: must mirror the media query above. */
+:root[data-theme='dark'] {
+  --bg: #12161d;
+  --surface: #1b212b;
+  --text: #e8ecf2;
+  --muted: #9aa5b8;
+  --border: #3a4455;
+}
+
+:root[data-theme='dark'] [data-section='values'] {
+  --accent: #8fb0ff;
+  --accent-text: #0b1020;
+  --tint: #1f2f58;
+}
+
+:root[data-theme='dark'] [data-section='technical'] {
+  --accent: #4dd4c6;
+  --accent-text: #0b1020;
+  --tint: #14403d;
+}
+
+:root[data-theme='dark'] [data-section='engineering'] {
+  --accent: #f5b04c;
+  --accent-text: #0b1020;
+  --tint: #4a3510;
+}
+
+:root[data-theme='dark'] [data-section='interpersonal'] {
+  --accent: #c9a0ff;
+  --accent-text: #0b1020;
+  --tint: #3a2760;
+}
+
+:root[data-theme='dark'] [data-section='ai'] {
+  --accent: #ff8fa6;
+  --accent-text: #0b1020;
+  --tint: #55202f;
+}
+
+:root[data-theme='dark'] [data-section='card'] {
+  --accent: #6fdc8c;
+  --accent-text: #0b1020;
+  --tint: #163a21;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+:root[data-text-size='large'] {
+  font-size: 112.5%;
+}
+
+:root[data-text-size='larger'] {
+  font-size: 125%;
+}
+
+:root[data-text-size='largest'] {
+  font-size: 150%;
 }
 
 * {
@@ -162,7 +227,7 @@ button {
   color: var(--accent-text);
   border-radius: var(--radius);
   padding: 0.5rem 1.25rem;
-  min-height: 44px;
+  min-height: 2.75rem;
   font-weight: 700;
 }
 
@@ -230,8 +295,8 @@ input[type='search'] {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
   background: var(--surface);
   color: var(--accent);
   border: 2px solid var(--accent);
@@ -430,7 +495,7 @@ ul {
 .add-entry input {
   flex: 1 1 14rem;
   max-width: 28rem;
-  min-height: 44px;
+  min-height: 2.75rem;
   border: 2px solid var(--accent);
 }
 
@@ -788,4 +853,56 @@ main {
 .sources a {
   color: var(--accent);
   overflow-wrap: anywhere;
+}
+
+.a11y {
+  position: relative;
+}
+
+.a11y-panel {
+  position: absolute;
+  right: 0;
+  z-index: 20;
+  min-width: 16rem;
+  margin-top: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+}
+
+.a11y-panel fieldset {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: 0;
+}
+
+.a11y-panel legend {
+  padding: 0;
+  font-weight: 700;
+}
+
+.a11y-panel label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+}
+
+.a11y-panel input[type='radio'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--accent);
+}
+
+.header-row {
+  min-width: 0;
+}
+
+.header-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem 1rem;
 }
