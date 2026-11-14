@@ -14,23 +14,30 @@ export const schwartzBasicValues: SourceContribution = {
   source: 'schwartz-basic-values',
   checked: '2026-11-14',
   categories: {
-    'Openness to change': {
-      'Self-direction': 'Thinking and acting independently: choosing your own path, creating and exploring.',
-      Stimulation: 'Seeking excitement, novelty and challenge in life.',
-    },
-    'Self-enhancement': {
-      Hedonism: 'Seeking pleasure and enjoyment for yourself.',
+    'Doing good work': {
       Achievement: 'Pursuing personal success by showing competence by the standards of those around you.',
-      Power: 'Valuing status, influence and control over people and resources.',
     },
-    Conservation: {
-      Security: 'Valuing safety, harmony and stability in society, in relationships and in yourself.',
-      Conformity: 'Restraining actions and impulses that might upset others or break social expectations.',
-      Tradition: 'Respecting and keeping the customs and ideas your culture or religion provides.',
-    },
-    'Self-transcendence': {
+    'Working with others': {
       Benevolence: 'Looking after and improving the welfare of the people you are in regular contact with.',
+    },
+    'Working alone and remotely': {
+      'Self-direction': 'Thinking and acting independently: choosing your own path, creating and exploring.',
+    },
+    'Adopting new ways of working': {
+      'Openness to change': 'Being ready to try new ideas, approaches and ways of doing things.',
+    },
+    'Business and organisation': {
+      Power: 'Valuing status, influence and control over people and resources.',
+      Conformity: 'Restraining actions and impulses that might upset others or break social expectations.',
+    },
+    'Society and the world': {
       Universalism: 'Understanding, appreciating and protecting the welfare of all people and of nature.',
+      Tradition: 'Respecting and keeping the customs and ideas your culture or religion provides.',
+      Security: 'Valuing safety, harmony and stability in society, in relationships and in yourself.',
+    },
+    'Wellbeing and a good life': {
+      Hedonism: 'Seeking pleasure and enjoyment for yourself.',
+      Stimulation: 'Seeking excitement, novelty and challenge in life.',
     },
   },
 }

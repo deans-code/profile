@@ -115,8 +115,19 @@ The Values catalog was rebuilt from published value frameworks, one at a time. T
 - [Theory of basic human values](https://en.wikipedia.org/wiki/Theory_of_basic_human_values), Wikipedia's summary of Shalom Schwartz's theory (Schwartz 1992; Schwartz et al. 2012): the ten basic values in four groups. Schwartz's own paper could not be read (its PDF refused automated access), and the nineteen refined values are not listed on the article, so they are not used.
 - [Rokeach Value Survey](https://en.wikipedia.org/wiki/Rokeach_Value_Survey), Wikipedia's summary of Milton Rokeach, The Nature of Human Values (1973): 18 terminal and 18 instrumental values.
 - [The 2020 Scrum Guide](https://scrumguides.org/scrum-guide.html): its five values (commitment, focus, openness, respect, courage).
+- [Manifesto for Agile Software Development and its twelve principles](https://agilemanifesto.org/) (2001): the four values and twelve principles. The authors allow free copying only of the whole manifesto, so only the ideas are named. A standing statement of values for software delivery that is still in wide use.
+- [Extreme programming](https://en.wikipedia.org/wiki/Extreme_programming), on Wikipedia (CC BY-SA 4.0, edited 14 October 2026): the five values (communication, simplicity, feedback, courage, respect) and the principles.
+- [Lean software development](https://en.wikipedia.org/wiki/Lean_software_development), on Wikipedia (CC BY-SA 4.0, edited 22 December 2025): the seven principles.
+- [Work ethic](https://en.wikipedia.org/wiki/Work_ethic), on Wikipedia (CC BY-SA 4.0, edited 6 August 2026): the factors and attitudes of a good work ethic.
+- [Value (ethics)](https://en.wikipedia.org/wiki/Value_(ethics)), on Wikipedia (CC BY-SA 4.0, edited 1 November 2026): its examples of values, the consumer-research List of Values and the moral foundations.
+- [Outline of self](https://en.wikipedia.org/wiki/Outline_of_self), virtues section, on Wikipedia (CC BY-SA 4.0, edited 27 November 2025; the address /wiki/List_of_virtues redirects to it): the grouped lists of virtues. Only virtues that apply to work, learning, relationships and a person's place in the world are used.
+- [Self-determination theory](https://en.wikipedia.org/wiki/Self-determination_theory), on Wikipedia (CC BY-SA 4.0, edited 7 November 2026), summarising Deci and Ryan: autonomy, competence and relatedness, intrinsic goals and motivation.
 
-Considered and not used: the Barrett Values Centre (its list is part of a paid assessment).
+Considered and not used: the Barrett Values Centre (its list is part of a paid assessment); the ACM Code of Ethics and the ACM/IEEE-CS Software Engineering Code of Ethics (the ACM site refused automated access, HTTP 403); Google re:Work's Project Aristotle (the guide address returned a not-found page); Wikipedia's DevOps article (it names three principles, shared ownership, workflow automation and rapid feedback, but no list of values beyond what other sources already give); Wikipedia's Core values (a disambiguation page that names no values).
+
+The wikipedia sources are CC BY-SA 4.0. Their text is not copied; descriptions are written for this app. Parts of some Wikipedia pages came through the fetch tool's summary rather than verbatim, so each source file records that.
+
+**Groups.** Values are grouped by where they apply, not by source: Doing good work; Building and delivering with computers; Working in a team; Working with others; Working alone and remotely; Adopting new ways of working; Learning and growth; Business and organisation; Personal character; Society and the world; What I expect from others; and Wellbeing and a good life. A value that fits several contexts appears once, in the context it fits best, and lists every source that names it. Saved profiles still load: a value that is no longer offered by that name becomes a custom value.
 
 Source files live in `src/data/catalog/values/`.
 

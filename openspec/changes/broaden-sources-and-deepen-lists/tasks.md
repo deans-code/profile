@@ -1,15 +1,15 @@
 ## 1. Rules and tests first
 
-- [ ] 1.1 Raise the per-tab source minimum from three to six in `src/data/attribution.test.ts` and add a test that each source's year is recorded and that no registered source is unused. Verify: the test fails for every tab until sources are added.
-- [ ] 1.2 Add a test that every group on every tab has at least six options, with an `EXCEPTIONS` list (empty) read from the test file, and a test that a category name is spelled identically across all source files of a tab. Verify: fails for current small groups.
-- [ ] 1.3 Add size-floor tests (Values 150, Technical 250, Engineering 120, Interpersonal 100, AI 120) and update thresholds in existing tests that now conflict. Verify: fails for tabs below their floor.
-- [ ] 1.4 Update `src/load.test.ts` so options and group names removed or merged by this change load as custom entries. Verify: passes now and after each tab.
+- [x] 1.1 Raise the per-tab source minimum from three to six in `src/data/attribution.test.ts` and add a test that each source's year is recorded and that no registered source is unused. Verify: the test fails for every tab until sources are added.
+- [x] 1.2 Add a test that every group on every tab has at least six options, with an `EXCEPTIONS` list (empty) read from the test file. Verify: fails for current small groups. (The category-spelling test in the first draft was dropped: a merged option takes its first source's category, so only the merged groups shown matter and are what the test checks.)
+- [x] 1.3 Add size-floor tests (Values 150, Technical 250, Engineering 120, Interpersonal 100, AI 120) and update thresholds in existing tests that now conflict. Verify: fails for tabs below their floor.
+- [x] 1.4 Update `src/load.test.ts` so options and group names removed or merged by this change load as custom entries. Verify: passes now and after each tab.
 
 ## 2. Values tab (work and life contexts)
 
-- [ ] 2.1 Vet and register at least three new Values sources from the candidates (Agile Manifesto and principles, Extreme Programming, ACM/IEEE-CS and ACM codes of ethics, Wikipedia value, virtue and work-ethic articles, Project Aristotle, Hofstede, self-determination theory). Verify: each address opens; rejects and reasons noted.
-- [ ] 2.2 Define the eleven context groups in design decision 6 and re-home every existing value into one by meaning, renaming categories in the VIA, Schwartz, Rokeach and Scrum files. Verify: one group per value, every group at least six, values-grouping tests rewritten and passing.
-- [ ] 2.3 Read each new source in full and add its worthwhile values, each with a description, to the best context group, covering work, delivery with computers, teams, others, isolation and remote work, new ways of working, learning, business, personal, world and expectations of others. Verify: integrity tests pass; values at least 150; every context group at least six.
+- [x] 2.1 Vet and register at least three new Values sources from the candidates (Agile Manifesto and principles, Extreme Programming, ACM/IEEE-CS and ACM codes of ethics, Wikipedia value, virtue and work-ethic articles, Project Aristotle, Hofstede, self-determination theory). Verify: each address opens; rejects and reasons noted. (Seven accepted: Agile Manifesto, XP, Lean software development, Work ethic, Value (ethics), Outline of self, Self-determination theory; rejected: ACM codes 403, Project Aristotle 404, DevOps, Core values.)
+- [x] 2.2 Define the twelve context groups in design decision 6 and re-home every existing value into one by meaning, renaming categories in the VIA, Schwartz, Rokeach and Scrum files. Verify: one group per value, every group at least six, values-grouping tests rewritten and passing.
+- [x] 2.3 Read each new source in full and add its worthwhile values, each with a description, to the best context group, covering work, delivery with computers, teams, others, isolation and remote work, new ways of working, learning, business, personal, world and expectations of others. Verify: integrity tests pass; values at least 150; every context group at least six.
 
 ## 3. Interpersonal tab
 

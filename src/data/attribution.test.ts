@@ -30,8 +30,8 @@ describe('source registry', () => {
     }
   })
 
-  it('lists at least three sources on every tab', () => {
-    for (const kind of KINDS) expect(TAB_SOURCES[kind].length, `${kind} has too few sources`).toBeGreaterThanOrEqual(3)
+  it('lists at least six sources on every tab', () => {
+    for (const kind of KINDS) expect(TAB_SOURCES[kind].length, `${kind} has too few sources`).toBeGreaterThanOrEqual(6)
   })
 
   it('has no source in the registry that no tab lists', () => {
