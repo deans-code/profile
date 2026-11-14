@@ -1,4 +1,5 @@
 import { AI } from './catalog/ai'
+import { ENGINEERING } from './catalog/engineering'
 import { TECHNICAL } from './catalog/technical'
 
 export type Section = 'technical' | 'engineering' | 'interpersonal' | 'ai'
@@ -19,91 +20,7 @@ export interface SkillCategory {
 
 export const CATALOGS: Record<Section, SkillCategory[]> = {
   technical: TECHNICAL.categories,
-  engineering: [
-    {
-      category: 'Architecture and design',
-      skills: [
-        'System design',
-        'Distributed systems',
-        'Domain-driven design',
-        'Microservices architecture',
-        'Event-driven architecture',
-        'CQRS and event sourcing',
-        'Design patterns',
-        'Clean code',
-        'API design',
-        'Data architecture',
-        'Resilience patterns',
-        'Database migrations',
-      ],
-    },
-    {
-      category: 'Quality and testing',
-      skills: [
-        'Unit testing',
-        'Integration testing',
-        'Contract testing',
-        'End-to-end testing',
-        'Test-driven development',
-        'Property-based testing',
-        'Code review',
-        'Static analysis',
-        'Performance testing',
-      ],
-    },
-    {
-      category: 'Reliability and operations',
-      skills: [
-        'Observability',
-        'Monitoring and alerting',
-        'Incident response',
-        'Debugging',
-        'Capacity planning',
-        'Disaster recovery',
-        'Chaos engineering',
-        'Zero-downtime deployments',
-        'Site reliability engineering',
-        'Platform engineering',
-      ],
-    },
-    {
-      category: 'Security',
-      skills: [
-        'Threat modelling',
-        'Secure coding',
-        'OWASP Top 10',
-        'Authentication and authorisation',
-        'Vulnerability management',
-        'Secrets management',
-        'Encryption and key management',
-        'Compliance and governance',
-        'Supply chain security',
-      ],
-    },
-    {
-      category: 'Performance and scale',
-      skills: ['Algorithms and data structures', 'Performance optimisation', 'Scalability', 'Concurrency', 'Caching strategies', 'Query tuning', 'Cost optimisation (FinOps)'],
-    },
-    {
-      category: 'Delivery and process',
-      skills: [
-        'Agile delivery',
-        'Scrum',
-        'Kanban',
-        'Estimation',
-        'Requirements analysis',
-        'Technical documentation',
-        'Release management',
-        'Feature flags',
-        'Trunk-based development',
-        'Refactoring',
-        'Technical debt management',
-        'Architecture decision records',
-        'Dependency management',
-        'Legacy system modernisation',
-      ],
-    },
-  ],
+  engineering: ENGINEERING.categories,
   interpersonal: [
     {
       category: 'Communication',

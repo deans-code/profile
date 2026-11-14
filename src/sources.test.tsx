@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
-import { sourcesFor } from './data/sources'
+import { SOURCE_REGISTRY, sourcesFor } from './data/sources'
 
 const next = () => within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(Continue|Finish)/ })
 
@@ -15,16 +15,13 @@ async function toTechnical() {
 }
 
 describe('sources', () => {
-  const urls = [
-    'https://survey.stackoverflow.co/2026/technology/data',
-    'https://devecosystem.jetbrains.com/tools-and-trends',
-    'https://www.cncf.io/wp-content/uploads/2026/03/State-of-Cloud-Native-Development-Q1-2026.pdf',
-  ]
+  const urls = sourcesFor('technical').map((s) => s.url)
 
   it('lists the technical sources with new-tab links, publishers and years', async () => {
     await toTechnical()
     const section = screen.getByRole('region', { name: 'Sources' })
     const links = within(section).getAllByRole('link')
+    expect(urls.length).toBeGreaterThanOrEqual(3)
     expect(links.map((l) => l.getAttribute('href'))).toEqual(urls)
     for (const l of links) {
       expect(l).toHaveAttribute('target', '_blank')
@@ -49,7 +46,7 @@ describe('sources', () => {
 
   it('is listed in the README', () => {
     const readme = readFileSync('README.md', 'utf-8')
-    for (const url of urls) expect(readme).toContain(url)
+    for (const source of Object.values(SOURCE_REGISTRY)) expect(readme).toContain(source.url)
     expect(readme).toMatch(/Selection rule/)
   })
 })

@@ -222,7 +222,7 @@ describe('profile card and downloads', () => {
     await user.click(chip('Rust'))
     await user.click(radio(/^Previous experience/))
     await user.click(next())
-    await user.click(chip('Scrum'))
+    await user.click(chip('Continuous integration'))
     await user.click(next())
     await user.click(chip('Teamwork'))
     await user.click(next())
@@ -339,7 +339,7 @@ describe('instructions', () => {
     await user.click(chip('Integrity'))
     for (const [section, word] of [
       ['technical', 'Python'],
-      ['engineering', 'Scrum'],
+      ['engineering', 'Continuous integration'],
       ['interpersonal', 'Teamwork'],
       ['ai', 'Claude Code'],
     ]) {
@@ -415,7 +415,7 @@ describe('end to end with definitions', () => {
     await user.click(screen.getByRole('button', { name: 'Close' }))
     await user.click(chip('Python'))
     await user.click(next())
-    await user.click(chip('Scrum'))
+    await user.click(chip('Continuous integration'))
     await user.click(next())
     await user.click(chip('Teamwork'))
     await user.click(next())

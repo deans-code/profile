@@ -106,7 +106,7 @@ describe('section transitions', () => {
     await user.click(chip('Python'))
     await user.click(next())
     await settle()
-    await user.click(chip('Scrum'))
+    await user.click(chip('Continuous integration'))
     await user.click(next())
     await settle()
     await user.click(chip('Teamwork'))

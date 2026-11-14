@@ -11,7 +11,7 @@ const link = () => screen.queryByRole('link', { name: /open chatgpt/i })
 
 async function goTo(user: ReturnType<typeof userEvent.setup>, step: 'technical' | 'engineering' | 'interpersonal') {
   await user.click(word('Integrity'))
-  const picks = ['Python', 'Scrum', 'Teamwork']
+  const picks = ['Python', 'Continuous integration', 'Teamwork']
   const order = ['technical', 'engineering', 'interpersonal']
   await user.click(next())
   for (let i = 0; i < order.indexOf(step); i++) {

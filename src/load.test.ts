@@ -13,7 +13,7 @@ const file = (overrides: Record<string, unknown> = {}) =>
     values: ['Integrity', 'Curiosity'],
     skills: {
       technical: lists(['Python']),
-      engineering: lists([], ['Scrum']),
+      engineering: lists([], ['Continuous integration']),
       interpersonal: lists(['Teamwork']),
       ai: lists(['Claude Code'], ['OpenRouter']),
     },
@@ -27,7 +27,7 @@ const legacyFile = (overrides: Record<string, unknown> = {}) =>
     values: ['Integrity'],
     skills: {
       technical: [{ name: 'Python', score: 8 }],
-      engineering: [{ name: 'Scrum', score: 5 }],
+      engineering: [{ name: 'Continuous integration', score: 5 }],
       interpersonal: [{ name: 'Teamwork', score: 7 }],
     },
     ...overrides,
@@ -50,7 +50,7 @@ describe('parseProfile', () => {
       values: ['Integrity', 'Curiosity'],
       skills: {
         technical: lists(['Python']),
-        engineering: lists([], ['Scrum']),
+        engineering: lists([], ['Continuous integration']),
         interpersonal: lists(['Teamwork']),
         ai: lists(['Claude Code'], ['OpenRouter']),
       },
@@ -63,7 +63,7 @@ describe('parseProfile', () => {
       { type: 'addCustomValue', text: 'Grit "quoted" *star*' },
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
       { type: 'addCustomSkill', section: 'technical', text: 'C# & café' },
-      { type: 'toggleSkill', section: 'engineering', name: 'Scrum' },
+      { type: 'toggleSkill', section: 'engineering', name: 'Continuous integration' },
       { type: 'setMode', mode: 'desired' },
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
       { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
@@ -122,7 +122,7 @@ describe('parseProfile', () => {
         values: ['Integrity'],
         skills: {
           technical: lists(['Python']),
-          engineering: lists(['Scrum']),
+          engineering: lists(['Continuous integration']),
           interpersonal: lists(['Teamwork']),
           ai: lists([]),
         },
@@ -236,7 +236,7 @@ describe('profileToState', () => {
     const s = { ...initialState, ...profileToState(ok(file())) }
     expect(s.customSkills.engineering).toEqual([])
     expect(s.selectedSkills.interpersonal).toEqual(lists(['Teamwork']))
-    expect(s.selectedSkills.engineering).toEqual(lists([], ['Scrum']))
+    expect(s.selectedSkills.engineering).toEqual(lists([], ['Continuous integration']))
   })
 })
 

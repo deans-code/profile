@@ -115,9 +115,24 @@ The catalog is guided by these reports:
 - [The State of Developer Ecosystem 2026: Tools and trends](https://devecosystem.jetbrains.com/tools-and-trends), by JetBrains. Only part of this page could be read (its charts did not load), so it contributed databases, cloud providers and JetBrains IDEs.
 - [State of Cloud Native Development, Q1 2026](https://www.cncf.io/wp-content/uploads/2026/03/State-of-Cloud-Native-Development-Q1-2026.pdf), by SlashData with the Cloud Native Computing Foundation, sponsored by the Continuous Delivery Foundation (licensed CC BY-NoDerivatives 4.0). It describes practices rather than products, so it contributed technologies such as service meshes, API gateways and observability tools; its practices are held for the Engineering tab.
 
+- [Technology Radar, Volume 35](https://www.thoughtworks.com/radar), by Thoughtworks (November 2026): platforms, tools and frameworks in the Adopt, Trial and Assess rings that are not AI-specific. No reuse terms are stated, so it is linked and credited only.
+- [Octoverse 2026](https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/), by GitHub (28 October 2026): the top languages by contributors, GitHub Actions and Dependabot. No reuse terms are stated, so it is linked and credited only.
+
 **Selection rule.** The Technical development catalog was rebuilt from these sources, one source at a time. A technology is offered when it has at least 5% usage in a ranked list in the Stack Overflow survey, or is named as in current use by the JetBrains or CNCF reports, and is not already offered on another page. Every option records all the sources that support it, and its description panel (right-click) lists them. Options that no source supports are not offered; a saved profile that contains one still loads it as a custom entry. Security operations vendors, AI-assisted tools and LLM vendors from the Stack Overflow lists are left for the Engineering and AI engineering tabs. The sources guide which technologies appear; their data is not reproduced in the app.
 
 Source files live in `src/data/catalog/technical/`, one per source, each with the date it was read.
+
+### Engineering
+
+The Engineering catalog was rebuilt from these sources, one at a time:
+
+- [DORA capabilities catalog](https://dora.dev/capabilities/) (State of AI-assisted Software Development 2025), by DORA, Google Cloud, licensed CC BY 4.0: technical and process capabilities. Only the dora.dev pages were read, not the full report. Its people and culture capabilities are held for the Interpersonal tab.
+- [OWASP Top 10:2025](https://top10.owasp.org/2025), by the OWASP Foundation, licensed CC BY 3.0: each of the ten risk categories is offered as the skill of preventing it.
+- [Technology Radar, Volume 35](https://www.thoughtworks.com/radar), by Thoughtworks: engineering techniques (Caution-ring items are not used).
+- [State of Cloud Native Development, Q1 2026](https://www.cncf.io/wp-content/uploads/2026/03/State-of-Cloud-Native-Development-Q1-2026.pdf), by SlashData: practices such as microservices, feature flagging and chaos engineering (CC BY-NoDerivatives, linked and credited only).
+- [Octoverse 2026](https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/), by GitHub: code review, automated dependency updates and push protection. Stacked pull requests are not offered because the Radar places them in its Caution ring.
+
+Source files live in `src/data/catalog/engineering/`.
 
 ### AI engineering
 
@@ -128,6 +143,9 @@ The AI engineering catalog was rebuilt the same way, one source at a time. A mod
 - [LLM Rankings](https://openrouter.ai/rankings), by OpenRouter (data through 13 November 2026, licensed CC BY 4.0): top models, apps, market share by author and fastest inference providers. Model families are listed rather than dated versions.
 - [Technology Radar, Volume 35](https://www.thoughtworks.com/radar), by Thoughtworks (November 2026): AI-related tools, platforms and techniques in the Adopt, Trial and Assess rings. The Caution ring is not used. No reuse terms are stated, so it is linked and credited only.
 - [The 2026 AI Index Report](https://hai.stanford.edu/ai-index/2026-ai-index-report), by Stanford HAI: only the highlights page was read.
+
+- [Octoverse 2026](https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/), by GitHub: the fastest-growing and most-engaged AI projects, and use of GitHub Copilot and multiple models.
+- [DORA capabilities catalog](https://dora.dev/capabilities/), by DORA, Google Cloud: organisational readiness for AI.
 
 Options with several supporting sources list all of them in their description (right-click). Source files live in `src/data/catalog/ai/`.
 

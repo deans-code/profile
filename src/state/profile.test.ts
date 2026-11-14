@@ -167,7 +167,7 @@ describe('step gating', () => {
   const oneSection = run([{ type: 'toggleSkill', section: 'technical', name: 'Python' }], withValue)
   const complete = run(
     [
-      { type: 'toggleSkill', section: 'engineering', name: 'Scrum' },
+      { type: 'toggleSkill', section: 'engineering', name: 'Continuous integration' },
       { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
       { type: 'toggleSkill', section: 'ai', name: 'Claude Code' },
     ],
@@ -185,7 +185,7 @@ describe('step gating', () => {
       desired,
       { type: 'toggleValue', name: 'Integrity' },
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
-      { type: 'toggleSkill', section: 'engineering', name: 'Scrum' },
+      { type: 'toggleSkill', section: 'engineering', name: 'Continuous integration' },
       { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
       { type: 'toggleSkill', section: 'ai', name: 'Claude Code' },
     ])
@@ -322,7 +322,7 @@ describe('selection limit', () => {
         selectedValues: ['Integrity'],
         selectedSkills: {
           technical: exp(technical.slice(0, 40)),
-          engineering: exp(['Scrum']),
+          engineering: exp(['Continuous integration']),
           interpersonal: exp(['Teamwork']),
           ai: exp(['Claude Code']),
         },
@@ -352,7 +352,7 @@ describe('loadProfile', () => {
     customValues: [],
     selectedSkills: {
       technical: exp(['Python']),
-      engineering: des(['Scrum']),
+      engineering: des(['Continuous integration']),
       interpersonal: exp(['Teamwork']),
       ai: exp(['Claude Code']),
     },
@@ -366,7 +366,7 @@ describe('loadProfile', () => {
     expect(s.mode).toBe('experience')
     expect(s.selectedValues).toEqual(['Integrity'])
     expect(s.selectedSkills.technical).toEqual(exp(['Python']))
-    expect(s.selectedSkills.engineering).toEqual(des(['Scrum']))
+    expect(s.selectedSkills.engineering).toEqual(des(['Continuous integration']))
   })
 
   it('opens the values page for an over-limit values list, keeping every value', () => {

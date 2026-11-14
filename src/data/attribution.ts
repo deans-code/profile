@@ -1,4 +1,5 @@
 import { AI } from './catalog/ai'
+import { ENGINEERING } from './catalog/engineering'
 import { TECHNICAL } from './catalog/technical'
 import type { TermKind } from './definitions'
 import { SOURCE_REGISTRY, TAB_SOURCES, type Source, type SourceId } from './sources'
@@ -14,7 +15,7 @@ export interface Attribution {
 export const ATTRIBUTION: Record<TermKind, Record<string, Attribution>> = {
   values: {},
   technical: TECHNICAL.attribution,
-  engineering: {},
+  engineering: ENGINEERING.attribution,
   interpersonal: {},
   ai: AI.attribution,
 }

@@ -15,8 +15,8 @@
 
 ## 3. Engineering tab
 
-- [ ] 3.1 Vet and register at least three sources for Engineering (see design candidates). Verify: each address opens; rejects noted.
-- [ ] 3.2 Check, attribute, correct and prune every Engineering option; add missing sourced options with descriptions. Verify: integrity tests pass for the tab; removals and additions listed in the README.
+- [x] 3.1 Vet and register at least three sources for Engineering (see design candidates). Verify: each address opens; rejects noted.
+- [x] 3.2 Check, attribute, correct and prune every Engineering option; add missing sourced options with descriptions. Verify: integrity tests pass for the tab; removals and additions listed in the README.
 
 ## 4. Interpersonal tab
 

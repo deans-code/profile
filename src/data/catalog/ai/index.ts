@@ -1,5 +1,7 @@
 import { mergeContributions } from '../types'
+import { dora2025Ai } from './dora-2025'
 import { jetbrainsAi2026 } from './jetbrains-ai-2026'
+import { octoverse2026Ai } from './octoverse-2026'
 import { openrouterRankings2026 } from './openrouter-rankings-2026'
 import { stackOverflow2026Ai } from './stack-overflow-2026'
 import { stanfordAiIndex2026 } from './stanford-ai-index-2026'
@@ -12,4 +14,6 @@ export const AI = mergeContributions([
   openrouterRankings2026,
   thoughtworksRadar35,
   stanfordAiIndex2026,
+  octoverse2026Ai,
+  dora2025Ai,
 ])

@@ -9,7 +9,7 @@ const state = run([
   { type: 'toggleSkill', section: 'technical', name: 'Python' },
   { type: 'toggleSkill', section: 'technical', name: 'Go' },
   { type: 'addCustomSkill', section: 'technical', text: 'C# & café' },
-  { type: 'toggleSkill', section: 'engineering', name: 'Scrum' },
+  { type: 'toggleSkill', section: 'engineering', name: 'Continuous integration' },
   { type: 'toggleValue', name: 'Curiosity' },
   { type: 'setMode', mode: 'desired' },
   { type: 'toggleSkill', section: 'technical', name: 'Python' },
@@ -35,7 +35,7 @@ describe('toJson', () => {
     expect(json.exportedAt).toBe('2026-01-02T03:04:05.000Z')
     expect(json.values).toEqual(['Craft "quality" *always*', 'Curiosity', 'Integrity'])
     expect(Object.keys(json.skills)).toEqual(['technical', 'engineering', 'interpersonal', 'ai'])
-    expect(json.skills.engineering).toEqual({ experience: ['Scrum'], desired: [] })
+    expect(json.skills.engineering).toEqual({ experience: ['Continuous integration'], desired: [] })
     expect(json.skills.ai).toEqual({ experience: [], desired: ['Claude Code', 'OpenRouter'] })
   })
 

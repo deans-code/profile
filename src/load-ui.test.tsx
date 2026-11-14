@@ -19,7 +19,7 @@ const profileJson = (overrides: Record<string, unknown> = {}) =>
     values: ['Integrity', 'Grit'],
     skills: {
       technical: lists(['Python', 'Zig']),
-      engineering: lists(['Scrum']),
+      engineering: lists(['Continuous integration']),
       interpersonal: lists(['Teamwork']),
       ai: lists(['Claude Code'], ['OpenRouter']),
     },
@@ -33,7 +33,7 @@ const legacyJson = () =>
     values: ['Integrity'],
     skills: {
       technical: [{ name: 'Python', score: 9 }],
-      engineering: [{ name: 'Scrum', score: 6 }],
+      engineering: [{ name: 'Continuous integration', score: 6 }],
       interpersonal: [{ name: 'Teamwork', score: 7 }],
     },
   })
@@ -97,7 +97,7 @@ describe('Load saved profile', () => {
     expect(word('Zig')).toHaveAttribute('aria-pressed', 'true')
     await user.click(word('Go'))
     await user.click(next())
-    expect(word('Scrum')).toHaveAttribute('aria-pressed', 'true')
+    expect(word('Continuous integration')).toHaveAttribute('aria-pressed', 'true')
     await user.click(next())
     expect(word('Teamwork')).toHaveAttribute('aria-pressed', 'true')
     await user.click(next())
@@ -293,7 +293,7 @@ describe('end to end: build, download, load, edit, download', () => {
     await user.click(word('Rust'))
     await user.click(radio(/^Previous experience/))
     await user.click(next())
-    await user.click(word('Scrum'))
+    await user.click(word('Continuous integration'))
     await user.click(next())
     await user.click(word('Teamwork'))
     await user.click(next())

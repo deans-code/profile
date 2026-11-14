@@ -62,15 +62,36 @@ export const SOURCE_REGISTRY: Record<SourceId, Source> = {
     url: 'https://hai.stanford.edu/ai-index/2026-ai-index-report',
     year: 2026,
   },
+  'dora-2025': {
+    id: 'dora-2025',
+    title: 'DORA capabilities catalog (State of AI-assisted Software Development 2025)',
+    publisher: 'DORA, Google Cloud',
+    url: 'https://dora.dev/capabilities/',
+    year: 2025,
+  },
+  'owasp-top10-2025': {
+    id: 'owasp-top10-2025',
+    title: 'OWASP Top 10:2025',
+    publisher: 'OWASP Foundation',
+    url: 'https://top10.owasp.org/2025',
+    year: 2025,
+  },
+  'octoverse-2026': {
+    id: 'octoverse-2026',
+    title: 'Octoverse 2026: Commits and pushes reach new highs as developers build with agents',
+    publisher: 'GitHub',
+    url: 'https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/',
+    year: 2026,
+  },
 }
 
 /** The sources shown under each tab, in display order. The Profile page has none. */
 export const TAB_SOURCES: Record<TermKind, SourceId[]> = {
   values: [],
-  technical: ['stack-overflow-2026', 'jetbrains-2026', 'cncf-2026'],
-  engineering: [],
+  technical: ['stack-overflow-2026', 'jetbrains-2026', 'cncf-2026', 'thoughtworks-radar-35', 'octoverse-2026'],
+  engineering: ['dora-2025', 'owasp-top10-2025', 'thoughtworks-radar-35', 'cncf-2026', 'octoverse-2026'],
   interpersonal: [],
-  ai: ['stack-overflow-2026', 'jetbrains-ai-2026', 'openrouter-rankings-2026', 'thoughtworks-radar-35', 'stanford-ai-index-2026'],
+  ai: ['stack-overflow-2026', 'jetbrains-ai-2026', 'openrouter-rankings-2026', 'thoughtworks-radar-35', 'stanford-ai-index-2026', 'octoverse-2026', 'dora-2025'],
 }
 
 export function sourcesFor(kind: TermKind): Source[] {
