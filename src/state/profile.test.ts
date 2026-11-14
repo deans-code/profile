@@ -87,7 +87,7 @@ describe('experience modes', () => {
 
   it('counts a page as complete when either mode has a selection', () => {
     expect(pageComplete(initialState, 'ai')).toBe(false)
-    expect(pageComplete(run([desired, { type: 'toggleSkill', section: 'ai', name: 'Ollama' }]), 'ai')).toBe(true)
+    expect(pageComplete(run([desired, { type: 'toggleSkill', section: 'ai', name: 'Claude Code' }]), 'ai')).toBe(true)
   })
 })
 
@@ -169,7 +169,7 @@ describe('step gating', () => {
     [
       { type: 'toggleSkill', section: 'engineering', name: 'Scrum' },
       { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
-      { type: 'toggleSkill', section: 'ai', name: 'Ollama' },
+      { type: 'toggleSkill', section: 'ai', name: 'Claude Code' },
     ],
     oneSection,
   )
@@ -187,7 +187,7 @@ describe('step gating', () => {
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
       { type: 'toggleSkill', section: 'engineering', name: 'Scrum' },
       { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
-      { type: 'toggleSkill', section: 'ai', name: 'Ollama' },
+      { type: 'toggleSkill', section: 'ai', name: 'Claude Code' },
     ])
     expect(stepBlockedReason(s, 'card')).toBeNull()
   })
@@ -200,7 +200,7 @@ describe('step gating', () => {
 
   it('blocks the profile when only the AI engineering page is empty', () => {
     expect(stepBlockedReason(complete, 'card')).toBeNull()
-    const empty = run([{ type: 'toggleSkill', section: 'ai', name: 'Ollama' }], complete)
+    const empty = run([{ type: 'toggleSkill', section: 'ai', name: 'Claude Code' }], complete)
     expect(stepBlockedReason(empty, 'card')).toMatch(/ai engineering/)
   })
 
@@ -324,7 +324,7 @@ describe('selection limit', () => {
           technical: exp(technical.slice(0, 40)),
           engineering: exp(['Scrum']),
           interpersonal: exp(['Teamwork']),
-          ai: exp(['Ollama']),
+          ai: exp(['Claude Code']),
         },
       }
       expect(overBy(s, 'technical', 'experience')).toBe(0)
@@ -354,7 +354,7 @@ describe('loadProfile', () => {
       technical: exp(['Python']),
       engineering: des(['Scrum']),
       interpersonal: exp(['Teamwork']),
-      ai: exp(['Ollama']),
+      ai: exp(['Claude Code']),
     },
     customSkills: { technical: [], engineering: [], interpersonal: [], ai: [] },
   }

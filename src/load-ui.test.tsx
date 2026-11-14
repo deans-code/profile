@@ -21,7 +21,7 @@ const profileJson = (overrides: Record<string, unknown> = {}) =>
       technical: lists(['Python', 'Zig']),
       engineering: lists(['Scrum']),
       interpersonal: lists(['Teamwork']),
-      ai: lists(['Ollama'], ['OpenRouter']),
+      ai: lists(['Claude Code'], ['OpenRouter']),
     },
     ...overrides,
   })
@@ -56,7 +56,7 @@ describe('Load saved profile', () => {
     render(<App />)
     await upload(user, profileJson())
     expect(await screen.findByRole('heading', { name: 'Your profile' })).toBeInTheDocument()
-    for (const name of ['Integrity', 'Grit', 'Python', 'Zig', 'Ollama', 'OpenRouter']) {
+    for (const name of ['Integrity', 'Grit', 'Python', 'Zig', 'Claude Code', 'OpenRouter']) {
       expect(within(card()).getByText(name)).toBeInTheDocument()
     }
     expect(within(card()).getAllByText('Desired experience')).toHaveLength(1)
@@ -71,7 +71,7 @@ describe('Load saved profile', () => {
     // The AI engineering page is empty, so the app asks for a selection there.
     expect((await screen.findAllByText(/Choose at least one skill on each of these pages first: ai engineering/)).length).toBeGreaterThan(0)
     expect(screen.getByRole('heading', { name: /ai engineering skills/i })).toBeInTheDocument()
-    await user.click(word('Ollama'))
+    await user.click(word('Claude Code'))
     await user.click(next())
     expect(within(card()).getByText('Python')).toBeInTheDocument()
     expect(card()).not.toHaveTextContent(/\/10|9/)
@@ -103,7 +103,7 @@ describe('Load saved profile', () => {
     await user.click(next())
 
     // AI engineering: both options restored.
-    expect(word('Ollama')).toHaveAttribute('aria-pressed', 'true')
+    expect(word('Claude Code')).toHaveAttribute('aria-pressed', 'true')
     expect(radio(/^Desired experience/)).toHaveTextContent('Desired experience (1)')
     await user.click(radio(/^Desired experience/))
     expect(word('OpenRouter')).toHaveAttribute('aria-pressed', 'true')
@@ -262,7 +262,7 @@ describe('Load saved profile', () => {
             technical: lists(['Python']),
             engineering: lists([]),
             interpersonal: lists([]),
-            ai: lists(['Ollama']),
+            ai: lists(['Claude Code']),
           },
         }),
       )
@@ -297,7 +297,7 @@ describe('end to end: build, download, load, edit, download', () => {
     await user.click(next())
     await user.click(word('Teamwork'))
     await user.click(next())
-    await user.click(word('Ollama'))
+    await user.click(word('Claude Code'))
     await user.click(radio(/^Desired experience/))
     await user.click(word('OpenRouter'))
     await user.click(next())
@@ -321,6 +321,6 @@ describe('end to end: build, download, load, edit, download', () => {
     const edited = JSON.parse(await blobs[2].text())
     expect(edited.values).toEqual(['Grit', 'Integrity', 'Trust'])
     expect(edited.skills.technical).toEqual(lists(['Python'], ['Rust']))
-    expect(edited.skills.ai).toEqual(lists(['Ollama'], ['OpenRouter']))
+    expect(edited.skills.ai).toEqual(lists(['Claude Code'], ['OpenRouter']))
   })
 })

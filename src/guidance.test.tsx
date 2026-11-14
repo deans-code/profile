@@ -64,7 +64,7 @@ describe('curated options', () => {
     ['technical', ['Expo', 'Cloud GPU instances', 'Parquet and data formats'], ['Playwright', 'Vite', 'Supabase', 'Cloudflare']],
     ['engineering', ['Exploratory testing'], ['Architecture decision records', 'Platform engineering', 'Supply chain security', 'Dependency management', 'Legacy system modernisation', 'Database migrations', 'Cost optimisation (FinOps)']],
     ['interpersonal', ['Cultural awareness', 'Commercial awareness', 'Self-motivation'], ['Psychological safety', 'Pair and mob programming', 'Onboarding new team members', 'Knowledge sharing', 'Asynchronous communication']],
-    ['ai', ['Olmoe', 'SmolLM', 'Phi', 'Jan', 'GPT4All', 'AnythingLLM', 'Qwen Code', 'Amp', 'Crush', 'SWE-agent', 'Cohere', 'Amazon (Nova)', 'AI-assisted documentation'], ['Parallel agent sessions', 'Building MCP servers', 'Prompt injection defence', 'Token and cost management', 'Long-running autonomous agents', 'Agent evaluation']],
+    ['ai', ['Olmoe', 'SmolLM', 'Phi', 'Jan', 'GPT4All', 'AnythingLLM', 'Qwen Code', 'Amp', 'Crush', 'SWE-agent', 'Cohere'], ['Anthropic', 'OpenRouter', 'Agent guideline files', 'Open-weight models']],
   ] as const)('%s drops weak skills and adds strong ones', (section, removed, added) => {
     const names = catalogSkillNames(section)
     for (const w of removed) expect(names).not.toContain(w)

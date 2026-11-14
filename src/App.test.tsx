@@ -226,7 +226,7 @@ describe('profile card and downloads', () => {
     await user.click(next())
     await user.click(chip('Teamwork'))
     await user.click(next())
-    await user.click(chip('Ollama'))
+    await user.click(chip('Claude Code'))
     await user.click(radio(/^Desired experience/))
     await user.click(chip('OpenRouter'))
     await user.click(next())
@@ -259,7 +259,7 @@ describe('profile card and downloads', () => {
     expect(within(values).queryByText('Desired experience')).not.toBeInTheDocument()
     expect(within(card).getByText('Python')).toBeInTheDocument()
     expect(within(card).getByText('Rust')).toBeInTheDocument()
-    expect(within(card).getByText('Ollama')).toBeInTheDocument()
+    expect(within(card).getByText('Claude Code')).toBeInTheDocument()
     expect(within(card).getByText('OpenRouter')).toBeInTheDocument()
     expect(card).not.toHaveTextContent(/\/10/)
     expect(card.querySelector('.bar, .score')).toBeNull()
@@ -305,7 +305,7 @@ describe('profile card and downloads', () => {
     const json = JSON.parse(await created[0].text())
     expect(json.values).toEqual(['Integrity'])
     expect(json.skills.technical).toEqual({ experience: ['Python'], desired: ['Rust'] })
-    expect(json.skills.ai).toEqual({ experience: ['Ollama'], desired: ['OpenRouter'] })
+    expect(json.skills.ai).toEqual({ experience: ['Claude Code'], desired: ['OpenRouter'] })
     const md = await created[1].text()
     expect(md).toContain('## AI engineering')
     expect(md).toContain('- Python')
@@ -341,7 +341,7 @@ describe('instructions', () => {
       ['technical', 'Python'],
       ['engineering', 'Scrum'],
       ['interpersonal', 'Teamwork'],
-      ['ai', 'Ollama'],
+      ['ai', 'Claude Code'],
     ]) {
       await user.click(next())
       expect(
@@ -419,16 +419,16 @@ describe('end to end with definitions', () => {
     await user.click(next())
     await user.click(chip('Teamwork'))
     await user.click(next())
-    await user.pointer({ keys: '[MouseRight]', target: chip('Ollama') })
-    expect(screen.getByRole('dialog')).toHaveAccessibleName('Description of Ollama')
+    await user.pointer({ keys: '[MouseRight]', target: chip('Claude Code') })
+    expect(screen.getByRole('dialog')).toHaveAccessibleName('Description of Claude Code')
     await user.click(screen.getByRole('button', { name: 'Close' }))
-    await user.click(chip('Ollama'))
+    await user.click(chip('Claude Code'))
     await user.click(next())
 
     const card = screen.getByRole('article', { name: 'Profile card' })
     expect(within(card).getByText('Integrity')).toBeInTheDocument()
     expect(within(card).getByText('Python')).toBeInTheDocument()
-    expect(within(card).getByText('Ollama')).toBeInTheDocument()
+    expect(within(card).getByText('Claude Code')).toBeInTheDocument()
     expect(within(card).getAllByText('Previous experience')).toHaveLength(4)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })

@@ -15,14 +15,14 @@ const state = run([
   { type: 'toggleSkill', section: 'technical', name: 'Python' },
   { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
   { type: 'toggleSkill', section: 'ai', name: 'OpenRouter' },
-  { type: 'toggleSkill', section: 'ai', name: 'Ollama' },
+  { type: 'toggleSkill', section: 'ai', name: 'Claude Code' },
 ])
 const profile = buildProfile(state)
 
 describe('buildProfile', () => {
   it('sorts each list alphabetically, keeps skill options apart and has one values list', () => {
     expect(profile.skills.technical).toEqual({ experience: ['C# & café', 'Go', 'Python'], desired: ['Python'] })
-    expect(profile.skills.ai).toEqual({ experience: [], desired: ['Ollama', 'OpenRouter'] })
+    expect(profile.skills.ai).toEqual({ experience: [], desired: ['Claude Code', 'OpenRouter'] })
     expect(profile.values).toEqual(['Craft "quality" *always*', 'Curiosity', 'Integrity'])
   })
 })
@@ -36,7 +36,7 @@ describe('toJson', () => {
     expect(json.values).toEqual(['Craft "quality" *always*', 'Curiosity', 'Integrity'])
     expect(Object.keys(json.skills)).toEqual(['technical', 'engineering', 'interpersonal', 'ai'])
     expect(json.skills.engineering).toEqual({ experience: ['Scrum'], desired: [] })
-    expect(json.skills.ai).toEqual({ experience: [], desired: ['Ollama', 'OpenRouter'] })
+    expect(json.skills.ai).toEqual({ experience: [], desired: ['Claude Code', 'OpenRouter'] })
   })
 
   it('has plain names and no scores', () => {

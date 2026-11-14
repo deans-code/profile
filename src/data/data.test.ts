@@ -70,51 +70,32 @@ describe('AI engineering catalog', () => {
   const names = catalogSkillNames('ai').map(norm)
   const category = (needle: string) => CATALOGS.ai.find((c) => norm(c.category).includes(needle))
 
-  it('has at least ten categories', () => {
-    expect(CATALOGS.ai.length).toBeGreaterThanOrEqual(10)
+  it('has at least six categories', () => {
+    expect(CATALOGS.ai.length).toBeGreaterThanOrEqual(6)
   })
 
-  it.each([
-    'approaches',
-    'frameworks',
-    'terminal',
-    'desktop',
-    'plugins',
-    'open-source',
-    'closed-model',
-    'inference providers',
-    'open-weight models',
-    'local runtimes',
-    'local hardware',
-    'agent extensibility',
-  ])('has a %s category with at least four entries', (needle) => {
-    expect(category(needle)?.skills.length ?? 0).toBeGreaterThanOrEqual(4)
-  })
+  it.each(['model providers', 'approaches', 'inference platforms', 'ai coding tools', 'agent setup', 'open-weight models'])(
+    'has a %s category with at least three entries',
+    (needle) => {
+      expect(category(needle)?.skills.length ?? 0).toBeGreaterThanOrEqual(3)
+    },
+  )
 
-  it.each([
-    'Vibe coding',
-    'Spec-driven development',
-    'Superpowers',
-    'OpenSpec',
-    'OpenCode',
-    'Fireworks AI',
-    'OpenRouter',
-    'Ollama',
-    'llama.cpp',
-    'LM Studio',
-    'Running open-weight models on local hardware',
-  ])('includes %s', (name) => {
-    expect(names).toContain(norm(name))
-  })
+  it.each(['Anthropic', 'OpenAI', 'Claude Code', 'OpenRouter', 'OpenCode', 'Agent sandboxing', 'Open-weight models'])(
+    'includes %s',
+    (name) => {
+      expect(names).toContain(norm(name))
+    },
+  )
 
   it('puts the named entries under the matching topics', () => {
-    expect(category('inference providers')?.skills).toEqual(expect.arrayContaining(['OpenRouter', 'Fireworks AI']))
-    expect(category('local runtimes')?.skills).toEqual(expect.arrayContaining(['Ollama', 'llama.cpp', 'LM Studio']))
-    expect(category('local hardware')?.skills).toContain('Running open-weight models on local hardware')
+    expect(category('inference platforms')?.skills).toEqual(expect.arrayContaining(['OpenRouter', 'LiteLLM']))
+    expect(category('ai coding tools')?.skills).toEqual(expect.arrayContaining(['Claude Code', 'OpenAI Codex']))
   })
 
-  it('is large', () => {
-    expect(names.length).toBeGreaterThanOrEqual(100)
+  it('has no editor already offered on the Technical tab', () => {
+    expect(names).not.toContain('cursor')
+    expect(names).not.toContain('zed')
   })
 })
 

@@ -15,7 +15,7 @@ const file = (overrides: Record<string, unknown> = {}) =>
       technical: lists(['Python']),
       engineering: lists([], ['Scrum']),
       interpersonal: lists(['Teamwork']),
-      ai: lists(['Ollama'], ['OpenRouter']),
+      ai: lists(['Claude Code'], ['OpenRouter']),
     },
     ...overrides,
   })
@@ -52,7 +52,7 @@ describe('parseProfile', () => {
         technical: lists(['Python']),
         engineering: lists([], ['Scrum']),
         interpersonal: lists(['Teamwork']),
-        ai: lists(['Ollama'], ['OpenRouter']),
+        ai: lists(['Claude Code'], ['OpenRouter']),
       },
     })
   })
@@ -67,7 +67,7 @@ describe('parseProfile', () => {
       { type: 'setMode', mode: 'desired' },
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
       { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork' },
-      { type: 'toggleSkill', section: 'ai', name: 'Ollama' },
+      { type: 'toggleSkill', section: 'ai', name: 'Claude Code' },
       { type: 'addCustomSkill', section: 'ai', text: 'My own tool' },
     ])
     const original = buildProfile(state)
@@ -219,7 +219,7 @@ describe('profileToState', () => {
           technical: lists(['python'], ['Zig']),
           engineering: lists([]),
           interpersonal: lists([]),
-          ai: lists(['ollama', 'Home-grown agent'], ['Home-grown agent']),
+          ai: lists(['claude code', 'Home-grown agent'], ['Home-grown agent']),
         },
       }),
     )
@@ -228,7 +228,7 @@ describe('profileToState', () => {
     expect(s.customValues).toEqual(['Grit'])
     expect(s.selectedSkills.technical).toEqual(lists(['Python'], ['Zig']))
     expect(s.customSkills.technical).toEqual(['Zig'])
-    expect(s.selectedSkills.ai).toEqual(lists(['Ollama', 'Home-grown agent'], ['Home-grown agent']))
+    expect(s.selectedSkills.ai).toEqual(lists(['Claude Code', 'Home-grown agent'], ['Home-grown agent']))
     expect(s.customSkills.ai).toEqual(['Home-grown agent'])
   })
 

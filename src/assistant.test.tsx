@@ -92,7 +92,7 @@ describe('ChatGPT link', () => {
     await user.click(word('Teamwork'))
     await user.click(next())
     expect(link()).not.toBeInTheDocument()
-    await user.click(word('Ollama'))
+    await user.click(word('Claude Code'))
     await user.click(next())
     expect(link()).not.toBeInTheDocument()
   })

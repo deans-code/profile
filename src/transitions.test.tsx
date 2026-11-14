@@ -112,7 +112,7 @@ describe('section transitions', () => {
     await user.click(chip('Teamwork'))
     await user.click(next())
     await settle()
-    await user.click(chip('Ollama'))
+    await user.click(chip('Claude Code'))
     await user.click(next())
     await settle()
     expect(heading(/your profile/i)).toHaveFocus()

@@ -107,7 +107,9 @@ npm run preview
 
 ## :bookmark: Sources
 
-The Technical development catalog is guided by these reports:
+### Technical development
+
+The catalog is guided by these reports:
 
 - [Stack Overflow Developer Survey 2026: Technology](https://survey.stackoverflow.co/2026/technology/data), by Stack Overflow.
 - [The State of Developer Ecosystem 2026: Tools and trends](https://devecosystem.jetbrains.com/tools-and-trends), by JetBrains. Only part of this page could be read (its charts did not load), so it contributed databases, cloud providers and JetBrains IDEs.
@@ -116,6 +118,18 @@ The Technical development catalog is guided by these reports:
 **Selection rule.** The Technical development catalog was rebuilt from these sources, one source at a time. A technology is offered when it has at least 5% usage in a ranked list in the Stack Overflow survey, or is named as in current use by the JetBrains or CNCF reports, and is not already offered on another page. Every option records all the sources that support it, and its description panel (right-click) lists them. Options that no source supports are not offered; a saved profile that contains one still loads it as a custom entry. Security operations vendors, AI-assisted tools and LLM vendors from the Stack Overflow lists are left for the Engineering and AI engineering tabs. The sources guide which technologies appear; their data is not reproduced in the app.
 
 Source files live in `src/data/catalog/technical/`, one per source, each with the date it was read.
+
+### AI engineering
+
+The AI engineering catalog was rebuilt the same way, one source at a time. A model provider, tool or practice is offered when a source names it as in current use or leading:
+
+- [Stack Overflow Developer Survey 2026: Technology](https://survey.stackoverflow.co/2026/technology/data), by Stack Overflow: LLM vendors used by at least 5% of respondents, and the problems with AI-generated code that cost the most time.
+- [The State of Developer Ecosystem 2026: Artificial intelligence](https://devecosystem.jetbrains.com/artificial-intelligence), by JetBrains. Its charts of AI tools did not load, so only what the page text states was used (AI agents, AI features, agent guideline files).
+- [LLM Rankings](https://openrouter.ai/rankings), by OpenRouter (data through 13 November 2026, licensed CC BY 4.0): top models, apps, market share by author and fastest inference providers. Model families are listed rather than dated versions.
+- [Technology Radar, Volume 35](https://www.thoughtworks.com/radar), by Thoughtworks (November 2026): AI-related tools, platforms and techniques in the Adopt, Trial and Assess rings. The Caution ring is not used. No reuse terms are stated, so it is linked and credited only.
+- [The 2026 AI Index Report](https://hai.stanford.edu/ai-index/2026-ai-index-report), by Stanford HAI: only the highlights page was read.
+
+Options with several supporting sources list all of them in their description (right-click). Source files live in `src/data/catalog/ai/`.
 
 ## :paperclip: Usage
 

@@ -34,6 +34,34 @@ export const SOURCE_REGISTRY: Record<SourceId, Source> = {
     url: 'https://www.cncf.io/wp-content/uploads/2026/03/State-of-Cloud-Native-Development-Q1-2026.pdf',
     year: 2026,
   },
+  'jetbrains-ai-2026': {
+    id: 'jetbrains-ai-2026',
+    title: 'The State of Developer Ecosystem 2026: Artificial intelligence',
+    publisher: 'JetBrains',
+    url: 'https://devecosystem.jetbrains.com/artificial-intelligence',
+    year: 2026,
+  },
+  'openrouter-rankings-2026': {
+    id: 'openrouter-rankings-2026',
+    title: 'LLM Rankings (usage data through 13 November 2026)',
+    publisher: 'OpenRouter',
+    url: 'https://openrouter.ai/rankings',
+    year: 2026,
+  },
+  'thoughtworks-radar-35': {
+    id: 'thoughtworks-radar-35',
+    title: 'Technology Radar, Volume 35',
+    publisher: 'Thoughtworks',
+    url: 'https://www.thoughtworks.com/radar',
+    year: 2026,
+  },
+  'stanford-ai-index-2026': {
+    id: 'stanford-ai-index-2026',
+    title: 'The 2026 AI Index Report',
+    publisher: 'Stanford Institute for Human-Centered AI',
+    url: 'https://hai.stanford.edu/ai-index/2026-ai-index-report',
+    year: 2026,
+  },
 }
 
 /** The sources shown under each tab, in display order. The Profile page has none. */
@@ -42,7 +70,7 @@ export const TAB_SOURCES: Record<TermKind, SourceId[]> = {
   technical: ['stack-overflow-2026', 'jetbrains-2026', 'cncf-2026'],
   engineering: [],
   interpersonal: [],
-  ai: [],
+  ai: ['stack-overflow-2026', 'jetbrains-ai-2026', 'openrouter-rankings-2026', 'thoughtworks-radar-35', 'stanford-ai-index-2026'],
 }
 
 export function sourcesFor(kind: TermKind): Source[] {

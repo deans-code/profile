@@ -1,3 +1,4 @@
+import { AI } from './catalog/ai'
 import { TECHNICAL } from './catalog/technical'
 import type { TermKind } from './definitions'
 import { SOURCE_REGISTRY, TAB_SOURCES, type Source, type SourceId } from './sources'
@@ -15,7 +16,7 @@ export const ATTRIBUTION: Record<TermKind, Record<string, Attribution>> = {
   technical: TECHNICAL.attribution,
   engineering: {},
   interpersonal: {},
-  ai: {},
+  ai: AI.attribution,
 }
 
 const norm = (s: string) => s.trim().toLowerCase()

@@ -25,8 +25,8 @@
 
 ## 5. AI engineering tab
 
-- [ ] 5.1 Vet and register at least three sources for AI engineering, favouring ones updated within the last year because the field moves quickly. Verify: each address opens and shows a current edition; rejects noted.
-- [ ] 5.2 Check, attribute, correct and prune every AI engineering option, including model, tool and provider names that may be renamed or retired; add missing sourced options with descriptions. Verify: integrity tests pass for the tab; removals, renames and additions listed in the README.
+- [x] 5.1 Vet and register at least three sources for AI engineering, favouring ones updated within the last year because the field moves quickly. Verify: each address opens and shows a current edition; rejects noted.
+- [x] 5.2 Check, attribute, correct and prune every AI engineering option, including model, tool and provider names that may be renamed or retired; add missing sourced options with descriptions. Verify: integrity tests pass for the tab; removals, renames and additions listed in the README.
 
 ## 6. Values tab
 
