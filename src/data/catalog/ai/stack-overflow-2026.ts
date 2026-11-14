@@ -12,7 +12,12 @@ export const stackOverflow2026Ai: SourceContribution = {
   source: 'stack-overflow-2026',
   checked: '2026-11-14',
   categories: {
-    'Model providers': {
+    'Approaches and ways of working': {
+      'Reviewing AI-generated code': 'Carefully checking code written by AI for correctness, security and maintainability before accepting it.',
+      'Giving AI the right context': 'Supplying an AI tool with the relevant files, requirements and constraints so its answers fit your project.',
+      'Spotting hallucinated packages and configuration': 'Checking that libraries, APIs and settings suggested by AI actually exist and are current.',
+    },
+    'Model providers and open-weight models': {
       Anthropic: 'The AI company behind the Claude family of models.',
       OpenAI: 'The AI company behind the GPT family of models and ChatGPT.',
       'Google AI': 'Google’s AI models and platform, including the Gemini family.',
@@ -22,11 +27,6 @@ export const stackOverflow2026Ai: SourceContribution = {
       'Mistral AI': 'A European AI company that builds open-weight and commercial language models.',
       xAI: 'The AI company behind the Grok models.',
       'Meta AI': 'Meta’s AI research and the Llama family of open-weight models.',
-    },
-    'Working with AI output': {
-      'Reviewing AI-generated code': 'Carefully checking code written by AI for correctness, security and maintainability before accepting it.',
-      'Giving AI the right context': 'Supplying an AI tool with the relevant files, requirements and constraints so its answers fit your project.',
-      'Spotting hallucinated packages and configuration': 'Checking that libraries, APIs and settings suggested by AI actually exist and are current.',
     },
   },
 }

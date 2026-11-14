@@ -12,15 +12,17 @@ export const thoughtworksRadar35Engineering: SourceContribution = {
   source: 'thoughtworks-radar-35',
   checked: '2026-11-14',
   categories: {
-    'Quality and testing': {
-      'Mutation testing': 'Making small deliberate changes to code to check that the tests fail, which shows how good the tests really are.',
-      'Formal specification with TLA+ and Quint': 'Describing a system’s behaviour precisely, in languages such as TLA+ and Quint, so its design can be checked for flaws.',
+    'Architecture and design': {
+      'Open Data Contract Standard': 'An open standard for describing a dataset’s structure, meaning and quality expectations as an agreement between data producers and consumers.',
     },
     'Delivery and process': {
       'Path-to-production mapping': 'Mapping every step a change takes from a developer’s machine to production, to find delays and risks.',
     },
-    'Architecture and design': {
-      'Open Data Contract Standard': 'An open standard for describing a dataset’s structure, meaning and quality expectations as an agreement between data producers and consumers.',
+    Testing: {
+      'Mutation testing': 'Making small deliberate changes to code to check that the tests fail, which shows how good the tests really are.',
+    },
+    'Software quality and maintenance': {
+      'Formal specification with TLA+ and Quint': 'Describing a system’s behaviour precisely, in languages such as TLA+ and Quint, so its design can be checked for flaws.',
     },
     Security: {
       'Threat modeling': 'Identifying what could go wrong in a system, who might attack it and what to do about it, early in design.',

@@ -142,6 +142,25 @@ The catalog is guided by these reports:
 - [Technology Radar, Volume 35](https://www.thoughtworks.com/radar), by Thoughtworks (November 2026): platforms, tools and frameworks in the Adopt, Trial and Assess rings that are not AI-specific. No reuse terms are stated, so it is linked and credited only.
 - [Octoverse 2026](https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/), by GitHub (28 October 2026): the top languages by contributors, GitHub Actions and Dependabot. No reuse terms are stated, so it is linked and credited only.
 
+- [TIOBE Index, November 2026](https://www.tiobe.com/tiobe-index/), by TIOBE Software BV: the top 30 languages by rating; languages at 0.5% or more are offered (the page allows its index to be shown if TIOBE is cited).
+- [State of CSS 2025](https://2025.stateofcss.com/), by Devographics: the Other Tools results (CSS frameworks, CSS-in-JS, pre- and post-processors and utilities), offering tools used by about 5% or more of the respondents to a question. No licence is shown on the pages read.
+- Wikipedia lists and comparisons (CC BY-SA 4.0; text is not copied and descriptions are written for this app). A technology from these lists is offered when the page shows it as maintained (a latest release in 2024 or later where the page gives dates; discontinued items are left out) and it is widely used. Parts of the longer pages came through the fetch tool's summary rather than verbatim, which each source file records:
+  - [Comparison of continuous integration software](https://en.wikipedia.org/wiki/Comparison_of_continuous_integration_software) (edited 20 July 2026)
+  - [List of build automation software](https://en.wikipedia.org/wiki/List_of_build_automation_software) (edited 3 March 2026)
+  - [Comparison of version-control software](https://en.wikipedia.org/wiki/Comparison_of_version-control_software) (edit date not shown; active products only)
+  - [List of unit testing frameworks](https://en.wikipedia.org/wiki/List_of_unit_testing_frameworks) (edit date not shown; read verbatim up to C++, the rest summarised and the last part unread)
+  - [Message broker](https://en.wikipedia.org/wiki/Message_broker) (edited 11 April 2026)
+  - [List of game engines](https://en.wikipedia.org/wiki/List_of_game_engines) (edit date not shown; the last part was not read and the page has no status column, so only well-known engines are offered)
+  - [List of single sign-on implementations](https://en.wikipedia.org/wiki/List_of_single_sign-on_implementations) (edited 2 June 2026)
+  - [Comparison of relational database management systems](https://en.wikipedia.org/wiki/Comparison_of_relational_database_management_systems) (edit date not shown; products with a 2024 or later release)
+  - [NoSQL](https://en.wikipedia.org/wiki/NoSQL) (edited 8 November 2026)
+  - [Comparison of server-side web frameworks](https://en.wikipedia.org/wiki/Comparison_of_server-side_web_frameworks) (edited 12 November 2026; only the part read verbatim is used)
+  - [Comparison of JavaScript-based web frameworks](https://en.wikipedia.org/wiki/Comparison_of_JavaScript-based_web_frameworks) (edited 11 November 2026)
+
+**Groups.** Containers, infrastructure and delivery; Messaging and integration; Monitoring and logging; Languages; Databases; Cloud platforms and hosting; Editors and IDEs; Web frameworks and technologies; Styling and front-end tooling; Package managers; Build tools; Testing and code quality; Game development and graphics; Version control; Identity and access. Build and delivery tools joined Containers and infrastructure; Game development grew into Game development and graphics. Backbone.js, which that comparison lists, is left out: no survey names it, so it fails the usage rule (and its name would also clash with the page's Back button in the existing tests).
+
+Considered and not used: State of JS (survey.stateofjs.com no longer resolves, and the Devographics page for the 2025 results did not render), PYPL (its ranking is drawn by script and was not in the fetched page), and Wikipedia's business integration comparison (every release it lists is dated 2018 or earlier).
+
 **Selection rule.** The Technical development catalog was rebuilt from these sources, one source at a time. A technology is offered when it has at least 5% usage in a ranked list in the Stack Overflow survey, or is named as in current use by the JetBrains or CNCF reports, and is not already offered on another page. Every option records all the sources that support it, and its description panel (right-click) lists them. Options that no source supports are not offered; a saved profile that contains one still loads it as a custom entry. Security operations vendors, AI-assisted tools and LLM vendors from the Stack Overflow lists are left for the Engineering and AI engineering tabs. The sources guide which technologies appear; their data is not reproduced in the app.
 
 Source files live in `src/data/catalog/technical/`, one per source, each with the date it was read.
@@ -155,6 +174,24 @@ The Engineering catalog was rebuilt from these sources, one at a time:
 - [Technology Radar, Volume 35](https://www.thoughtworks.com/radar), by Thoughtworks: engineering techniques (Caution-ring items are not used).
 - [State of Cloud Native Development, Q1 2026](https://www.cncf.io/wp-content/uploads/2026/03/State-of-Cloud-Native-Development-Q1-2026.pdf), by SlashData: practices such as microservices, feature flagging and chaos engineering (CC BY-NoDerivatives, linked and credited only).
 - [Octoverse 2026](https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/), by GitHub: code review, automated dependency updates and push protection. Stacked pull requests are not offered because the Radar places them in its Caution ring.
+- [SWEBOK Guide, version 4.0](https://www.computer.org/education/bodies-of-knowledge/software-engineering) (2024), by the IEEE Computer Society: its knowledge areas. The guide is copyright protected and may not be copied or adapted, so only the names of knowledge areas are used. A standing body of knowledge, so its age is not a bar.
+- [Site Reliability Engineering](https://sre.google/sre-book/table-of-contents/) (2017) and [The Site Reliability Workbook](https://sre.google/workbook/table-of-contents/) (2018), by Google, published by O'Reilly (CC BY-NC-ND 4.0): only the chapter and part titles were read, and only the names of practices are used because the licence forbids adaptations. Standing references still in wide use.
+- [The Twelve-Factor App](https://12factor.net/), by Adam Wiggins (last updated 2017): the twelve factors. No licence is stated, so only the names of the practices are used.
+- [Azure Well-Architected Framework: pillars](https://learn.microsoft.com/en-us/azure/well-architected/pillars), by Microsoft (2025), and [AWS Well-Architected Framework: the pillars](https://docs.aws.amazon.com/wellarchitected/latest/framework/the-pillars-of-the-framework.html), by Amazon Web Services: the pillar names only. No reuse terms were visible; the individual pillar pages were not read.
+- Wikipedia articles (CC BY-SA 4.0; text is not copied and descriptions are written for this app; parts of some pages came through the fetch tool's summary rather than verbatim, which each source file records):
+  - [List of software development philosophies](https://en.wikipedia.org/wiki/List_of_software_development_philosophies) (edited 10 September 2026): only practices and principles that apply to everyday engineering work are used, not every item.
+  - [SOLID](https://en.wikipedia.org/wiki/SOLID) (edited 10 October 2026)
+  - [Software design pattern](https://en.wikipedia.org/wiki/Software_design_pattern) (edited 12 September 2026): only widely used patterns are offered.
+  - [Software architecture](https://en.wikipedia.org/wiki/Software_architecture) (edited 3 November 2026)
+  - [Domain-driven design](https://en.wikipedia.org/wiki/Domain-driven_design) (edited 15 October 2026)
+  - [Microservices](https://en.wikipedia.org/wiki/Microservices) (edited 4 October 2026)
+  - [ISO/IEC 9126](https://en.wikipedia.org/wiki/ISO/IEC_9126) (edited 24 June 2026), which describes the quality model that ISO/IEC 25010 replaced; the address /wiki/ISO/IEC_25010 redirects to it
+  - [Technical debt](https://en.wikipedia.org/wiki/Technical_debt) (edited 16 October 2026)
+  - [Code refactoring](https://en.wikipedia.org/wiki/Code_refactoring) (edited 9 November 2026)
+  - [Software testing](https://en.wikipedia.org/wiki/Software_testing) (edited 31 October 2026)
+  - [Site reliability engineering](https://en.wikipedia.org/wiki/Site_reliability_engineering) (edited 4 October 2026)
+
+**Groups.** Architecture and design; Design principles and patterns; Delivery and process; Cloud-native and platform practices; Testing; Software quality and maintenance; Reliability and operations; Security; Software knowledge areas. The Security group is unchanged. Exploratory testing, previously removed because no source named it, returns because the Software testing article names it.
 
 Source files live in `src/data/catalog/engineering/`.
 
@@ -166,8 +203,29 @@ The Interpersonal catalog was rebuilt from published skills frameworks, since th
 - [Career Readiness Competencies](https://www.naceweb.org/career-readiness/competencies/career-readiness-defined/), by the National Association of Colleges and Employers (NACE). NACE allows non-commercial use only; the app uses just the competency names with its own descriptions and credits NACE. The page shows no edition date and marks Equity and Inclusion as under review.
 - [SFIA 9](https://sfia-online.org/en/the-sfia-framework/sfia-9), by the SFIA Foundation (October 2024): the names of its generic attributes (such as collaboration, communication and adaptability). SFIA is licensed and copying is prohibited, so only names are used and the individual skills directory was not read.
 - [The 2020 Scrum Guide](https://scrumguides.org/scrum-guide.html), by Ken Schwaber and Jeff Sutherland (CC BY-SA 4.0): self-managing teams, facilitation, coaching and inspecting and adapting. It is a standing framework, so its 2020 edition is still current.
+- [O*NET OnLine: transferable skills and abilities](https://www.onetonline.org/find/descriptor/browse/Skills/), by the US Department of Labor (CC BY 4.0, site updated 6 October 2026): its social, problem solving and systems skills and its idea generation, reasoning and communication abilities. The Work Styles page returned 404 and is not used.
+- Wikipedia articles (CC BY-SA 4.0; text is not copied, descriptions are written for this app; parts of some pages came through the fetch tool's summary rather than verbatim, which each source file records):
+  - [Soft skills](https://en.wikipedia.org/wiki/Soft_skills) (edited 23 September 2026)
+  - [Social skills](https://en.wikipedia.org/wiki/Interpersonal_skills) (edited 25 October 2026; the address redirects to it)
+  - [Emotional intelligence](https://en.wikipedia.org/wiki/Emotional_intelligence) (edited 9 November 2026)
+  - [Cultural intelligence](https://en.wikipedia.org/wiki/Cultural_intelligence) (edited 7 September 2025)
+  - [Team role inventories](https://en.wikipedia.org/wiki/Team_Role_Inventories), the nine Belbin team roles (edited 16 October 2026)
+  - [Tuckman's stages of group development](https://en.wikipedia.org/wiki/Tuckman%27s_stages_of_group_development) (edited 11 September 2026)
+  - [Team composition](https://en.wikipedia.org/wiki/Team_composition) (edited 26 July 2026)
+  - [Active listening](https://en.wikipedia.org/wiki/Active_listening) (edited 1 November 2026)
+  - [Conflict resolution](https://en.wikipedia.org/wiki/Conflict_resolution) (edited 2 November 2026)
+  - [Negotiation](https://en.wikipedia.org/wiki/Negotiation) (edited 15 September 2026)
+  - [Assertiveness](https://en.wikipedia.org/wiki/Assertiveness) (edited 12 August 2026)
+  - [Mentorship](https://en.wikipedia.org/wiki/Mentorship) (edited 1 September 2026)
+  - [Public speaking](https://en.wikipedia.org/wiki/Public_speaking) (edited 10 November 2026)
+  - [Facilitation (organisational)](https://en.wikipedia.org/wiki/Facilitation_(organisational)) (edited 1 December 2024)
+  - [Psychological safety](https://en.wikipedia.org/wiki/Psychological_safety) (edited 4 October 2026)
+  - [Time management](https://en.wikipedia.org/wiki/Time_management) (edited 8 October 2026)
+  - [Delegation](https://en.wikipedia.org/wiki/Delegation) (edited 26 September 2026)
 
-Considered and not used: the World Economic Forum Future of Jobs Report and the PMI Pulse of the Profession (both refuse automated access, so they could not be read), and LinkedIn's most in-demand skills article (the latest readable edition is from February 2024, older than the two-year limit).
+**Groups.** Communication; Teamwork and collaboration; Team roles; Leadership, coaching and facilitation; Conflict and negotiation; Emotional and cultural intelligence; Culture, inclusion and safety; Customers and stakeholders; Thinking and problem solving; Personal effectiveness. The Belbin roles are offered as the skill of playing each role and Tuckman's stages as the skill of guiding a team through each stage.
+
+Considered and not used: the ESCO skills classification (its transversal skills hierarchy did not load), the Thomas-Kilmann conflict mode instrument page on Wikipedia (404; the conflict styles are taken from the Conflict resolution article), Wikipedia's Feedback article (about feedback in general, not workplace feedback), the World Economic Forum Future of Jobs Report and the PMI Pulse of the Profession (both refuse automated access, so they could not be read), and LinkedIn's most in-demand skills article (the latest readable edition is from February 2024, older than the two-year limit).
 
 Source files live in `src/data/catalog/interpersonal/`.
 
@@ -183,6 +241,20 @@ The AI engineering catalog was rebuilt the same way, one source at a time. A mod
 
 - [Octoverse 2026](https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/), by GitHub: the fastest-growing and most-engaged AI projects, and use of GitHub Copilot and multiple models.
 - [DORA capabilities catalog](https://dora.dev/capabilities/), by DORA, Google Cloud: organisational readiness for AI.
+- [OWASP Top 10 for Large Language Model Applications, 2025](https://genai.owasp.org/llm-top-10/), by the OWASP Gen AI Security Project (CC BY-SA 4.0): each of the ten risks is offered as the skill of guarding against it.
+- [Artificial Intelligence Risk Management Framework (AI RMF 1.0)](https://www.nist.gov/itl/ai-risk-management-framework), by NIST (January 2023, under revision): only the overview page was read, and it names the four functions (govern, map, measure, manage) only in an image caption; the Playbook was not read.
+- [Model Context Protocol specification](https://modelcontextprotocol.io/specification/latest): its roles, server features (resources, prompts, tools), elicitation and security principles. The page shows no licence or date, so only names of concepts are used.
+- Wikipedia articles (CC BY-SA 4.0; text is not copied and descriptions are written for this app; parts of the longer pages came through the fetch tool's summary rather than verbatim, which each source file records):
+  - [Retrieval-augmented generation](https://en.wikipedia.org/wiki/Retrieval-augmented_generation) (edited 14 November 2026)
+  - [Prompt engineering](https://en.wikipedia.org/wiki/Prompt_engineering) (read through 39,943 of 146,112 characters verbatim, the rest summarised; edit date not shown)
+  - [MLOps](https://en.wikipedia.org/wiki/MLOps) (edited 4 November 2026)
+  - [AI alignment](https://en.wikipedia.org/wiki/AI_alignment) (about 40,000 characters verbatim, the middle summarised and the last third not read; edit date not shown)
+  - [Vector database](https://en.wikipedia.org/wiki/Vector_database) (edited 7 November 2026)
+  - [Fine-tuning (deep learning)](https://en.wikipedia.org/wiki/Fine-tuning_(deep_learning)) (edited 9 November 2026)
+  - [Intelligent agent](https://en.wikipedia.org/wiki/Intelligent_agent) (edited 7 November 2026)
+  - [Reinforcement learning from human feedback](https://en.wikipedia.org/wiki/Reinforcement_learning_from_human_feedback) (edited 26 October 2026)
+
+**Groups.** Approaches and ways of working; Prompting and context engineering; Agents and extensibility; AI coding tools and agents; Model providers and open-weight models; Inference platforms, gateways and local runtimes; Retrieval and data for AI; Training and fine-tuning; Building and operating AI applications; Evaluating and choosing models; AI security; AI governance and alignment. Wikipedia's Large language model article was only read through a summary, so it is not listed as a source; the Generative AI navigation box on several pages is a list of products and was used only as an index, not as evidence.
 
 Options with several supporting sources list all of them in their description (right-click). Source files live in `src/data/catalog/ai/`.
 
@@ -192,9 +264,11 @@ Each tab's options come from one data file per source (`src/data/catalog/<tab>/<
 
 1. Re-read the source and update or add its file, setting the `checked` date.
 2. Add or remove sources in `src/data/sources.ts` (the registry and the per-tab order) and in the tab's `index.ts`.
-3. Run `npm test`. The tests fail if an option has no source, cites a source that is not on its tab, has no description, appears on two tabs, or if a listed source supports nothing or a tab has fewer than three sources.
+3. Run `npm test`. The tests fail if an option has no source, cites a source that is not on its tab, has no description, appears on two tabs, or if a listed source supports nothing, a tab has fewer than six sources, a tab is below its minimum size (Values 150, Technical 250, Engineering 120, Interpersonal 100, AI engineering 120), or any group has fewer than six options. There are no exceptions to the group-size rule at present.
 
-A source qualifies when it has an identifiable publisher, is current (within about two years, or a standing framework), can be read at its address, and permits being linked and credited. Sources that refuse automated access, or whose licence forbids reuse, are cited by name and link only, and some were not used (see each tab above).
+A source qualifies when it has an identifiable publisher, can be read at its address, permits being linked and credited, and is still in use: a recent survey or report, or an older standing framework, standard or reference (for example the Agile Manifesto of 2001, SWEBOK, the Twelve-Factor App or Belbin team roles). A source that has been superseded or retired does not qualify, and technology options still need 5% usage or two sources, so old sources add breadth for practices and principles rather than for outdated tools. Wikipedia articles and lists qualify when they list the items offered and cite their own references; each is linked by title with its edit date and CC BY-SA 4.0 licence, and its text is not copied. Sources that refuse automated access, or whose licence forbids reuse, are cited by name and link only, and some were not used (see each tab above).
+
+Each source is read in full for its tab: every worthwhile item it names is offered, with a description written for this app, or is left out for a stated reason (for example Wikipedia's list of software development philosophies is long, so only practices and principles that apply to everyday engineering work are used). The fetch tool sometimes returned only part of a long page verbatim and summarised the rest; each source file records this, and nothing is listed from a page that could not be read at all.
 
 Because the catalogs were rebuilt, many options from earlier versions are no longer offered. A saved profile that contains one still loads, and the option appears as a custom entry.
 

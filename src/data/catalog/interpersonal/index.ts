@@ -1,8 +1,26 @@
 import { mergeContributions } from '../types'
+import { activeListeningWikipedia } from './active-listening-wikipedia'
+import { assertivenessWikipedia } from './assertiveness-wikipedia'
+import { conflictResolutionWikipedia } from './conflict-resolution-wikipedia'
+import { culturalIntelligenceWikipedia } from './cultural-intelligence-wikipedia'
+import { delegationWikipedia } from './delegation-wikipedia'
 import { dora2025Interpersonal } from './dora-2025'
+import { emotionalIntelligenceWikipedia } from './emotional-intelligence-wikipedia'
+import { facilitationWikipedia } from './facilitation-wikipedia'
+import { mentorshipWikipedia } from './mentorship-wikipedia'
 import { naceCareerReadiness } from './nace-career-readiness'
+import { negotiationWikipedia } from './negotiation-wikipedia'
+import { onet2026Interpersonal } from './onet-2026'
+import { psychologicalSafetyWikipedia } from './psychological-safety-wikipedia'
+import { publicSpeakingWikipedia } from './public-speaking-wikipedia'
 import { scrumGuide2020 } from './scrum-guide-2020'
 import { sfia9 } from './sfia-9'
+import { socialSkillsWikipedia } from './social-skills-wikipedia'
+import { softSkillsWikipedia } from './soft-skills-wikipedia'
+import { teamCompositionWikipedia } from './team-composition-wikipedia'
+import { teamRoleInventoriesWikipedia } from './team-role-inventories-wikipedia'
+import { timeManagementWikipedia } from './time-management-wikipedia'
+import { tuckmanStagesWikipedia } from './tuckman-stages-wikipedia'
 
 /** Sources are merged in the order they are read; add each new source's file here. */
-export const INTERPERSONAL = mergeContributions([dora2025Interpersonal, naceCareerReadiness, sfia9, scrumGuide2020])
+export const INTERPERSONAL = mergeContributions([dora2025Interpersonal, naceCareerReadiness, sfia9, scrumGuide2020, onet2026Interpersonal, softSkillsWikipedia, socialSkillsWikipedia, emotionalIntelligenceWikipedia, culturalIntelligenceWikipedia, teamRoleInventoriesWikipedia, tuckmanStagesWikipedia, teamCompositionWikipedia, activeListeningWikipedia, conflictResolutionWikipedia, negotiationWikipedia, assertivenessWikipedia, mentorshipWikipedia, publicSpeakingWikipedia, facilitationWikipedia, psychologicalSafetyWikipedia, timeManagementWikipedia, delegationWikipedia])

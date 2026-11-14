@@ -19,7 +19,7 @@ export const sfia9: SourceContribution = {
     'Teamwork and collaboration': {
       'Teamwork and collaboration': '',
     },
-    Leadership: {
+    'Leadership, coaching and facilitation': {
       Leadership: '',
     },
     'Thinking and problem solving': {

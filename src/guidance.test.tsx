@@ -62,7 +62,7 @@ describe('curated options', () => {
 
   it.each([
     ['technical', ['Expo', 'Cloud GPU instances', 'Parquet and data formats'], ['Playwright', 'Vite', 'Supabase', 'Cloudflare']],
-    ['engineering', ['Exploratory testing'], ['Platform engineering', 'Test automation', 'Threat modeling', 'OWASP Top 10', 'Feature flagging', 'Chaos engineering']],
+    ['engineering', [], ['Exploratory testing', 'Platform engineering', 'Test automation', 'Threat modeling', 'OWASP Top 10', 'Feature flagging', 'Chaos engineering']],
     ['interpersonal', ['Cultural awareness', 'Commercial awareness', 'Self-motivation'], ['Teamwork and collaboration', 'Self-managing teams', 'Facilitation', 'Building a high-trust, generative culture', 'Communication']],
     ['ai', ['Olmoe', 'SmolLM', 'Phi', 'Jan', 'GPT4All', 'AnythingLLM', 'Qwen Code', 'Amp', 'Crush', 'SWE-agent', 'Cohere'], ['Anthropic', 'OpenRouter', 'Agent guideline files', 'Open-weight models']],
   ] as const)('%s drops weak skills and adds strong ones', (section, removed, added) => {

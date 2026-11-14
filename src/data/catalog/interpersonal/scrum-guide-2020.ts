@@ -12,13 +12,17 @@ export const scrumGuide2020: SourceContribution = {
   source: 'scrum-guide-2020',
   checked: '2026-11-14',
   categories: {
-    'Team practices': {
+    'Teamwork and collaboration': {
       'Self-managing teams': 'Working as a team that decides for itself who does what, when and how, rather than being directed.',
-      Facilitation: 'Running meetings and workshops so everyone takes part, discussion stays focused and decisions are reached.',
-      Coaching: 'Helping individuals and teams build their own skills and judgement through questions, feedback and support.',
-      'Stakeholder collaboration': 'Working closely with the people who are affected by or depend on your work, and keeping them involved.',
       'Working transparently': 'Making your work, progress and problems visible to teammates and stakeholders so they can be inspected and discussed.',
       'Inspecting and adapting': 'Regularly reviewing what you have done and changing your plans and ways of working based on what you learn.',
+    },
+    'Leadership, coaching and facilitation': {
+      Facilitation: 'Running meetings and workshops so everyone takes part, discussion stays focused and decisions are reached.',
+      Coaching: 'Helping individuals and teams build their own skills and judgement through questions, feedback and support.',
+    },
+    'Customers and stakeholders': {
+      'Stakeholder collaboration': 'Working closely with the people who are affected by or depend on your work, and keeping them involved.',
     },
   },
 }

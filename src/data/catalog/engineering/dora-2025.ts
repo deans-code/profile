@@ -13,6 +13,9 @@ export const dora2025: SourceContribution = {
   source: 'dora-2025',
   checked: '2026-11-14',
   categories: {
+    'Architecture and design': {
+      'Loosely coupled teams': 'Structuring architecture and teams so each can change, test and release its work without needing others to coordinate.',
+    },
     'Delivery and process': {
       'Continuous integration': 'Merging every developer’s changes into a shared branch frequently, with each merge built and tested automatically.',
       'Continuous delivery': 'Keeping software always in a releasable state so changes can be deployed quickly, safely and on demand.',
@@ -24,18 +27,19 @@ export const dora2025: SourceContribution = {
       'Streamlining change approval': 'Replacing slow, external approval gates with lightweight peer review and automated checks.',
       'Visibility of work in the value stream': 'Making the flow of work from idea to customer visible, so delays and bottlenecks can be found.',
       'Visual management': 'Using boards and dashboards to show the status of work and flow to everyone on the team.',
+    },
+    'Cloud-native and platform practices': {
       'Platform engineering': 'Building internal platforms and self-service tools that make it easy for teams to build, deploy and run software.',
-    },
-    'Quality and testing': {
-      'Test automation': 'Running tests automatically and reliably so developers get fast feedback on every change.',
-      'Test data management': 'Providing realistic, safe and easily refreshed data for automated testing.',
-      'Code maintainability': 'Writing code that is easy to understand, change and reuse over its lifetime.',
-      'Documentation quality': 'Keeping documentation accurate, findable and useful to the people who rely on it.',
-    },
-    'Architecture and design': {
-      'Loosely coupled teams': 'Structuring architecture and teams so each can change, test and release its work without needing others to coordinate.',
       'Flexible infrastructure': 'Using on-demand, scalable infrastructure such as the cloud, so capacity follows need.',
       'Database change management': 'Treating database changes like code, with automation, review and versioning, so they ship with the application.',
+    },
+    Testing: {
+      'Test automation': 'Running tests automatically and reliably so developers get fast feedback on every change.',
+      'Test data management': 'Providing realistic, safe and easily refreshed data for automated testing.',
+    },
+    'Software quality and maintenance': {
+      'Code maintainability': 'Writing code that is easy to understand, change and reuse over its lifetime.',
+      'Documentation quality': 'Keeping documentation accurate, findable and useful to the people who rely on it.',
     },
     'Reliability and operations': {
       'Monitoring and observability': 'Collecting logs, metrics and traces so you can understand and troubleshoot how a system behaves in production.',

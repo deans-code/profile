@@ -14,10 +14,10 @@ export const octoverse2026: SourceContribution = {
   checked: '2026-11-14',
   categories: {
     'Delivery and process': {
+      'Continuous integration': '',
       'Code review': 'Having teammates examine each change before it is merged, to catch defects, share knowledge and keep quality consistent.',
       'Automated dependency updates': 'Using tools such as Dependabot to open pull requests that keep libraries and packages up to date.',
       'Open source contribution': 'Taking part in public projects by reporting issues, proposing changes and following a project’s contribution process.',
-      'Continuous integration': '',
     },
     Security: {
       'Secret scanning and push protection': 'Detecting passwords, keys and tokens in code and blocking them before they are pushed to a repository.',

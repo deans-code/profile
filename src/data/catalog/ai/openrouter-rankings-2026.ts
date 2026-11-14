@@ -12,9 +12,19 @@ export const openrouterRankings2026: SourceContribution = {
   source: 'openrouter-rankings-2026',
   checked: '2026-11-14',
   categories: {
-    'Model providers': {
-      OpenAI: '',
+    'Approaches and ways of working': {
+      'Agentic workflows': 'Designing work so AI agents take multiple steps, use tools and make decisions toward a goal.',
+      'AI-assisted coding': 'Using AI to write, explain, test and refactor code as part of everyday development.',
+    },
+    'AI coding tools and agents': {
+      'Claude Code': 'Anthropic’s coding agent that works on your codebase from the terminal and in editors.',
+      'OpenAI Codex': 'OpenAI’s coding agent that works on your codebase from the terminal, editors and the cloud.',
+      'Kilo Code': 'An open-source AI coding agent for editors such as Visual Studio Code.',
+      'Hermes Agent': 'An AI agent from Nous Research.',
+    },
+    'Model providers and open-weight models': {
       Anthropic: '',
+      OpenAI: '',
       'Google AI': '',
       DeepSeek: '',
       'Alibaba Qwen': '',
@@ -26,29 +36,17 @@ export const openrouterRankings2026: SourceContribution = {
       Xiaomi: 'Xiaomi’s AI lab, which builds the MiMo family of language models.',
       MiniMax: 'A Chinese AI company that builds the MiniMax family of language models.',
       NVIDIA: 'The GPU maker, which also publishes open Nemotron language models.',
-    },
-    'Open-weight models': {
       'OpenAI gpt-oss': 'OpenAI’s open-weight reasoning models, available in 20B and 120B sizes and fast on specialised inference hardware.',
       'Meta Llama': 'Meta’s Llama family of open-weight language models.',
       'NVIDIA Nemotron': 'NVIDIA’s family of open language models, tuned for efficient inference.',
     },
-    'Inference platforms and gateways': {
+    'Inference platforms, gateways and local runtimes': {
       OpenRouter: 'A gateway with one API and one bill for models from many providers, with usage rankings.',
       Cerebras: 'An inference provider using wafer-scale chips to serve models at very high speed.',
       Groq: 'An inference provider using custom chips to serve models at very high speed.',
       'Fireworks AI': 'A platform for fast, low-cost inference with open models.',
       Baseten: 'A platform for deploying and serving models in production.',
       CoreWeave: 'A cloud provider specialising in GPU computing for AI workloads.',
-    },
-    'AI coding tools and agents': {
-      'Claude Code': 'Anthropic’s coding agent that works on your codebase from the terminal and in editors.',
-      'OpenAI Codex': 'OpenAI’s coding agent that works on your codebase from the terminal, editors and the cloud.',
-      'Kilo Code': 'An open-source AI coding agent for editors such as Visual Studio Code.',
-      'Hermes Agent': 'An AI agent from Nous Research.',
-    },
-    Approaches: {
-      'Agentic workflows': 'Designing work so AI agents take multiple steps, use tools and make decisions toward a goal.',
-      'AI-assisted coding': 'Using AI to write, explain, test and refactor code as part of everyday development.',
     },
     'Evaluating and choosing models': {
       'Comparing models with benchmarks and rankings': 'Using published benchmarks, usage rankings, speed and price to choose a model for a task.',

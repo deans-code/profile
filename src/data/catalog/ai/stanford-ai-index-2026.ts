@@ -11,13 +11,13 @@ export const stanfordAiIndex2026: SourceContribution = {
   source: 'stanford-ai-index-2026',
   checked: '2026-11-14',
   categories: {
-    'Evaluating and choosing models': {
-      'Comparing models with benchmarks and rankings': '',
-    },
     'AI coding tools and agents': {
       'Computer-use agents': 'AI agents that operate a computer by looking at the screen and using the mouse and keyboard, as tested by benchmarks such as OSWorld.',
     },
-    'AI safety and security': {
+    'Evaluating and choosing models': {
+      'Comparing models with benchmarks and rankings': '',
+    },
+    'AI governance and alignment': {
       'Responsible AI practices': 'Assessing and reducing the risks of AI systems, such as bias, misuse, privacy harms and unreliable output, and documenting what was done.',
     },
   },

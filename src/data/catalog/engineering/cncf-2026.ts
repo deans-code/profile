@@ -15,13 +15,15 @@ export const cncf2026Engineering: SourceContribution = {
     'Architecture and design': {
       'Microservices architecture': 'Building an application as a set of small, independently deployable services.',
       'Event-driven architecture': 'Designing systems whose components communicate by producing and reacting to events.',
-      'Multicluster management': 'Running and governing applications across several Kubernetes clusters, for scale, resilience or data location.',
-      'Immutable infrastructure': 'Replacing servers and environments with new, identical ones instead of changing them in place.',
-      'Hybrid cloud deployment': 'Running applications across a mix of public cloud and private or on-premises infrastructure.',
     },
     'Delivery and process': {
       'Feature flagging': 'Turning features on or off at run time, so code can be deployed before it is released and rolled out gradually.',
+    },
+    'Cloud-native and platform practices': {
       'Platform engineering': '',
+      'Multicluster management': 'Running and governing applications across several Kubernetes clusters, for scale, resilience or data location.',
+      'Immutable infrastructure': 'Replacing servers and environments with new, identical ones instead of changing them in place.',
+      'Hybrid cloud deployment': 'Running applications across a mix of public cloud and private or on-premises infrastructure.',
     },
     'Reliability and operations': {
       'Chaos engineering': 'Deliberately injecting failures into a system to find weaknesses before real incidents do.',

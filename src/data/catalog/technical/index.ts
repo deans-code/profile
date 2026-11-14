@@ -1,15 +1,22 @@
 import { mergeContributions } from '../types'
+import { buildAutomationWikipedia } from './build-automation-wikipedia'
+import { ciSoftwareWikipedia } from './ci-software-wikipedia'
 import { cncf2026 } from './cncf-2026'
+import { gameEnginesWikipedia } from './game-engines-wikipedia'
+import { javascriptFrameworksWikipedia } from './javascript-frameworks-wikipedia'
 import { jetbrains2026 } from './jetbrains-2026'
+import { messageBrokerWikipedia } from './message-broker-wikipedia'
+import { nosqlWikipedia } from './nosql-wikipedia'
 import { octoverse2026Technical } from './octoverse-2026'
+import { rdbmsComparisonWikipedia } from './rdbms-comparison-wikipedia'
+import { serverSideFrameworksWikipedia } from './server-side-frameworks-wikipedia'
+import { singleSignOnWikipedia } from './single-sign-on-wikipedia'
 import { stackOverflow2026 } from './stack-overflow-2026'
+import { stateOfCss2025 } from './state-of-css-2025'
 import { thoughtworksRadar35Technical } from './thoughtworks-radar-35'
+import { tiobe2026 } from './tiobe-2026'
+import { unitTestingFrameworksWikipedia } from './unit-testing-frameworks-wikipedia'
+import { versionControlWikipedia } from './version-control-wikipedia'
 
 /** Sources are merged in the order they are read; add each new source's file here. */
-export const TECHNICAL = mergeContributions([
-  stackOverflow2026,
-  jetbrains2026,
-  cncf2026,
-  thoughtworksRadar35Technical,
-  octoverse2026Technical,
-])
+export const TECHNICAL = mergeContributions([stackOverflow2026, jetbrains2026, cncf2026, thoughtworksRadar35Technical, octoverse2026Technical, tiobe2026, stateOfCss2025, ciSoftwareWikipedia, buildAutomationWikipedia, versionControlWikipedia, unitTestingFrameworksWikipedia, messageBrokerWikipedia, gameEnginesWikipedia, singleSignOnWikipedia, rdbmsComparisonWikipedia, nosqlWikipedia, serverSideFrameworksWikipedia, javascriptFrameworksWikipedia])

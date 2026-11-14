@@ -11,7 +11,7 @@ export const dora2025Ai: SourceContribution = {
   source: 'dora-2025',
   checked: '2026-11-14',
   categories: {
-    'Organisational readiness for AI': {
+    'AI governance and alignment': {
       'Clear and communicated AI stance': 'Setting out, and sharing with everyone, how an organisation expects AI tools to be used and what is off limits.',
       'AI-accessible internal data': 'Making internal documents, code and data available to AI tools safely, so their answers fit your organisation.',
       'Healthy data ecosystems': 'Keeping data well organised, trustworthy and governed so it can support AI as well as people.',

@@ -1,15 +1,25 @@
 import { mergeContributions } from '../types'
+import { awsWellArchitected } from './aws-well-architected'
+import { azureWellArchitected } from './azure-well-architected'
 import { cncf2026Engineering } from './cncf-2026'
+import { codeRefactoringWikipedia } from './code-refactoring-wikipedia'
+import { domainDrivenDesignWikipedia } from './domain-driven-design-wikipedia'
 import { dora2025 } from './dora-2025'
+import { googleSreBooks } from './google-sre-books'
+import { iso9126Wikipedia } from './iso-9126-wikipedia'
+import { microservicesWikipedia } from './microservices-wikipedia'
 import { octoverse2026 } from './octoverse-2026'
 import { owaspTop10_2025 } from './owasp-top10-2025'
+import { siteReliabilityEngineeringWikipedia } from './site-reliability-engineering-wikipedia'
+import { softwareArchitectureWikipedia } from './software-architecture-wikipedia'
+import { softwareDesignPatternWikipedia } from './software-design-pattern-wikipedia'
+import { softwareDevelopmentPhilosophiesWikipedia } from './software-development-philosophies-wikipedia'
+import { softwareTestingWikipedia } from './software-testing-wikipedia'
+import { solidWikipedia } from './solid-wikipedia'
+import { swebok4 } from './swebok-4'
+import { technicalDebtWikipedia } from './technical-debt-wikipedia'
 import { thoughtworksRadar35Engineering } from './thoughtworks-radar-35'
+import { twelveFactorApp } from './twelve-factor-app'
 
 /** Sources are merged in the order they are read; add each new source's file here. */
-export const ENGINEERING = mergeContributions([
-  dora2025,
-  owaspTop10_2025,
-  thoughtworksRadar35Engineering,
-  cncf2026Engineering,
-  octoverse2026,
-])
+export const ENGINEERING = mergeContributions([dora2025, owaspTop10_2025, thoughtworksRadar35Engineering, cncf2026Engineering, octoverse2026, swebok4, softwareDevelopmentPhilosophiesWikipedia, solidWikipedia, softwareDesignPatternWikipedia, softwareArchitectureWikipedia, domainDrivenDesignWikipedia, microservicesWikipedia, iso9126Wikipedia, technicalDebtWikipedia, codeRefactoringWikipedia, softwareTestingWikipedia, siteReliabilityEngineeringWikipedia, googleSreBooks, twelveFactorApp, azureWellArchitected, awsWellArchitected])

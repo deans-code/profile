@@ -10,11 +10,11 @@ export const jetbrainsAi2026: SourceContribution = {
   source: 'jetbrains-ai-2026',
   checked: '2026-11-14',
   categories: {
-    Approaches: {
+    'Approaches and ways of working': {
       'Agentic development': 'Using AI agents that plan and carry out multi-step coding tasks, with a developer directing and reviewing the work.',
       'Building AI-powered features': 'Adding AI capabilities, such as chat, search or summarisation, to the products and services you build.',
     },
-    'Agent setup and extensibility': {
+    'Agents and extensibility': {
       'Agent guideline files': 'Files such as AGENTS.md or CLAUDE.md that give a coding agent standing instructions about your project’s conventions, commands and constraints.',
     },
   },

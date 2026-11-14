@@ -1,19 +1,22 @@
 import { mergeContributions } from '../types'
+import { aiAlignmentWikipedia } from './ai-alignment-wikipedia'
 import { dora2025Ai } from './dora-2025'
+import { fineTuningWikipedia } from './fine-tuning-wikipedia'
+import { intelligentAgentWikipedia } from './intelligent-agent-wikipedia'
 import { jetbrainsAi2026 } from './jetbrains-ai-2026'
+import { mcpSpecification } from './mcp-specification'
+import { mlopsWikipedia } from './mlops-wikipedia'
+import { nistAiRmf } from './nist-ai-rmf'
 import { octoverse2026Ai } from './octoverse-2026'
 import { openrouterRankings2026 } from './openrouter-rankings-2026'
+import { owaspLlmTop10 } from './owasp-llm-top10-2025'
+import { promptEngineeringWikipedia } from './prompt-engineering-wikipedia'
+import { ragWikipedia } from './rag-wikipedia'
+import { rlhfWikipedia } from './rlhf-wikipedia'
 import { stackOverflow2026Ai } from './stack-overflow-2026'
 import { stanfordAiIndex2026 } from './stanford-ai-index-2026'
 import { thoughtworksRadar35 } from './thoughtworks-radar-35'
+import { vectorDatabaseWikipedia } from './vector-database-wikipedia'
 
 /** Sources are merged in the order they are read; add each new source's file here. */
-export const AI = mergeContributions([
-  stackOverflow2026Ai,
-  jetbrainsAi2026,
-  openrouterRankings2026,
-  thoughtworksRadar35,
-  stanfordAiIndex2026,
-  octoverse2026Ai,
-  dora2025Ai,
-])
+export const AI = mergeContributions([stackOverflow2026Ai, jetbrainsAi2026, openrouterRankings2026, thoughtworksRadar35, stanfordAiIndex2026, octoverse2026Ai, dora2025Ai, owaspLlmTop10, nistAiRmf, mcpSpecification, ragWikipedia, promptEngineeringWikipedia, mlopsWikipedia, aiAlignmentWikipedia, vectorDatabaseWikipedia, fineTuningWikipedia, intelligentAgentWikipedia, rlhfWikipedia])

@@ -12,21 +12,19 @@ export const jetbrains2026: SourceContribution = {
   checked: '2026-11-14',
   categories: {
     Languages: {
-      // Named as having grown considerably in popularity.
       TypeScript: '',
       Python: '',
       Rust: '',
     },
     Databases: {
-      // PostgreSQL reached 59% and MySQL about 54% in the report text; Supabase and Firebase are named.
       PostgreSQL: '',
       MySQL: '',
       Supabase: '',
     },
     'Cloud platforms and hosting': {
       'Amazon Web Services': '',
-      'Google Cloud': '',
       'Microsoft Azure': '',
+      'Google Cloud': '',
       Firebase: '',
       'Hetzner Cloud': '',
       OVHcloud: 'A European cloud provider offering servers, storage and managed services.',

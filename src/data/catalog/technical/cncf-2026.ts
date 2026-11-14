@@ -16,7 +16,7 @@ export const cncf2026: SourceContribution = {
   source: 'cncf-2026',
   checked: '2026-11-14',
   categories: {
-    'Containers and infrastructure': {
+    'Containers, infrastructure and delivery': {
       Kubernetes: '',
       'Service meshes': 'A layer that manages secure, observable communication between services, for example Istio or Linkerd.',
       'API gateways': 'A single entry point that routes, secures and monitors requests to back-end services.',

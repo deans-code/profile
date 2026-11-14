@@ -19,8 +19,11 @@ export const naceCareerReadiness: SourceContribution = {
     'Teamwork and collaboration': {
       'Teamwork and collaboration': 'Building working relationships and contributing to shared goals while valuing different viewpoints and shared responsibility.',
     },
-    Leadership: {
+    'Leadership, coaching and facilitation': {
       Leadership: 'Recognising and using your own and your team’s strengths to achieve goals.',
+    },
+    'Culture, inclusion and safety': {
+      'Equity and inclusion': 'Working respectfully and fairly with people of different cultures and backgrounds, and helping everyone take part.',
     },
     'Thinking and problem solving': {
       'Critical thinking': 'Analysing information logically and in context to understand needs and decide how to respond.',
@@ -28,9 +31,6 @@ export const naceCareerReadiness: SourceContribution = {
     'Personal effectiveness': {
       'Career and self-development': 'Taking charge of your own growth by learning continually, knowing your strengths and weaknesses and building your network.',
       Professionalism: 'Showing reliable work habits and acting responsibly toward colleagues and the wider community.',
-    },
-    'Culture and inclusion': {
-      'Equity and inclusion': 'Working respectfully and fairly with people of different cultures and backgrounds, and helping everyone take part.',
     },
   },
 }

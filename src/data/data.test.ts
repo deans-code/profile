@@ -74,7 +74,7 @@ describe('AI engineering catalog', () => {
     expect(CATALOGS.ai.length).toBeGreaterThanOrEqual(6)
   })
 
-  it.each(['model providers', 'approaches', 'inference platforms', 'ai coding tools', 'agent setup', 'open-weight models'])(
+  it.each(['model providers', 'approaches', 'inference platforms', 'ai coding tools', 'agents and extensibility', 'open-weight models'])(
     'has a %s category with at least three entries',
     (needle) => {
       expect(category(needle)?.skills.length ?? 0).toBeGreaterThanOrEqual(3)
