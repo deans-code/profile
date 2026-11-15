@@ -100,7 +100,7 @@ npm run preview
 - Loading of a saved JSON profile, validated before it replaces the current profile.
 - A distinct colour for each section, with accessible contrast in light and dark themes.
 - Scroll-to-top and an animated change of section when moving between steps (skipped when the system asks for reduced motion).
-- Two options on every skill page, **Previous experience** and **Desired experience**, each with its own selections and count. Every page opens on Previous experience. Values have a single list.
+- Two options on every skill page, **Previous experience** and **Desired experience**, each with its own selections and count. Every page opens on Previous experience. Values have a single list. The two options stay pinned at the top of the screen as you scroll a skill page, on desktop and on phones, so both are always in view.
 - Guided steps that require at least one value and at least one skill in each section (in either option) before the profile.
 - Profile card showing previous and desired words for every skill page, and one list of values, without scores.
 - Download of the profile as JSON or Markdown, generated locally.

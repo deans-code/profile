@@ -119,6 +119,19 @@ describe('skill steps', () => {
 describe('experience options', () => {
   const radio = (name: RegExp) => screen.getByRole('radio', { name })
 
+  it('keeps the options in a pinned bar on skill pages only', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    expect(document.querySelector('.mode-bar')).toBeNull()
+    await pickValues(user)
+    for (let page = 0; page < 4; page++) {
+      await user.click(next())
+      const bar = document.querySelector('.mode-bar')!
+      expect(bar).toContainElement(screen.getByRole('radiogroup', { name: 'Experience option' }))
+      expect(bar).toHaveTextContent(/Previous experience \(\d+\).*Desired experience \(\d+\)/)
+    }
+  })
+
   it('shows both options on every skill page, defaulting to previous experience, but not on the values page', async () => {
     const user = userEvent.setup()
     render(<App />)
