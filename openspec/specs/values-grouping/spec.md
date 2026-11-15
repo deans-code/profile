@@ -3,9 +3,7 @@
 ## Purpose
 
 Presents values in named categories, with a broader set to choose from, so users can scan and pick values more easily.
-
 ## Requirements
-
 ### Requirement: Values are grouped into categories
 The system SHALL present the built-in values grouped under named category headings, each category shown as its own card, in the same card layout as the skill sections.
 
@@ -14,14 +12,18 @@ The system SHALL present the built-in values grouped under named category headin
 - **THEN** values appear under category headings such as Character, Relationships and Growth, rather than as one flat list
 
 ### Requirement: Expanded set of values
-The system SHALL offer at least 100 built-in values across at least 8 categories, with no value appearing in more than one category, and every built-in value SHALL have a description.
+The system SHALL offer at least 100 built-in values across at least 8 categories, all relating to professional work, with no value appearing in more than one category, and every built-in value SHALL have a description. There SHALL be no "Wellbeing and a good life" category, and no built-in value whose only context is personal wellbeing, romance, leisure or religion.
 
 #### Scenario: Catalog size
 - **WHEN** the built-in values are inspected
 - **THEN** there are at least 100, in at least 8 categories, each with a non-empty description and no duplicates ignoring case
 
+#### Scenario: Wellbeing group removed
+- **WHEN** the user browses the values
+- **THEN** no "Wellbeing and a good life" heading is shown, and "Love", "Zest", "Spirituality", "Hedonism", "Salvation", "Pleasure", "Life satisfaction" and "Leisure" are not offered
+
 #### Scenario: Earlier values retained
-- **WHEN** a profile saved before this change contains built-in values from the original list
+- **WHEN** a profile saved before this change contains built-in values that remain in the catalog
 - **THEN** each still loads as the same built-in value
 
 ### Requirement: Values can be filtered
@@ -51,3 +53,4 @@ Values SHALL be displayed at one uniform size, and SHALL open their description 
 #### Scenario: Description on right-click
 - **WHEN** the user right-clicks "Integrity"
 - **THEN** its description opens and its selection state is unchanged
+

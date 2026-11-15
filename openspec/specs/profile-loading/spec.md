@@ -3,9 +3,7 @@
 ## Purpose
 
 Lets users return to a profile they previously downloaded, in the current format or an earlier one, restore it in the builder, and continue editing it.
-
 ## Requirements
-
 ### Requirement: Load a saved profile
 The system SHALL provide a "Load saved profile" control, available from every page, that lets the user choose a JSON profile file previously downloaded from the app and restores its values and its previous and desired skills.
 
@@ -79,11 +77,19 @@ Loading SHALL replace the current profile. If the user has made any selection in
 - **THEN** the current profile and page are unchanged
 
 ### Requirement: Over-limit and incomplete files
-A file with more than 5 values SHALL be loaded in full and then constrained as in the selection-limits capability. A file that cannot satisfy the completion rules to reach the profile card SHALL open on the first page that needs attention, with a message saying what to do.
+A file with more than 10 values SHALL be loaded in full and then constrained as in the selection-limits capability. A file with fewer than 5 values SHALL be loaded in full and open the values page with a message saying how many more to choose. A value that is no longer built in SHALL load as a custom value. A file that cannot satisfy the completion rules to reach the profile card SHALL open on the first page that needs attention, with a message saying what to do.
 
 #### Scenario: Over-limit file
-- **WHEN** the file has 8 values
-- **THEN** all 8 are loaded, the values page opens, and the user is told to deselect 3 to continue
+- **WHEN** the file has 12 values
+- **THEN** all 12 are loaded, the values page opens, and the user is told to deselect 2 to continue
+
+#### Scenario: Too few values
+- **WHEN** the file has 3 values
+- **THEN** the values page opens with the 3 selected and a message to choose at least 2 more
+
+#### Scenario: Removed wellbeing value
+- **WHEN** the file selects "Life satisfaction"
+- **THEN** it loads without error as a custom value
 
 #### Scenario: Incomplete file
 - **WHEN** the loaded file has no AI engineering selections in either option
@@ -95,3 +101,4 @@ The file SHALL be read only in the browser and never uploaded. After a load the 
 #### Scenario: Same file twice
 - **WHEN** the user loads a file, edits, and loads the same file again
 - **THEN** the second load is processed
+

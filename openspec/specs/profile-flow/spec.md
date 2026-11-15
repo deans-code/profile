@@ -3,9 +3,7 @@
 ## Purpose
 
 Defines the order of steps and when the user may move on, now that scoring is removed.
-
 ## Requirements
-
 ### Requirement: No scoring
 The app SHALL NOT offer scoring: no scoring step, no per-skill sliders or numbers, and no scores in the profile card or downloads.
 
@@ -21,15 +19,19 @@ The steps SHALL be, in order: Values, Technical development, Engineering, Interp
 - **THEN** the AI engineering page opens, and Finish on that page opens the Profile
 
 ### Requirement: Completion rules
-A page SHALL count as complete when at least one word is selected in either option. The user SHALL NOT enter a later step while an earlier page is incomplete or while the values selection in either option is over its limit, and the reason SHALL be shown.
+The values page SHALL count as complete when 5 to 10 values are selected. A skill page SHALL count as complete when at least one word is selected in either option. The user SHALL NOT enter a later step while an earlier page is incomplete or while the values selection is over its limit, and the reason SHALL be shown.
 
 #### Scenario: Desired only
-- **WHEN** a user has selected words only under "Desired experience" on every page
+- **WHEN** a user has 5 values selected and has selected words only under "Desired experience" on every skill page
 - **THEN** they can reach the Profile
 
 #### Scenario: Empty page blocks
 - **WHEN** the AI engineering page has no selection in either option
 - **THEN** the Profile step is unavailable and the message names AI engineering as needing a selection
+
+#### Scenario: Too few values
+- **WHEN** 4 values are selected
+- **THEN** the user cannot continue and is told to choose at least 1 more
 
 ### Requirement: Profile card shows both options
 The profile card SHALL show the values as one list and, for each skill page, the previous-experience words and the desired-experience words as separate groups, omitting an empty group, and without scores.
@@ -44,3 +46,4 @@ The step navigation SHALL show each step's number, the user's current position o
 #### Scenario: Blocked step
 - **WHEN** an earlier page is incomplete
 - **THEN** later steps appear unavailable and the existing reason is still shown
+
