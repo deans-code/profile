@@ -4,15 +4,25 @@ interface Props {
   label: string
   placeholder: string
   onAdd: (text: string) => void
+  /** Id of the paragraph (see AddEntryHelp) that explains what Add does. */
+  helpId: string
   /** When true the Add button is disabled and typed text is kept. */
   full?: boolean
 }
 
-/** A highlighted panel for adding a word that is not in the lists, shown at the top of a selection page. */
-export default function AddEntry({ label, placeholder, onAdd, full = false }: Props) {
+/** Explains what Add does. Shown in the normal page flow, above the pinned bar, so the bar stays short. */
+export function AddEntryHelp({ id }: { id: string }) {
+  return (
+    <p id={id} className="add-help">
+      Not in the lists? Type it and press Add or Enter. It will appear under Custom, selected.
+    </p>
+  )
+}
+
+/** A compact form for adding a word that is not in the lists, pinned at the top of a selection page. */
+export default function AddEntry({ label, placeholder, onAdd, helpId, full = false }: Props) {
   const [text, setText] = useState('')
   const id = useId()
-  const helpId = `${id}-help`
 
   function submit(e: FormEvent) {
     e.preventDefault()
@@ -23,12 +33,9 @@ export default function AddEntry({ label, placeholder, onAdd, full = false }: Pr
 
   return (
     <form className="add-entry" onSubmit={submit}>
-      <label htmlFor={id} className="add-title">
+      <label htmlFor={id} className="visually-hidden">
         {label}
       </label>
-      <p id={helpId} className="add-help">
-        Not in the lists? Type it and press Add or Enter. It will appear under Custom, selected.
-      </p>
       <div className="add-row">
         <input
           id={id}

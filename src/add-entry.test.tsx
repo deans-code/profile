@@ -10,16 +10,22 @@ describe('add your own at the top', () => {
   it('sits before the filter and the first category on the values page', () => {
     render(<App />)
     const input = screen.getByLabelText('Add your own value')
+    const bar = document.querySelector<HTMLElement>('.pinned-bar')!
+    expect(bar).toContainElement(input)
+    expect(within(bar).queryByRole('radiogroup')).not.toBeInTheDocument()
     expect(before(input, screen.getByLabelText('Filter values'))).toBe(true)
     expect(before(input, document.querySelector('.category')!)).toBe(true)
   })
 
-  it('sits after the experience options and before the filter and cards on a skill page', async () => {
+  it('sits in the same pinned bar as the experience options, before the filter and cards, on a skill page', async () => {
     const user = userEvent.setup()
     render(<App />)
     await pickValues(user)
     await user.click(next())
     const input = screen.getByLabelText('Add your own technical development skill')
+    const bar = document.querySelector<HTMLElement>('.pinned-bar')!
+    expect(within(bar).getByRole('radiogroup', { name: 'Experience option' })).toBeInTheDocument()
+    expect(bar).toContainElement(input)
     expect(before(screen.getByRole('radiogroup', { name: 'Experience option' }), input)).toBe(true)
     expect(before(input, screen.getByLabelText('Filter skills'))).toBe(true)
     expect(before(input, document.querySelector('.category')!)).toBe(true)
@@ -30,6 +36,8 @@ describe('add your own at the top', () => {
     render(<App />)
     const input = screen.getByLabelText('Add your own value')
     expect(input).toHaveAccessibleDescription(/Type it and press Add or Enter.*Custom/)
+    expect(document.querySelector('.pinned-bar')).not.toHaveTextContent(/Not in the lists/)
+    expect(before(screen.getByText(/Not in the lists/), input)).toBe(true)
     await user.type(input, 'Grit{Enter}')
     expect(screen.getByRole('button', { name: 'Grit' })).toHaveAttribute('aria-pressed', 'true')
     expect(input).toHaveValue('')

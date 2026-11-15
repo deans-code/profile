@@ -466,41 +466,35 @@ ul {
   padding: 0 0.5rem;
 }
 
-.add-entry {
-  margin: 1.25rem 0;
-  padding: 0.875rem 1rem;
-  background: var(--tint);
-  border: 2px solid var(--accent);
-  border-radius: var(--radius);
-  color: var(--text);
-}
-
-.add-title {
-  display: block;
-  font-size: 1.125rem;
-  font-weight: 700;
-}
-
 .add-help {
-  margin: 0.125rem 0 0.5rem;
+  margin: 0.5rem 0 0;
   color: var(--text);
+}
+
+.add-entry {
+  flex: 1 1 18rem;
+  min-width: 0;
+  margin: 0;
 }
 
 .add-row {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
 .add-entry input {
-  flex: 1 1 14rem;
-  max-width: 28rem;
+  flex: 1 1 auto;
+  min-width: 0;
   min-height: 2.75rem;
   border: 2px solid var(--accent);
 }
 
+.add-entry button {
+  min-height: 2.75rem;
+}
+
 .add-limit {
-  margin: 0.5rem 0 0;
+  margin: 0.25rem 0 0;
   font-weight: 600;
 }
 
@@ -793,21 +787,29 @@ main {
   font-size: 0.9rem;
 }
 
-/* Experience option switch: pinned to the top while the skill page scrolls */
-html {
-  scroll-padding-top: 4.5rem;
+/* Pinned bar: the experience options and the add-your-own form stay at the top while the page scrolls */
+/* Keep a focused word clear of the pinned bar. This is a scroll margin on the focused element, not scroll
+   padding on the page, because scroll padding makes the browser nudge the page whenever the pinned input is typed in. */
+:root {
+  --pinned-bar-height: 5rem;
 }
 
-@media (max-width: 40rem) {
-  html {
-    scroll-padding-top: 4rem;
-  }
+:focus {
+  scroll-margin-top: var(--pinned-bar-height);
 }
 
-.mode-bar {
+.pinned-bar :focus {
+  scroll-margin-top: 0;
+}
+
+.pinned-bar {
   position: sticky;
   top: 0;
   z-index: 4;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem 1rem;
   margin: 0.5rem 0 0.75rem;
   padding: 0.5rem 0;
   background: var(--bg);
@@ -846,9 +848,21 @@ html {
 }
 
 @media (max-width: 40rem) {
-  .mode-bar {
+  :root {
+    --pinned-bar-height: 7.5rem;
+  }
+
+  .pinned-bar {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.25rem;
     margin: 0.25rem 0 0.5rem;
     padding: 0.25rem 0;
+  }
+
+  .add-entry {
+    flex: none;
   }
 
   .mode-switch {

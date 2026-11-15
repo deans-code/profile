@@ -119,15 +119,18 @@ describe('skill steps', () => {
 describe('experience options', () => {
   const radio = (name: RegExp) => screen.getByRole('radio', { name })
 
-  it('keeps the options in a pinned bar on skill pages only', async () => {
+  it('pins the add-your-own form on every page and the options on skill pages only', async () => {
     const user = userEvent.setup()
     render(<App />)
-    expect(document.querySelector('.mode-bar')).toBeNull()
+    const valuesBar = document.querySelector<HTMLElement>('.pinned-bar')!
+    expect(within(valuesBar).getByLabelText('Add your own value')).toBeInTheDocument()
+    expect(within(valuesBar).queryByRole('radiogroup')).not.toBeInTheDocument()
     await pickValues(user)
     for (let page = 0; page < 4; page++) {
       await user.click(next())
-      const bar = document.querySelector('.mode-bar')!
+      const bar = document.querySelector('.pinned-bar')!
       expect(bar).toContainElement(screen.getByRole('radiogroup', { name: 'Experience option' }))
+      expect(within(bar as HTMLElement).getByRole('button', { name: 'Add' })).toBeInTheDocument()
       expect(bar).toHaveTextContent(/Previous experience \(\d+\).*Desired experience \(\d+\)/)
     }
   })

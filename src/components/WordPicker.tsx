@@ -1,7 +1,7 @@
 import { useId, useState } from 'react'
 import type { TermKind } from '../data/definitions'
 import { ASSISTANT_HELP } from '../data/assistant'
-import AddEntry from './AddEntry'
+import AddEntry, { AddEntryHelp } from './AddEntry'
 import AssistantLink from './AssistantLink'
 import ModeSwitch from './ModeSwitch'
 import SelectionHelp from './SelectionHelp'
@@ -71,6 +71,7 @@ export default function WordPicker({
   const [filter, setFilter] = useState('')
   const filterId = useId()
   const hintId = `${filterId}-hint`
+  const addHelpId = `${filterId}-add-help`
   const chosen = new Set(selected)
   const full = limit !== undefined && selected.length >= limit
   const query = filter.trim().toLowerCase()
@@ -95,10 +96,13 @@ export default function WordPicker({
           options below.
         </p>
       )}
-      {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
       <SelectionHelp limit={limit} min={min} unit={kind === 'values' ? 'values' : 'skills'} mode={mode} />
+      <AddEntryHelp id={addHelpId} />
 
-      <AddEntry label={addLabel} placeholder={addPlaceholder} full={full} onAdd={onAddCustom} />
+      <div className="pinned-bar">
+        {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
+        <AddEntry label={addLabel} placeholder={addPlaceholder} helpId={addHelpId} full={full} onAdd={onAddCustom} />
+      </div>
 
       <div className="filter-block">
         <label htmlFor={filterId} className="filter-label">

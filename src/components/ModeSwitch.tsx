@@ -22,25 +22,23 @@ export default function ModeSwitch({ mode, counts, onChange }: Props) {
   }
 
   return (
-    <div className="mode-bar">
-      <div className="mode-switch" role="radiogroup" aria-label="Experience option">
-        {MODES.map((m) => (
-          <button
-            key={m}
-            ref={(el) => {
-              refs.current[m] = el
-            }}
-            type="button"
-            role="radio"
-            aria-checked={m === mode}
-            tabIndex={m === mode ? 0 : -1}
-            onClick={() => onChange(m)}
-            onKeyDown={onKeyDown}
-          >
-            {MODE_LABELS[m]} ({counts[m]})
-          </button>
-        ))}
-      </div>
+    <div className="mode-switch" role="radiogroup" aria-label="Experience option">
+      {MODES.map((m) => (
+        <button
+          key={m}
+          ref={(el) => {
+            refs.current[m] = el
+          }}
+          type="button"
+          role="radio"
+          aria-checked={m === mode}
+          tabIndex={m === mode ? 0 : -1}
+          onClick={() => onChange(m)}
+          onKeyDown={onKeyDown}
+        >
+          {MODE_LABELS[m]} ({counts[m]})
+        </button>
+      ))}
     </div>
   )
 }
