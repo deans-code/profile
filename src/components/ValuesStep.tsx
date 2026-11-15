@@ -1,6 +1,6 @@
 import type { Dispatch } from 'react'
 import { VALUE_CATEGORIES } from '../data/values'
-import { limitFor, type Action, type ProfileState } from '../state/profile'
+import { limitFor, MIN_VALUES, type Action, type ProfileState } from '../state/profile'
 import WordPicker from './WordPicker'
 
 interface Props {
@@ -14,12 +14,13 @@ export default function ValuesStep({ state, dispatch }: Props) {
       kind="values"
       headingId="values-heading"
       heading="What do you value?"
-      lead="Pick up to five values that matter most to you."
+      lead="Pick 5 to 10 values that matter most to you."
       hint="Select the values that describe you, or add your own."
       categories={VALUE_CATEGORIES.map((c) => ({ category: c.category, words: c.values }))}
       selected={state.selectedValues}
       custom={state.customValues}
       limit={limitFor('values')}
+      min={MIN_VALUES}
       noun="values"
       filterLabel="Filter values"
       addLabel="Add your own value"

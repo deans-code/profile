@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { pickValues } from './test-values'
 import App from './App'
 
 const next = () => within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(Continue|Finish)/ })
@@ -16,7 +17,7 @@ describe('add your own at the top', () => {
   it('sits after the experience options and before the filter and cards on a skill page', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    await pickValues(user)
     await user.click(next())
     const input = screen.getByLabelText('Add your own technical development skill')
     expect(before(screen.getByRole('radiogroup', { name: 'Experience option' }), input)).toBe(true)
@@ -34,11 +35,11 @@ describe('add your own at the top', () => {
     expect(input).toHaveValue('')
   })
 
-  it('shows the limit reason beside the disabled Add at 5 values, and not for skills', async () => {
+  it('shows the limit reason beside the disabled Add at 10 values, and not for skills', async () => {
     const user = userEvent.setup()
     render(<App />)
     expect(screen.queryByText(/Limit reached: deselect a word to add another/)).not.toBeInTheDocument()
-    for (const v of ['Respect', 'Fairness', 'Honesty', 'Courage', 'Humility']) {
+    for (const v of ['Respect', 'Fairness', 'Honesty', 'Courage', 'Humility', 'Integrity', 'Curiosity', 'Accountability', 'Trust', 'Kindness']) {
       await user.click(screen.getByRole('button', { name: v }))
     }
     const form = document.querySelector<HTMLElement>('form.add-entry')!

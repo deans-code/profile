@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { pickValues } from './test-values'
 import App from './App'
 import { ATTRIBUTION } from './data/attribution'
 import { SOURCE_REGISTRY, TAB_SOURCES, sourcesFor } from './data/sources'
@@ -10,7 +11,7 @@ const next = () => within(document.querySelector<HTMLElement>('footer.nav')!).ge
 async function toTechnical() {
   const user = userEvent.setup()
   render(<App />)
-  await user.click(screen.getByRole('button', { name: 'Respect' }))
+  await pickValues(user)
   await user.click(next())
   return user
 }
@@ -46,7 +47,7 @@ describe('sources', () => {
       .getAllByRole('link')
       .map((l) => l.getAttribute('href'))
     expect(valuesLinks).toEqual(sourcesFor('values').map((s) => s.url))
-    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    await pickValues(user)
     await user.click(next())
     const technicalLinks = within(screen.getByRole('region', { name: 'Sources' }))
       .getAllByRole('link')
@@ -67,7 +68,7 @@ describe('sources', () => {
       return TAB_SOURCES[kind].filter((id) => ids.has(id)).map((id) => SOURCE_REGISTRY[id].url)
     }
     expect(shown()).toEqual(cited('values'))
-    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    await pickValues(user)
     await user.click(next())
     expect(shown()).toEqual(cited('technical'))
   })

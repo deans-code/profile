@@ -1,8 +1,9 @@
 import { render, screen, within } from '@testing-library/react'
+import { pickValues } from './test-values'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import { VALUE_CATEGORIES } from './data/values'
-import { MAX_SELECTION as LIMIT } from './state/profile'
+import { MAX_VALUES as LIMIT } from './state/profile'
 
 const word = (name: string) => screen.getByRole('button', { name })
 const main = () => within(screen.getByRole('main'))
@@ -15,6 +16,16 @@ describe('grouped values', () => {
       const heading = main().getByRole('heading', { name: c.category })
       const card = heading.closest('.category') as HTMLElement
       for (const v of c.values) expect(within(card).getByRole('button', { name: v })).toBeInTheDocument()
+    }
+  })
+
+  it('has no wellbeing group and offers none of its values', () => {
+    expect(VALUE_CATEGORIES.map((c) => c.category)).not.toContain('Wellbeing and a good life')
+    const all = VALUE_CATEGORIES.flatMap((c) => c.values)
+    expect(VALUE_CATEGORIES.length).toBeGreaterThanOrEqual(8)
+    expect(all.length).toBeGreaterThanOrEqual(100)
+    for (const v of ['Love', 'Zest', 'Spirituality', 'Hedonism', 'Salvation', 'Pleasure', 'Life satisfaction', 'Leisure']) {
+      expect(all).not.toContain(v)
     }
   })
 
@@ -78,9 +89,9 @@ describe('grouped values', () => {
     await user.pointer({ keys: '[MouseRight]', target: word('Fairness') })
     expect(screen.getByRole('dialog')).toHaveAccessibleName(/Fairness/)
     await user.keyboard('{Escape}')
-    await user.pointer({ keys: '[MouseRight]', target: word('Zest') })
-    expect(screen.getByRole('dialog')).toHaveTextContent(/energy/i)
-    expect(word('Zest')).toHaveAttribute('aria-pressed', 'false')
+    await user.pointer({ keys: '[MouseRight]', target: word('Kindness') })
+    expect(screen.getByRole('dialog')).toHaveAccessibleName(/Kindness/)
+    expect(word('Kindness')).toHaveAttribute('aria-pressed', 'false')
   })
 })
 
@@ -110,7 +121,7 @@ describe('filter box guidance', () => {
   it('also guides on skill pages', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(word('Fairness'))
+    await pickValues(user)
     await user.click(screen.getByRole('button', { name: /^Continue/ }))
     expect(screen.getByLabelText('Filter skills')).toHaveAccessibleDescription(
       /Type part of a word to show only the technical development skills that match/,

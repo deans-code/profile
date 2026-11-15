@@ -1,4 +1,5 @@
 import { render, screen, waitFor, within } from '@testing-library/react'
+import { FIVE_VALUES, pickValues } from './test-values'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import { MAX_FILE_BYTES } from './load'
@@ -16,7 +17,7 @@ const lists = (experience: string[], desired: string[] = []) => ({ experience, d
 const profileJson = (overrides: Record<string, unknown> = {}) =>
   JSON.stringify({
     exportedAt: '2026-01-02T03:04:05.000Z',
-    values: ['Fairness', 'Grit'],
+    values: [...FIVE_VALUES, 'Grit'],
     skills: {
       technical: lists(['Python', 'Zig']),
       engineering: lists(['Continuous integration']),
@@ -30,7 +31,7 @@ const profileJson = (overrides: Record<string, unknown> = {}) =>
 const legacyJson = () =>
   JSON.stringify({
     exportedAt: '2026-01-02T03:04:05.000Z',
-    values: ['Fairness'],
+    values: FIVE_VALUES,
     skills: {
       technical: [{ name: 'Python', score: 9 }],
       engineering: [{ name: 'Continuous integration', score: 6 }],
@@ -46,7 +47,7 @@ describe('Load saved profile', () => {
     const user = userEvent.setup()
     render(<App />)
     expect(screen.getByRole('button', { name: 'Load saved profile' })).toBeInTheDocument()
-    await user.click(word('Fairness'))
+    await pickValues(user)
     await user.click(next())
     expect(screen.getByRole('button', { name: 'Load saved profile' })).toBeInTheDocument()
   })
@@ -88,7 +89,7 @@ describe('Load saved profile', () => {
     // Values: loaded values selected, custom restored.
     expect(word('Fairness')).toHaveAttribute('aria-pressed', 'true')
     expect(word('Grit')).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText(/^2 of 5 selected/)).toBeInTheDocument()
+    expect(screen.getByText(/^6 of 10 selected/)).toBeInTheDocument()
     await user.click(word('Kindness'))
     await user.click(next())
 
@@ -115,16 +116,16 @@ describe('Load saved profile', () => {
   it('merges the values of a file saved with two options into one list', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await upload(user, profileJson({ values: lists(['Fairness'], ['Curiosity', 'fairness']) }))
+    await upload(user, profileJson({ values: lists(FIVE_VALUES, ['Courage', 'fairness']) }))
     await screen.findByRole('heading', { name: 'Your profile' })
     const values = within(card()).getByRole('heading', { name: 'Values' }).parentElement!
-    expect(within(values).getAllByRole('listitem').map((li) => li.textContent)).toEqual(['Curiosity', 'Fairness'])
+    expect(within(values).getAllByRole('listitem').map((li) => li.textContent)).toEqual(['Accountability', 'Courage', 'Curiosity', 'Fairness', 'Honesty', 'Integrity'])
   })
 
   it('matches built-in entries ignoring case and restores others as custom', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await upload(user, profileJson({ values: ['fairness'] }))
+    await upload(user, profileJson({ values: ['fairness', ...FIVE_VALUES.slice(1)] }))
     await screen.findByRole('heading', { name: 'Your profile' })
     expect(within(card()).getByText('Fairness')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Edit' }))
@@ -188,12 +189,12 @@ describe('Load saved profile', () => {
     it('counts a desired-only skill selection as progress to replace', async () => {
       const user = userEvent.setup()
       render(<App />)
-      await user.click(word('Kindness'))
+      await pickValues(user)
       await user.click(next())
       await user.click(radio(/^Desired experience/))
       await user.click(word('Python'))
       await user.click(screen.getByRole('button', { name: /^Back/ }))
-      await user.click(word('Kindness'))
+      await user.click(word('Fairness'))
       await upload(user, profileJson())
       expect(await screen.findByRole('group', { name: 'Confirm loading a profile' })).toBeInTheDocument()
     })
@@ -233,23 +234,32 @@ describe('Load saved profile', () => {
   })
 
   describe('over-limit and incomplete files', () => {
-    it('loads all 8 values, opens the values page and says how many to deselect', async () => {
+    it('loads all 12 values, opens the values page and says how many to deselect', async () => {
       const user = userEvent.setup()
       render(<App />)
-      const values = Array.from({ length: 8 }, (_, i) => `Custom value ${i}`)
+      const values = Array.from({ length: 12 }, (_, i) => `Custom value ${i}`)
       await upload(user, profileJson({ values }))
       expect(
-        await screen.findByText(/Loaded profile\.json\. You have too many selected\. Deselect 3 words on the values page to continue \(limit 5\)/),
+        await screen.findByText(/Loaded profile\.json\. You have too many selected\. Deselect 2 words on the values page to continue \(limit 10\)/),
       ).toBeInTheDocument()
       expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
-      expect(screen.getByText(/^8 of 5 selected/)).toHaveTextContent(/deselect 3 words/i)
+      expect(screen.getByText(/^12 of 10 selected/)).toHaveTextContent(/deselect 2 words/i)
       expect(next()).toBeDisabled()
 
       await user.click(word('Custom value 0'))
       await user.click(word('Custom value 1'))
-      await user.click(word('Custom value 2'))
-      expect(screen.getByText(/^5 of 5 selected/)).toBeInTheDocument()
+      expect(screen.getByText(/^10 of 10 selected/)).toBeInTheDocument()
       expect(next()).toBeEnabled()
+    })
+
+    it('opens the values page for a file with fewer than 5 values, asking for more', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await upload(user, profileJson({ values: ['Fairness', 'Grit', 'Life satisfaction'] }))
+      expect((await screen.findAllByText(/Choose at least 2 more values/)).length).toBeGreaterThan(0)
+      expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
+      expect(word('Life satisfaction')).toHaveAttribute('aria-pressed', 'true')
+      expect(next()).toBeDisabled()
     })
 
     it('opens the first page that needs attention for an incomplete file', async () => {
@@ -284,7 +294,7 @@ describe('end to end: build, download, load, edit, download', () => {
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
 
     const first = render(<App />)
-    await user.click(word('Fairness'))
+    await pickValues(user)
     await user.type(screen.getByLabelText('Add your own value'), 'Grit')
     await user.click(screen.getByRole('button', { name: 'Add' }))
     await user.click(next())
@@ -319,7 +329,7 @@ describe('end to end: build, download, load, edit, download', () => {
     for (let i = 0; i < 5; i++) await user.click(next())
     await user.click(screen.getByRole('button', { name: 'Download JSON' }))
     const edited = JSON.parse(await blobs[2].text())
-    expect(edited.values).toEqual(['Fairness', 'Grit', 'Kindness'])
+    expect(edited.values).toEqual([...FIVE_VALUES, 'Grit', 'Kindness'].sort())
     expect(edited.skills.technical).toEqual(lists(['Python'], ['Rust']))
     expect(edited.skills.ai).toEqual(lists(['Claude Code'], ['OpenRouter']))
   })

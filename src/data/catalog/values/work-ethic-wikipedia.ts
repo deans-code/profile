@@ -39,9 +39,5 @@ export const workEthicValues: SourceContribution = {
     'What I expect from others': {
       'Reliability from others': 'Expecting others to be available and to do what they have said they will do.',
     },
-    'Wellbeing and a good life': {
-      Positivity: 'Choosing to look for what is good and working constructively.',
-      Leisure: 'Valuing rest and time away from work.',
-    },
   },
 }

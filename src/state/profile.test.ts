@@ -1,5 +1,7 @@
 import {
-  MAX_SELECTION,
+  MAX_VALUES,
+  MIN_VALUES,
+  underBy,
   STEPS,
   initialState,
   isFull,
@@ -15,12 +17,14 @@ import {
   type PerMode,
   type ProfileState,
 } from './profile'
+import { FIVE_VALUES } from '../test-values'
 import { COMMON_VALUES } from '../data/values'
 import { catalogSkillNames } from '../data/skills'
 
 const run = (actions: Action[], from: ProfileState = initialState) => actions.reduce(reducer, from)
 const exp = (names: string[]): PerMode<string[]> => ({ experience: names, desired: [] })
 const des = (names: string[]): PerMode<string[]> => ({ experience: [], desired: names })
+const five: Action[] = FIVE_VALUES.map((name) => ({ type: 'toggleValue', name }))
 const desired: Action = { type: 'setMode', mode: 'desired' }
 
 describe('steps', () => {
@@ -47,16 +51,16 @@ describe('experience modes', () => {
   })
 
   it('keeps values in one list whatever the mode', () => {
-    const s = run([desired, { type: 'toggleValue', name: 'Fairness' }])
-    expect(s.selectedValues).toEqual(['Fairness'])
-    expect(selectedFor(s, 'values')).toEqual(['Fairness'])
-    expect(selectedFor(s, 'values', 'experience')).toEqual(['Fairness'])
-    expect(pageComplete(run([desired, { type: 'toggleValue', name: 'Fairness' }]), 'values')).toBe(true)
+    const s = run([desired, ...five])
+    expect(s.selectedValues).toEqual(FIVE_VALUES)
+    expect(selectedFor(s, 'values')).toEqual(FIVE_VALUES)
+    expect(selectedFor(s, 'values', 'experience')).toEqual(FIVE_VALUES)
+    expect(pageComplete(run([desired, ...five]), 'values')).toBe(true)
   })
 
   it('opens every page on previous experience, keeping desired selections', () => {
     const s = run([
-      { type: 'toggleValue', name: 'Fairness' },
+      ...five,
       { type: 'goTo', step: 'technical' },
       desired,
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
@@ -163,7 +167,7 @@ describe('skills', () => {
 })
 
 describe('step gating', () => {
-  const withValue = run([{ type: 'toggleValue', name: 'Fairness' }])
+  const withValue = run([...five])
   const oneSection = run([{ type: 'toggleSkill', section: 'technical', name: 'Python' }], withValue)
   const complete = run(
     [
@@ -174,16 +178,22 @@ describe('step gating', () => {
     oneSection,
   )
 
-  it('blocks leaving values until one is selected', () => {
+  it('blocks leaving values until five are selected', () => {
     expect(stepBlockedReason(initialState, 'technical')).not.toBeNull()
     expect(run([{ type: 'goTo', step: 'technical' }]).step).toBe('values')
+    const four = run(five.slice(0, 4))
+    expect(underBy(four)).toBe(1)
+    expect(pageComplete(four, 'values')).toBe(false)
+    expect(stepBlockedReason(four, 'technical')).toMatch(/at least 1 more value /)
+    expect(run([{ type: 'goTo', step: 'technical' }], four).step).toBe('values')
+    expect(pageComplete(run(five), 'values')).toBe(true)
     expect(run([{ type: 'goTo', step: 'technical' }], withValue).step).toBe('technical')
   })
 
   it('accepts a profile that only has desired selections', () => {
     const s = run([
       desired,
-      { type: 'toggleValue', name: 'Fairness' },
+      ...five,
       { type: 'toggleSkill', section: 'technical', name: 'Python' },
       { type: 'toggleSkill', section: 'engineering', name: 'Continuous integration' },
       { type: 'toggleSkill', section: 'interpersonal', name: 'Teamwork and collaboration' },
@@ -212,7 +222,7 @@ describe('step gating', () => {
       ],
       complete,
     )
-    expect(s.selectedValues).toEqual(['Fairness'])
+    expect(s.selectedValues).toEqual(FIVE_VALUES)
     expect(s.selectedSkills.technical).toEqual(exp(['Python']))
   })
 })
@@ -225,19 +235,20 @@ describe('selection limit', () => {
   const pickSkills = (n: number): Action[] =>
     technical.slice(0, n).map((name) => ({ type: 'toggleSkill', section: 'technical', name }))
 
-  it('uses a limit of 5 values', () => {
-    expect(MAX_SELECTION).toBe(5)
+  it('uses a range of 5 to 10 values', () => {
+    expect(MIN_VALUES).toBe(5)
+    expect(MAX_VALUES).toBe(10)
   })
 
   it('stops selecting values at the limit', () => {
-    const s = run([...pick(MAX_SELECTION, values), { type: 'toggleValue', name: values[MAX_SELECTION] }])
-    expect(s.selectedValues).toHaveLength(MAX_SELECTION)
-    expect(s.selectedValues).not.toContain(values[MAX_SELECTION])
+    const s = run([...pick(MAX_VALUES, values), { type: 'toggleValue', name: values[MAX_VALUES] }])
+    expect(s.selectedValues).toHaveLength(MAX_VALUES)
+    expect(s.selectedValues).not.toContain(values[MAX_VALUES])
   })
 
   it('applies the one limit whatever the mode', () => {
-    const s = run([...pick(MAX_SELECTION, values), desired, { type: 'toggleValue', name: values[MAX_SELECTION] }])
-    expect(s.selectedValues).toHaveLength(MAX_SELECTION)
+    const s = run([...pick(MAX_VALUES, values), desired, { type: 'toggleValue', name: values[MAX_VALUES] }])
+    expect(s.selectedValues).toHaveLength(MAX_VALUES)
     expect(isFull(s, 'values')).toBe(true)
     expect(isFull(run([{ type: 'toggleValue', name: values[0] }], s), 'values')).toBe(false)
   })
@@ -248,7 +259,7 @@ describe('selection limit', () => {
   })
 
   it('reports limits per page: values only', () => {
-    expect(limitFor('values')).toBe(MAX_SELECTION)
+    expect(limitFor('values')).toBe(MAX_VALUES)
     for (const page of ['technical', 'engineering', 'interpersonal', 'ai'] as const) {
       expect(limitFor(page)).toBeUndefined()
     }
@@ -257,22 +268,22 @@ describe('selection limit', () => {
 
   it('counts custom entries and rejects one past the limit', () => {
     const s = run([
-      ...pick(MAX_SELECTION - 1, values),
+      ...pick(MAX_VALUES - 1, values),
       { type: 'addCustomValue', text: 'Grit' },
       { type: 'addCustomValue', text: 'Mettle' },
     ])
-    expect(s.selectedValues).toHaveLength(MAX_SELECTION)
+    expect(s.selectedValues).toHaveLength(MAX_VALUES)
     expect(s.selectedValues).toContain('Grit')
     expect(s.customValues).toEqual(['Grit'])
   })
 
   it('does not select an existing match for a duplicate custom entry when full', () => {
     const s = run([
-      ...pick(MAX_SELECTION, values),
-      { type: 'addCustomValue', text: values[MAX_SELECTION].toUpperCase() },
+      ...pick(MAX_VALUES, values),
+      { type: 'addCustomValue', text: values[MAX_VALUES].toUpperCase() },
     ])
-    expect(s.selectedValues).toHaveLength(MAX_SELECTION)
-    expect(s.selectedValues).not.toContain(values[MAX_SELECTION])
+    expect(s.selectedValues).toHaveLength(MAX_VALUES)
+    expect(s.selectedValues).not.toContain(values[MAX_VALUES])
   })
 
   it('accepts custom skills past ten', () => {
@@ -283,17 +294,17 @@ describe('selection limit', () => {
 
   it('lets a word be swapped after deselecting', () => {
     const s = run([
-      ...pick(MAX_SELECTION, values),
+      ...pick(MAX_VALUES, values),
       { type: 'toggleValue', name: values[0] },
-      { type: 'toggleValue', name: values[MAX_SELECTION] },
+      { type: 'toggleValue', name: values[MAX_VALUES] },
     ])
-    expect(s.selectedValues).toHaveLength(MAX_SELECTION)
-    expect(s.selectedValues).toContain(values[MAX_SELECTION])
+    expect(s.selectedValues).toHaveLength(MAX_VALUES)
+    expect(s.selectedValues).toContain(values[MAX_VALUES])
     expect(s.selectedValues).not.toContain(values[0])
   })
 
   describe('over-limit pages (for example a loaded profile)', () => {
-    const over: ProfileState = { ...initialState, selectedValues: values.slice(0, MAX_SELECTION + 2) }
+    const over: ProfileState = { ...initialState, selectedValues: values.slice(0, MAX_VALUES + 2) }
 
     it('reports how many to remove', () => {
       expect(overBy(over, 'values', 'experience')).toBe(2)
@@ -301,15 +312,15 @@ describe('selection limit', () => {
     })
 
     it('allows deselecting but not selecting', () => {
-      expect(reducer(over, { type: 'toggleValue', name: values[MAX_SELECTION + 2] })).toBe(over)
+      expect(reducer(over, { type: 'toggleValue', name: values[MAX_VALUES + 2] })).toBe(over)
       expect(reducer(over, { type: 'toggleValue', name: values[0] }).selectedValues).toHaveLength(
-        MAX_SELECTION + 1,
+        MAX_VALUES + 1,
       )
     })
 
     it('blocks moving forward, naming the page, count and limit, but not moving back', () => {
       expect(stepBlockedReason(over, 'technical')).toBe(
-        'You have too many selected. Deselect 2 words on the values page to continue (limit 5).',
+        'You have too many selected. Deselect 2 words on the values page to continue (limit 10).',
       )
       expect(reducer(over, { type: 'goTo', step: 'technical' }).step).toBe('values')
       const onTechnical = { ...over, step: 'technical' as const }
@@ -319,7 +330,7 @@ describe('selection limit', () => {
     it('does not block later steps for a skill page holding more than ten', () => {
       const s: ProfileState = {
         ...initialState,
-        selectedValues: ['Fairness'],
+        selectedValues: FIVE_VALUES,
         selectedSkills: {
           technical: exp(technical.slice(0, 40)),
           engineering: exp(['Continuous integration']),
@@ -348,7 +359,7 @@ describe('selection limit', () => {
 describe('loadProfile', () => {
   const values = COMMON_VALUES.map((v) => v.name)
   const complete: LoadedProfile = {
-    selectedValues: ['Fairness'],
+    selectedValues: FIVE_VALUES,
     customValues: [],
     selectedSkills: {
       technical: exp(['Python']),
@@ -364,17 +375,17 @@ describe('loadProfile', () => {
     const s = reducer(before, { type: 'loadProfile', profile: complete })
     expect(s.step).toBe('card')
     expect(s.mode).toBe('experience')
-    expect(s.selectedValues).toEqual(['Fairness'])
+    expect(s.selectedValues).toEqual(FIVE_VALUES)
     expect(s.selectedSkills.technical).toEqual(exp(['Python']))
     expect(s.selectedSkills.engineering).toEqual(des(['Continuous integration']))
   })
 
   it('opens the values page for an over-limit values list, keeping every value', () => {
-    const profile = { ...complete, selectedValues: values.slice(0, MAX_SELECTION + 2) }
+    const profile = { ...complete, selectedValues: values.slice(0, MAX_VALUES + 2) }
     expect(loadLanding(profile).notice).toMatch(/Deselect 2 words on the values page/)
     const s = reducer(initialState, { type: 'loadProfile', profile })
     expect(s.step).toBe('values')
-    expect(s.selectedValues).toHaveLength(MAX_SELECTION + 2)
+    expect(s.selectedValues).toHaveLength(MAX_VALUES + 2)
   })
 
   it('loads many skills without asking to deselect, but still gates over-limit values', () => {
@@ -383,7 +394,7 @@ describe('loadProfile', () => {
       selectedSkills: { ...complete.selectedSkills, engineering: exp(catalogSkillNames('engineering').slice(0, 30)) },
     }
     expect(loadLanding(many)).toEqual({ step: 'card', notice: null })
-    const both = { ...many, selectedValues: values.slice(0, MAX_SELECTION + 2) }
+    const both = { ...many, selectedValues: values.slice(0, MAX_VALUES + 2) }
     const landing = loadLanding(both)
     expect(landing.step).toBe('values')
     expect(landing.notice).toMatch(/Deselect 2 words/)

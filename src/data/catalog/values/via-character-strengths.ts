@@ -42,12 +42,5 @@ export const viaCharacterStrengths: SourceContribution = {
     'Society and the world': {
       Fairness: 'Treating everyone equally and giving each person a fair chance under the same rules.',
     },
-    'Wellbeing and a good life': {
-      Love: 'Valuing close, warm relationships in which care is given and received.',
-      Zest: 'Approaching life with energy, enthusiasm and a sense of vitality.',
-      Spirituality: 'Having a sense of purpose, meaning or connection to something larger than yourself.',
-      Hope: 'Being optimistic about the future and working to bring about the outcomes you want.',
-      Gratitude: 'Being thankful for good things and expressing that thanks.',
-    },
   },
 }

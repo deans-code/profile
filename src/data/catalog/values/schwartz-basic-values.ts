@@ -35,9 +35,5 @@ export const schwartzBasicValues: SourceContribution = {
       Tradition: 'Respecting and keeping the customs and ideas your culture or religion provides.',
       Security: 'Valuing safety, harmony and stability in society, in relationships and in yourself.',
     },
-    'Wellbeing and a good life': {
-      Hedonism: 'Seeking pleasure and enjoyment for yourself.',
-      Stimulation: 'Seeking excitement, novelty and challenge in life.',
-    },
   },
 }

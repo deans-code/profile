@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { pickValues } from './test-values'
 import App from './App'
 import { ASSISTANT_HELP, chatGptUrl } from './data/assistant'
 
@@ -10,7 +11,7 @@ const next = () =>
 const link = () => screen.queryByRole('link', { name: /open chatgpt/i })
 
 async function goTo(user: ReturnType<typeof userEvent.setup>, step: 'technical' | 'engineering' | 'interpersonal') {
-  await user.click(word('Fairness'))
+  await pickValues(user)
   const picks = ['Python', 'Continuous integration', 'Teamwork and collaboration']
   const order = ['technical', 'engineering', 'interpersonal']
   await user.click(next())
@@ -77,7 +78,7 @@ describe('ChatGPT link', () => {
   it('does not include anything the user has selected or typed', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(word('Fairness'))
+    await pickValues(user)
     await user.type(screen.getByLabelText('Add your own value'), 'MyPrivateValue')
     await user.click(screen.getByRole('button', { name: 'Add' }))
     const href = link()!.getAttribute('href')!

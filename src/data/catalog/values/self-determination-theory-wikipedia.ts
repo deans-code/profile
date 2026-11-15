@@ -33,10 +33,5 @@ export const selfDeterminationValues: SourceContribution = {
     'What I expect from others': {
       'Freedom to decide': 'Expecting room to make choices about your own work.',
     },
-    'Wellbeing and a good life': {
-      'Self-fulfilment': '',
-      'Meaning and purpose': 'Feeling that your life and work matter and point somewhere.',
-      'Life satisfaction': 'Being content with life as a whole.',
-    },
   },
 }

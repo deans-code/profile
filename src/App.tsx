@@ -69,7 +69,7 @@ export default function App() {
             <p className="intro">Build a personal profile of what you value and what you can do.</p>
             <ol className="how-it-works" aria-label="How it works">
               <li>
-                <strong>Choose up to five values</strong> that matter most to you.
+                <strong>Choose 5 to 10 values</strong> that matter most to you.
               </li>
               <li>
                 <strong>Pick skills on four pages</strong>: technical development, engineering, interpersonal and AI

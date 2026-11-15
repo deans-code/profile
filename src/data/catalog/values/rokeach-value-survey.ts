@@ -54,17 +54,5 @@ export const rokeachValueSurvey: SourceContribution = {
       'A world of beauty': 'Valuing the beauty of nature and the arts.',
       'A world at peace': 'Living in a world without war and conflict.',
     },
-    'Wellbeing and a good life': {
-      Love: '',
-      'True friendship': 'Close, supportive companionship with people you trust.',
-      'Mature love': 'Deep emotional and spiritual intimacy with another person.',
-      Happiness: 'Living a contented, joyful life.',
-      'Inner harmony': 'Being at peace with yourself, free of inner conflict.',
-      Pleasure: 'A life of enjoyment and leisure.',
-      'Family security': 'Taking care of the people closest to you.',
-      'A comfortable life': 'A prosperous, financially secure life.',
-      'An exciting life': 'A stimulating, active life full of new experiences.',
-      Salvation: 'Spiritual redemption and eternal life.',
-    },
   },
 }

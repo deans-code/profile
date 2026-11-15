@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import { COMMON_VALUES } from './data/values'
-import { MAX_SELECTION as LIMIT } from './state/profile'
+import { MAX_VALUES as LIMIT } from './state/profile'
 
 const word = (name: string) => screen.getByRole('button', { name })
 // The AI engineering catalog has a "Continue" word, so look only in the footer.
@@ -15,13 +15,25 @@ async function selectValues(user: ReturnType<typeof userEvent.setup>, n: number)
 }
 
 describe('selection limit UI', () => {
-  it('shows "n of 5 selected"', async () => {
+  it('shows "n of 10 selected"', async () => {
     const user = userEvent.setup()
     render(<App />)
     expect(screen.getByText(`0 of ${LIMIT} selected`)).toBeInTheDocument()
     await selectValues(user, 3)
     expect(screen.getByText(new RegExp(`^3 of ${LIMIT} selected`))).toBeInTheDocument()
-    expect(LIMIT).toBe(5)
+    expect(LIMIT).toBe(10)
+  })
+
+  it('asks for at least 5 values and blocks Continue until there are 5', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await selectValues(user, 3)
+    expect(screen.getByText(/^3 of 10 selected/)).toHaveTextContent(/choose at least 2 more words/i)
+    expect(next()).toBeDisabled()
+    await user.click(word(values[3]))
+    expect(next()).toBeDisabled()
+    await user.click(word(values[4]))
+    expect(next()).toBeEnabled()
   })
 
   it('has a single selection on the values page, with no experience options', () => {
@@ -29,7 +41,7 @@ describe('selection limit UI', () => {
     expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument()
     expect(screen.queryByRole('radio')).not.toBeInTheDocument()
     const help = screen.getByRole('complementary', { name: 'How to use this step' })
-    expect(help).toHaveTextContent('Select up to 5 values.')
+    expect(help).toHaveTextContent('Select 5 to 10 values.')
     expect(help).not.toHaveTextContent(/previous|desired|other option/i)
   })
 

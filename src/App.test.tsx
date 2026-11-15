@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { FIVE_VALUES, pickValues } from './test-values'
 import App from './App'
 
 const chip = (name: string) => screen.getByRole('button', { name })
@@ -22,7 +23,7 @@ describe('values step', () => {
     render(<App />)
     await user.click(chip('Fairness'))
     expect(chip('Fairness')).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText('1 of 5 selected')).toBeInTheDocument()
+    expect(screen.getByText('1 of 10 selected')).toBeInTheDocument()
     await user.click(chip('Fairness'))
     expect(chip('Fairness')).toHaveAttribute('aria-pressed', 'false')
 
@@ -53,12 +54,15 @@ describe('values step', () => {
     expect(screen.queryByRole('button', { name: 'Grit' })).not.toBeInTheDocument()
   })
 
-  it('blocks continue until a value is selected, with an explanation', async () => {
+  it('blocks continue until 5 values are selected, with an explanation', async () => {
     const user = userEvent.setup()
     render(<App />)
     expect(next()).toBeDisabled()
-    expect(screen.getByRole('status')).toHaveTextContent(/at least one value/i)
+    expect(screen.getByRole('status')).toHaveTextContent(/at least 5 more values/i)
     await user.click(chip('Fairness'))
+    expect(screen.getByRole('status')).toHaveTextContent(/at least 4 more values/i)
+    expect(next()).toBeDisabled()
+    await pickValues(user, ['Honesty', 'Integrity', 'Curiosity', 'Accountability'])
     expect(next()).toBeEnabled()
   })
 })
@@ -67,7 +71,7 @@ describe('skill steps', () => {
   async function toTechnical() {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Fairness'))
+    await pickValues(user)
     await user.click(next())
     return user
   }
@@ -119,7 +123,7 @@ describe('experience options', () => {
     const user = userEvent.setup()
     render(<App />)
     expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument()
-    await user.click(chip('Fairness'))
+    await pickValues(user)
     for (let page = 0; page < 4; page++) {
       await user.click(next())
       expect(screen.getByRole('radiogroup', { name: 'Experience option' })).toBeInTheDocument()
@@ -131,7 +135,7 @@ describe('experience options', () => {
   it('keeps previous and desired selections apart, with a count on each option', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Fairness'))
+    await pickValues(user)
     await user.click(next())
     await user.click(chip('Python'))
     await user.click(chip('Go'))
@@ -154,7 +158,7 @@ describe('experience options', () => {
   it('switches with the arrow keys', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Fairness'))
+    await pickValues(user)
     await user.click(next())
     radio(/^Previous experience/).focus()
     await user.keyboard('{ArrowRight}')
@@ -167,7 +171,7 @@ describe('experience options', () => {
   it('opens every page on previous experience, keeping the desired words and count', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Fairness'))
+    await pickValues(user)
     await user.click(next())
     await user.click(radio(/^Desired experience/))
     await user.click(chip('Python'))
@@ -199,7 +203,7 @@ describe('experience options', () => {
   it('adds a custom entry to the active option only', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Fairness'))
+    await pickValues(user)
     await user.click(next())
     await user.click(radio(/^Desired experience/))
     await user.type(screen.getByLabelText(/add your own technical development skill/i), 'Zig')
@@ -215,7 +219,7 @@ describe('profile card and downloads', () => {
   async function toCard() {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Fairness'))
+    await pickValues(user)
     await user.click(next())
     await user.click(chip('Python'))
     await user.click(radio(/^Desired experience/))
@@ -303,7 +307,7 @@ describe('profile card and downloads', () => {
 
     expect(names).toEqual(['profile.json', 'profile.md'])
     const json = JSON.parse(await created[0].text())
-    expect(json.values).toEqual(['Fairness'])
+    expect(json.values).toEqual([...FIVE_VALUES].sort())
     expect(json.skills.technical).toEqual({ experience: ['Python'], desired: ['Rust'] })
     expect(json.skills.ai).toEqual({ experience: ['Claude Code'], desired: ['OpenRouter'] })
     const md = await created[1].text()
@@ -324,7 +328,7 @@ describe('instructions', () => {
     expect(lines[0]).toHaveTextContent(
       'Click a word to select or deselect it. Right-click a word to read its description.',
     )
-    expect(lines[1]).toHaveTextContent('Select up to 5 values.')
+    expect(lines[1]).toHaveTextContent('Select 5 to 10 values.')
     expect(lines[2]).toHaveClass('help-alt')
     expect(lines[2]).toHaveTextContent(
       'Mouse: right-click a word. Keyboard: focus a word and press ? or Shift+F10. Touch: press and hold.',
@@ -335,8 +339,8 @@ describe('instructions', () => {
   it('states the values limit on the values page only; skill pages say as many as apply', async () => {
     const user = userEvent.setup()
     render(<App />)
-    expect(help()).toHaveTextContent(/up to 5 values/i)
-    await user.click(chip('Fairness'))
+    expect(help()).toHaveTextContent(/5 to 10 values/i)
+    await pickValues(user)
     for (const [section, word] of [
       ['technical', 'Python'],
       ['engineering', 'Continuous integration'],
@@ -377,7 +381,7 @@ describe('uniform words and section colours', () => {
   it('renders skills with the same class as values', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(chip('Fairness'))
+    await pickValues(user)
     await user.click(next())
     const skills = screen.getAllByRole('button').filter((b) => b.hasAttribute('aria-pressed'))
     expect(new Set(skills.map((b) => b.className))).toEqual(new Set(['chip']))
@@ -397,7 +401,7 @@ describe('uniform words and section colours', () => {
       'ai',
       'card',
     ])
-    await user.click(chip('Fairness'))
+    await pickValues(user)
     await user.click(next())
     expect(root()).toHaveAttribute('data-section', 'technical')
   })
@@ -409,7 +413,7 @@ describe('end to end with definitions', () => {
     render(<App />)
     await user.pointer({ keys: '[MouseRight]', target: chip('Fairness') })
     await user.click(screen.getByRole('button', { name: 'Close' }))
-    await user.click(chip('Fairness'))
+    await pickValues(user)
     await user.click(next())
     await user.pointer({ keys: '[MouseRight]', target: chip('Python') })
     await user.click(screen.getByRole('button', { name: 'Close' }))
@@ -446,7 +450,7 @@ describe('end to end with many skills', () => {
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
     render(<App />)
 
-    await user.click(chip('Fairness'))
+    await pickValues(user)
     await user.click(next())
 
     const pickSome = async (count: number) => {
@@ -480,6 +484,6 @@ describe('end to end with many skills', () => {
     expect(json.skills.interpersonal.experience).toHaveLength(6)
     expect(json.skills.ai.experience).toHaveLength(10)
     const markdown = await blobs[1].text()
-    expect(markdown.match(/^- /gm)).toHaveLength(1 + 14 + 12 + 6 + 10)
+    expect(markdown.match(/^- /gm)).toHaveLength(5 + 14 + 12 + 6 + 10)
   })
 })

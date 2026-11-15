@@ -85,10 +85,5 @@ export const outlineOfSelfValues: SourceContribution = {
       'Accountability from others': 'Expecting others to own their results as you own yours.',
       'Good faith': 'Expecting others to assume the best of you and act honestly in return.',
     },
-    'Wellbeing and a good life': {
-      Gratitude: '',
-      Optimism: 'Expecting good outcomes and acting on that expectation.',
-      Mindfulness: 'Being present and aware of what is happening now.',
-    },
   },
 }

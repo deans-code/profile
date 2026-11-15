@@ -30,6 +30,8 @@ interface Props {
   onModeChange?: (mode: Mode) => void
   /** Maximum selectable words on this page; omit for no limit. */
   limit?: number
+  /** Minimum words needed to continue; omit for no minimum. */
+  min?: number
   /** What the filter and the Add control are called, for example "technical development skills". */
   noun: string
   filterLabel: string
@@ -57,6 +59,7 @@ export default function WordPicker({
   counts,
   onModeChange,
   limit,
+  min,
   noun,
   filterLabel,
   addLabel,
@@ -93,7 +96,7 @@ export default function WordPicker({
         </p>
       )}
       {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
-      <SelectionHelp limit={limit} unit={kind === 'values' ? 'values' : 'skills'} mode={mode} />
+      <SelectionHelp limit={limit} min={min} unit={kind === 'values' ? 'values' : 'skills'} mode={mode} />
 
       <AddEntry label={addLabel} placeholder={addPlaceholder} full={full} onAdd={onAddCustom} />
 
@@ -157,7 +160,7 @@ export default function WordPicker({
         })}
       </div>
 
-      <SelectionStatus count={selected.length} limit={limit} />
+      <SelectionStatus count={selected.length} limit={limit} min={min} />
     </section>
   )
 }

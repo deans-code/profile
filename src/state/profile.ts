@@ -15,8 +15,11 @@ export const MODE_LABELS: Record<Mode, string> = {
   desired: 'Desired experience',
 }
 
+/** Fewest values needed to continue. */
+export const MIN_VALUES = 5
+
 /** Most values that can be selected. */
-export const MAX_SELECTION = 5
+export const MAX_VALUES = 10
 
 /** A page with selectable words. */
 export type Page = 'values' | Section
@@ -24,7 +27,7 @@ export type Page = 'values' | Section
 export const PAGES: Page[] = ['values', ...SECTIONS]
 
 /** Per-page selection limits (per mode on skill pages). Pages that are not listed have no limit. */
-export const LIMITS: Partial<Record<Page, number>> = { values: MAX_SELECTION }
+export const LIMITS: Partial<Record<Page, number>> = { values: MAX_VALUES }
 
 /** The most words selectable on a page in one mode, or undefined when the page has no limit. */
 export const limitFor = (page: Page): number | undefined => LIMITS[page]
@@ -105,9 +108,14 @@ export function overBy(state: ProfileState, page: Page, mode: Mode): number {
   return limit === undefined ? 0 : Math.max(0, selectionCount(state, page, mode) - limit)
 }
 
-/** A page is complete when at least one word is selected in either mode. */
+/** How many more values must be selected to reach the minimum. */
+export function underBy(state: ProfileState): number {
+  return Math.max(0, MIN_VALUES - state.selectedValues.length)
+}
+
+/** The values page is complete with 5 to 10 selected; a skill page when at least one word is selected in either mode. */
 export function pageComplete(state: ProfileState, page: Page): boolean {
-  if (page === 'values') return state.selectedValues.length > 0
+  if (page === 'values') return state.selectedValues.length >= MIN_VALUES && state.selectedValues.length <= MAX_VALUES
   return MODES.some((m) => selectionCount(state, page, m) > 0)
 }
 
@@ -138,7 +146,8 @@ export function stepBlockedReason(state: ProfileState, step: Step): string | nul
     const where = over.page === 'values' ? '' : ` under ${MODE_LABELS[over.mode]}`
     return `You have too many selected. Deselect ${over.over} ${noun}${where} on the ${pageLabel(over.page)} page to continue (limit ${limitFor(over.page)}).`
   }
-  if (!pageComplete(state, 'values')) return 'Choose at least one value to unlock the next step.'
+  const under = underBy(state)
+  if (under > 0) return `Choose at least ${under} more ${under === 1 ? 'value' : 'values'} (${MIN_VALUES} to ${MAX_VALUES}) to unlock the next step.`
   if (step === 'card') {
     const missing = missingSections(state)
     if (missing.length > 0) {

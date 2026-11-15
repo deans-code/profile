@@ -43,10 +43,5 @@ export const valueEthicsValues: SourceContribution = {
       'Recognition for my work': 'Expecting credit when your contribution makes a difference.',
       'Dignity and respect': '',
     },
-    'Wellbeing and a good life': {
-      'Self-fulfilment': 'Feeling that your life is using and developing what you are capable of.',
-      'Fun and enjoyment': 'Enjoying what you do and making room for play.',
-      'Warm relationships': 'Having close, caring relationships with people who matter to you.',
-    },
   },
 }

@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { pickValues } from './test-values'
 import App from './App'
 import { CATALOGS, SECTIONS, catalogSkillNames } from './data/skills'
 import { COMMON_VALUES } from './data/values'
@@ -16,7 +17,7 @@ describe('page guidance', () => {
     const nav = screen.getByRole('navigation', { name: 'Steps' })
     expect(intro.compareDocumentPosition(nav) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
 
-    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    await pickValues(user)
     await user.click(next())
     expect(screen.getByText(/Build a personal profile of what you value/)).toBeInTheDocument()
   })
@@ -26,7 +27,7 @@ describe('page guidance', () => {
     render(<App />)
     expect(screen.getByText(/Step 1 of 6/)).toHaveTextContent('Next: Technical development')
 
-    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    await pickValues(user)
     await user.click(next())
     expect(screen.getByText(/Step 2 of 6/)).toHaveTextContent('Technical development')
     const nav = within(screen.getByRole('navigation', { name: 'Steps' }))
@@ -39,7 +40,7 @@ describe('page guidance', () => {
     render(<App />)
     expect(screen.queryByText(/built from two kinds of experience/)).not.toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    await pickValues(user)
     await user.click(next())
     const intro = screen.getByText(/built from two kinds of experience/)
     const options = screen.getByRole('radiogroup', { name: 'Experience option' })
@@ -85,8 +86,8 @@ describe('clearer navigation and messages', () => {
     render(<App />)
     const footer = within(document.querySelector<HTMLElement>('footer.nav')!)
     expect(footer.getByRole('button', { name: 'Continue to Technical development' })).toBeDisabled()
-    expect(footer.getByRole('status')).toHaveTextContent('Before you continue: Choose at least one value')
-    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    expect(footer.getByRole('status')).toHaveTextContent('Before you continue: Choose at least 5 more values')
+    await pickValues(user)
     await user.click(next())
     expect(footer.getByRole('button', { name: 'Back to Values' })).toBeEnabled()
     expect(footer.getByRole('button', { name: 'Continue to Engineering' })).toBeEnabled()
@@ -96,8 +97,8 @@ describe('clearer navigation and messages', () => {
     const user = userEvent.setup()
     render(<App />)
     expect(screen.getByRole('progressbar', { name: 'Steps complete' })).toHaveAttribute('value', '0')
-    expect(screen.getByText(/Pick up to five values/)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Respect' }))
+    expect(screen.getByText(/Pick 5 to 10 values/)).toBeInTheDocument()
+    await pickValues(user)
     await user.click(next())
     const nav = within(screen.getByRole('navigation', { name: 'Steps' }))
     const values = nav.getByRole('button', { name: /^Values/ })

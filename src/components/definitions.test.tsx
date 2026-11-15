@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
+import { pickValues } from '../test-values'
 import userEvent from '@testing-library/user-event'
 import App from './../App'
 import { CLICK_SUPPRESS_MS, LONG_PRESS_MS } from './TermButton'
@@ -156,7 +157,7 @@ describe('definition panel', () => {
   it('works for skills in every section', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(word('Fairness'))
+    await pickValues(user)
     await user.click(screen.getByRole('button', { name: /^Continue/ }))
     await user.pointer({ keys: '[MouseRight]', target: word('Python') })
     expect(panel()).toHaveTextContent(/readable general-purpose/i)
@@ -278,7 +279,7 @@ describe('panel stays attached and closes when its word goes', () => {
   it('closes when the section changes by keyboard', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(word('Fairness'))
+    await pickValues(user, ['Fairness', 'Integrity', 'Curiosity', 'Accountability', 'Respect'])
     word('Honesty').focus()
     await user.keyboard('?')
     expect(panel()).toBeInTheDocument()
@@ -291,7 +292,7 @@ describe('panel stays attached and closes when its word goes', () => {
   it('closes when a filter removes the word from view', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(word('Fairness'))
+    await pickValues(user)
     await user.click(screen.getByRole('button', { name: /^Continue/ }))
     word('Python').focus()
     await user.keyboard('?')

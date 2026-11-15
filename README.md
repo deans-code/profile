@@ -4,7 +4,7 @@
 
 A tool to help capture an individual's profile: what they value, and what hands-on, engineering, interpersonal and AI engineering experience they have and want.
 
-Users pick up to 5 values from grouped, common choices, build skill lists from curated catalogs, record both previous and desired experience, and finish with a profile card that can be downloaded as JSON or Markdown.
+Users pick 5 to 10 values from grouped, common choices, build skill lists from curated catalogs, record both previous and desired experience, and finish with a profile card that can be downloaded as JSON or Markdown.
 
 The software runs entirely in the browser. No data leaves the user's device, unless the user chooses to follow the optional ChatGPT link (see below), which sends only a generic prompt.
 
@@ -18,7 +18,7 @@ The software runs entirely in the browser. No data leaves the user's device, unl
 - [x] Present a profile card with downloads as JSON and Markdown.
 - [x] Provide a description for every built-in value and skill, opened by right-click (with keyboard and touch alternatives).
 - [x] Use a wide, uniform layout with a distinct colour per section and animated changes between sections.
-- [x] Limit values to 5 selections; skills are unlimited.
+- [x] Select 5 to 10 values; skills are unlimited.
 - [x] Choose values once (no previous or desired option for values), and open every skill page on previous experience.
 - [x] Offer a link to ChatGPT, with a ready-made prompt, on the values and interpersonal pages to help discover more.
 - [x] Load a previously downloaded JSON profile and continue editing it.
@@ -95,7 +95,7 @@ npm run preview
 
 - Over 100 common values in nine categories (for example Character and integrity, Learning and growth, Society and the world), with a filter and custom values, all shown at the same size in cards that use the full width of the screen.
 - Technical development, engineering and interpersonal skill catalogs, grouped by category into cards, with filtering and custom skills. The technical catalog is guided by published developer surveys (see [Sources](#sources)), which are also listed at the bottom of every page.
-- A limit of 5 selected values, with a running count. Skills have no limit.
+- A range of 5 to 10 selected values, with a running count. Skills have no limit.
 - A short description for every built-in value and skill (custom entries have none).
 - Loading of a saved JSON profile, validated before it replaces the current profile.
 - A distinct colour for each section, with accessible contrast in light and dark themes.
@@ -127,7 +127,7 @@ Considered and not used: the Barrett Values Centre (its list is part of a paid a
 
 The wikipedia sources are CC BY-SA 4.0. Their text is not copied; descriptions are written for this app. Parts of some Wikipedia pages came through the fetch tool's summary rather than verbatim, so each source file records that.
 
-**Groups.** Values are grouped by where they apply, not by source: Doing good work; Building and delivering with computers; Working in a team; Working with others; Working alone and remotely; Adopting new ways of working; Learning and growth; Business and organisation; Personal character; Society and the world; What I expect from others; and Wellbeing and a good life. A value that fits several contexts appears once, in the context it fits best, and lists every source that names it. Saved profiles still load: a value that is no longer offered by that name becomes a custom value.
+**Groups.** Values are grouped by where they apply, not by source: Doing good work; Building and delivering with computers; Working in a team; Working with others; Working alone and remotely; Adopting new ways of working; Learning and growth; Business and organisation; Personal character; Society and the world; and What I expect from others. A value that fits several contexts appears once, in the context it fits best, and lists every source that names it. Saved profiles still load: a value that is no longer offered by that name becomes a custom value.
 
 Source files live in `src/data/catalog/values/`.
 
@@ -299,7 +299,7 @@ Because the catalogs were rebuilt, many options from earlier versions are no lon
 
 ### Selection limit
 
-The values page allows up to 5 selected values, including your own. At the limit the remaining values are dimmed and a message explains how to free a slot: deselect a value, then choose another. Descriptions still open for dimmed values.
+The values page needs between 5 and 10 selected values, including your own. With fewer than 5 the page says how many more to choose and you cannot continue. At 10 the remaining values are dimmed and a message explains how to free a slot: deselect a value, then choose another. Descriptions still open for dimmed values.
 
 The technical development, engineering, interpersonal and AI engineering pages have no limit: select as many skills as apply. The profile card lists every selected skill.
 
@@ -320,7 +320,7 @@ Use **Load saved profile** (top right, on any page) and choose a JSON file previ
 - The file is read in your browser only; nothing is uploaded.
 - If you already have selections you are asked to confirm before they are replaced.
 - Files that are not valid profiles (not JSON, wrong structure, over 1 MB) are rejected with a message, and your current profile is left unchanged.
-- A saved profile with more than 5 values (for example, one edited by hand or saved when the limit was higher) is loaded in full. The values page opens, and you must deselect down to 5 before you can continue. Any number of skills loads normally.
+- A saved profile with more than 10 values (for example, one edited by hand or saved when the limit was lower) is loaded in full. The values page opens, and you must deselect down to 10 before you can continue. A profile with fewer than 5 values also opens the values page, asking for more. A value that is no longer offered, such as one from the removed wellbeing group, loads as a custom value. Any number of skills loads normally.
 - Profiles saved when values had two options load with both lists merged into one.
 - Profiles saved before experience options existed (with scores) still load: their words become previous experience, the scores are ignored and the AI engineering page starts empty.
 - Markdown downloads cannot be loaded.
