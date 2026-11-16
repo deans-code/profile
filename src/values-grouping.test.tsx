@@ -3,6 +3,7 @@ import { pickValues } from './test-values'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import { VALUE_CATEGORIES } from './data/values'
+import { selectableNames } from './data/skills'
 import { MAX_VALUES as LIMIT } from './state/profile'
 
 const word = (name: string) => screen.getByRole('button', { name })
@@ -111,8 +112,9 @@ describe('filter box guidance', () => {
     render(<App />)
     expect(screen.queryByText(/^Showing /)).not.toBeInTheDocument()
     await user.type(screen.getByLabelText('Filter values'), 'res')
-    const total = VALUE_CATEGORIES.reduce((n, c) => n + c.values.length, 0)
-    const shown = VALUE_CATEGORIES.flatMap((c) => c.values).filter((v) => v.toLowerCase().includes('res')).length
+    const names = selectableNames('values')
+    const total = names.length
+    const shown = names.filter((v) => v.toLowerCase().includes('res')).length
     expect(screen.getByText(`Showing ${shown} of ${total} values.`)).toBeInTheDocument()
     await user.clear(screen.getByLabelText('Filter values'))
     expect(screen.queryByText(/^Showing /)).not.toBeInTheDocument()

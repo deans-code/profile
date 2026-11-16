@@ -1,4 +1,4 @@
-import type { Section } from './skills'
+import type { TermKind } from './definitions'
 
 /**
  * A broader term groups several existing options, so a user can say "CI/CD" without naming every tool.
@@ -9,11 +9,37 @@ export interface BroadTerm {
   name: string
   /** One sentence for the app's definition panel. The panel also lists what the term covers. */
   description: string
-  /** Existing options in the same section that the term stands for (at least three). */
+  /** Existing options on the same page that the term stands for (at least three). */
   covers: string[]
 }
 
-export const BROAD_TERMS: Record<Section, BroadTerm[]> = {
+export const BROAD_TERMS: Record<TermKind, BroadTerm[]> = {
+  values: [
+    { name: 'Quality and craftsmanship', description: 'Taking care to do work well, down to the details.', covers: ['Excellence', 'Craftsmanship', 'Workmanship', 'Detail orientation', 'Conscientiousness', 'Diligence'] },
+    { name: 'Drive and achievement', description: 'Setting goals and sticking with them until they are met.', covers: ['Achievement', 'A sense of accomplishment', 'Results-focus', 'Goal orientation', 'Hard work', 'Perseverance', 'Initiative'] },
+    { name: 'Team spirit', description: 'Pulling together and feeling part of a group.', covers: ['Collaboration', 'Teamwork', 'Cooperation', 'Solidarity', 'Sense of belonging', 'Sportsmanship'] },
+    { name: 'Shared ownership of outcomes', description: 'A team owning its results together and organising itself to reach them.', covers: ['Collective responsibility', 'Self-organisation', 'Empowerment', 'Commitment', 'Trust'] },
+    { name: 'Kindness and empathy', description: 'Caring about other people and how they feel.', covers: ['Compassion', 'Empathy', 'Benevolence', 'Forgiveness', 'Hospitality', 'Generativity'] },
+    { name: 'Respectful dealing with people', description: 'Treating others courteously and with an open mind.', covers: ['Respect', 'Politeness', 'Tact', 'Tolerance', 'Listening', 'Broad-mindedness'] },
+    { name: 'Learning and self-development', description: 'Continuing to learn and to develop yourself.', covers: ['Curiosity', 'Self-improvement', 'Personal development', 'Mastery', 'Self-cultivation', 'Amplifying learning'] },
+    { name: 'Clear thinking', description: 'Reasoning carefully and understanding problems well.', covers: ['Critical thinking', 'Problem solving', 'Insight', 'Understanding', 'Common sense', 'Wisdom', 'Intellect'] },
+    { name: 'Honesty and ethics', description: 'Acting truthfully and doing what is right.', covers: ['Honesty', 'Integrity', 'Ethical behaviour', 'Authenticity', 'Humility', 'Self-respect'] },
+    { name: 'Inner strength', description: 'Staying steady and hopeful under pressure.', covers: ['Courage', 'Resilience', 'Optimism', 'Self-confidence', 'Patience', 'Equanimity', 'Emotional control'] },
+    { name: 'Working independently', description: 'Directing and managing your own work without close supervision.', covers: ['Self-direction', 'Independence', 'Self-reliance', 'Self-management', 'Autonomy'] },
+    { name: 'Self-discipline and reliability', description: 'Keeping yourself motivated, on time and dependable.', covers: ['Self-discipline', 'Time management', 'Dependability', 'Attention', 'Intrinsic motivation', 'Taking initiative'] },
+    { name: 'Welcoming change', description: 'Welcoming change and adjusting to it.', covers: ['Openness to change', 'Adaptation', 'Responding to change', 'Embracing change', 'Open-mindedness'] },
+    { name: 'Learning from experience', description: 'Looking back at how things went and getting better.', covers: ['Inspection', 'Regular reflection', 'Continuous improvement', 'Transparency'] },
+    { name: 'Fairness at work', description: 'Rewarding people fairly and keeping work and life in balance.', covers: ['Meritocracy', 'Fair pay', 'Work-life balance', 'Professional ethics'] },
+    { name: 'Commitment to the organisation', description: 'Staying loyal and meeting what an organisation expects of you.', covers: ['Loyalty', 'Organisational commitment', 'Duty', 'Obedience', 'Conformity'] },
+    { name: 'Ambition and success', description: 'Aiming to get ahead and be recognised for it.', covers: ['Ambition', 'Power', 'Social recognition', 'Prosperity'] },
+    { name: 'Social justice', description: 'Fair and equal treatment for everyone in society.', covers: ['Equality', 'Justice', 'Fairness', 'Human rights', 'Democracy', 'Welfare of others'] },
+    { name: 'Caring for people and the planet', description: 'Acting for the good of others and of the environment.', covers: ['Altruism', 'Charity', 'Social responsibility', 'Environmental concern', 'Citizenship'] },
+    { name: 'Peace and safety', description: 'Living without violence and with security.', covers: ['A world at peace', 'Nonviolence', 'National security', 'Security'] },
+    { name: 'Engineering excellence', description: 'Building software that works, stays simple and is of high quality.', covers: ['Technical excellence', 'Working software', 'Built-in quality', 'Maintainable work', 'Simplicity', 'Automation'] },
+    { name: 'Lean flow of work', description: 'Delivering steadily and often while cutting waste.', covers: ['Eliminating waste', 'Sustainable pace', 'Early and frequent delivery', 'Optimising the whole', 'Feedback'] },
+    { name: 'Respect from others', description: 'Expecting to be treated well and listened to.', covers: ['Dignity and respect', 'Fair treatment', 'Good faith', 'Being listened to'] },
+    { name: 'Support and feedback from others', description: 'Expecting help, honest feedback and recognition from the people around you.', covers: ['Support to do my job', 'Honest feedback', 'Recognition for my work', 'Trust from others', 'Reliability from others', 'Accountability from others'] },
+  ],
   technical: [
     {
       name: 'CI/CD',
@@ -115,6 +141,51 @@ export const BROAD_TERMS: Record<Section, BroadTerm[]> = {
       description: 'Tools that make writing and organising style sheets faster.',
       covers: ['Tailwind CSS', 'Bootstrap', 'Sass and SCSS', 'Less', 'PostCSS'],
     },
+    { name: 'Metrics and alerting', description: 'Collecting numeric measurements from systems and raising alerts when they go wrong.', covers: ['Prometheus', 'VictoriaMetrics', 'Thanos', 'Cortex', 'Alertmanager', 'Grafana Mimir', 'PromQL'] },
+    { name: 'Infrastructure monitoring', description: 'Watching the health of servers, networks and services over time.', covers: ['Nagios', 'Zabbix', 'Icinga', 'Checkmk'] },
+    { name: 'Log collection and storage', description: 'Gathering, shipping and keeping logs so they can be searched.', covers: ['Fluentd', 'Fluent Bit', 'Grafana Loki', 'VictoriaLogs', 'Syslog', 'Splunk'] },
+    { name: 'Web and application languages', description: 'Languages used to build web, mobile and business applications.', covers: ['JavaScript', 'TypeScript', 'Java', 'C#', 'Kotlin', 'Swift', 'Dart', 'Objective-C'] },
+    { name: 'Data and statistics languages', description: 'Languages used for analysis, statistics and querying data.', covers: ['R', 'MATLAB', 'Julia', 'SAS', 'SQL', 'PL/SQL'] },
+    { name: 'Legacy and enterprise languages', description: 'Long-lived languages still found in business and scientific systems.', covers: ['COBOL', 'ABAP', 'Fortran', 'Visual Basic', 'Delphi and Object Pascal', 'Ada'] },
+    { name: 'Cloud and analytical databases', description: 'Managed or analytical data stores run as a service or for large queries.', covers: ['BigQuery', 'DuckDB', 'Supabase', 'Google Cloud Firestore', 'Google Cloud Bigtable', 'DynamoDB'] },
+    { name: 'In-memory data stores', description: 'Stores that keep data in memory for very fast access and caching.', covers: ['Redis', 'Valkey', 'Memcached', 'Hazelcast', 'Apache Ignite', 'Aerospike'] },
+    { name: 'Distributed SQL databases', description: 'Databases that spread data across many machines while keeping SQL and transactions.', covers: ['CockroachDB', 'YugabyteDB', 'TiDB', 'FoundationDB'] },
+    { name: 'Graph and multi-model databases', description: 'Databases that store connected data or several data shapes in one system.', covers: ['Neo4j', 'ArangoDB', 'Amazon Neptune', 'RavenDB', 'Couchbase'] },
+    { name: 'Wide-column databases', description: 'Databases that store very large tables of rows with flexible columns.', covers: ['Apache Cassandra', 'ScyllaDB', 'Apache HBase', 'Google Cloud Bigtable'] },
+    { name: 'Front-end hosting platforms', description: 'Services that host websites and front-end apps with little set-up.', covers: ['Vercel', 'Netlify', 'Cloudflare', 'Firebase'] },
+    { name: 'Independent cloud providers', description: 'Smaller providers of servers and hosting outside the three largest clouds.', covers: ['Hetzner Cloud', 'OVHcloud', 'DigitalOcean', 'Alibaba Cloud', 'Tencent Cloud'] },
+    { name: 'JetBrains IDEs', description: 'The family of IDEs made by JetBrains, each tuned to a language.', covers: ['IntelliJ IDEA', 'PyCharm', 'WebStorm', 'PhpStorm', 'Rider', 'RustRover', 'GoLand', 'CLion'] },
+    { name: 'Terminal editors', description: 'Editors that run inside a terminal and are driven from the keyboard.', covers: ['Vim', 'Neovim', 'Emacs', 'Nano'] },
+    { name: 'Visual Studio Code family', description: 'Editors built on or alongside Visual Studio Code.', covers: ['Visual Studio Code', 'VSCodium', 'GitHub Codespaces', 'Cursor'] },
+    { name: 'Platform and enterprise IDEs', description: 'IDEs tied to a platform or a large ecosystem.', covers: ['Xcode', 'Android Studio', 'Visual Studio', 'Eclipse', 'Rider'] },
+    { name: 'Full-stack JavaScript frameworks', description: 'Frameworks that cover both server and browser in JavaScript or TypeScript.', covers: ['Next.js', 'Nuxt', 'Remix', 'SvelteKit', 'Astro', 'Meteor', 'Fresh'] },
+    { name: 'Java web frameworks', description: 'Frameworks for building web applications on the Java platform.', covers: ['Spring Boot', 'Spring Framework', 'Play Framework', 'Vaadin', 'Grails', 'Apache Struts', 'Apache Wicket'] },
+    { name: 'PHP web frameworks', description: 'Frameworks and platforms for building web applications in PHP.', covers: ['Laravel', 'CakePHP', 'CodeIgniter', 'WordPress'] },
+    { name: 'Microsoft .NET web technologies', description: 'Ways to build web applications on .NET.', covers: ['ASP.NET Core', 'ASP.NET', 'Blazor'] },
+    { name: 'Lightweight browser libraries', description: 'Small libraries that add behaviour to web pages without a full framework.', covers: ['jQuery', 'htmx', 'Preact', 'AngularJS', 'Ember.js'] },
+    { name: 'JavaScript package managers', description: 'Tools that install and manage JavaScript dependencies.', covers: ['npm', 'pnpm', 'Yarn', 'Bun'] },
+    { name: 'System package managers', description: 'Tools that install software on an operating system.', covers: ['APT', 'Pacman', 'Homebrew', 'Winget', 'Chocolatey', 'Nix'] },
+    { name: 'JavaScript bundlers and task runners', description: 'Tools that bundle, build and automate front-end code.', covers: ['Vite', 'Webpack', 'Grunt', 'Gulp'] },
+    { name: 'JVM build tools', description: 'Tools that build projects on the Java virtual machine.', covers: ['Maven', 'Gradle', 'sbt', 'Apache Ant', 'Leiningen'] },
+    { name: 'Native and polyglot build tools', description: 'Tools that build C, C++ and mixed-language projects.', covers: ['CMake', 'Ninja', 'Make', 'Meson', 'Bazel', 'Buck', 'SCons'] },
+    { name: 'JavaScript testing tools', description: 'Frameworks and libraries for testing JavaScript code.', covers: ['Jest', 'Vitest', 'Mocha', 'Jasmine', 'AVA', 'QUnit', 'Chai', 'Sinon.js'] },
+    { name: 'Java and JVM testing tools', description: 'Frameworks and libraries for testing code on the JVM.', covers: ['JUnit', 'TestNG', 'Mockito', 'AssertJ', 'Hamcrest', 'Spock', 'ScalaTest', 'Testcontainers'] },
+    { name: '.NET testing tools', description: 'Frameworks and libraries for testing .NET code.', covers: ['xUnit.net', 'NUnit', 'MSTest', 'Moq'] },
+    { name: 'C and C++ testing tools', description: 'Frameworks for testing C and C++ code.', covers: ['Catch2', 'GoogleTest', 'Boost.Test'] },
+    { name: 'PHP and Ruby testing tools', description: 'Frameworks for testing PHP and Ruby code.', covers: ['PHPUnit', 'Pest', 'Codeception', 'RSpec', 'Minitest'] },
+    { name: 'Code quality and security scanning', description: 'Tools that check code for defects, style and vulnerabilities.', covers: ['ESLint', 'SonarQube', 'CodeQL', 'Snyk Code', 'JaCoCo', 'Codecov'] },
+    { name: 'Open-source identity servers', description: 'Self-hosted servers for sign-in and single sign-on.', covers: ['Keycloak', 'Apereo CAS', 'Shibboleth', 'WSO2 Identity Server', 'FreeIPA'] },
+    { name: 'Cloud identity services', description: 'Hosted services for sign-in and user management.', covers: ['Auth0', 'Okta', 'OneLogin', 'Microsoft Entra ID'] },
+    { name: 'Enterprise integration platforms', description: 'Platforms for connecting systems and moving messages between them.', covers: ['Apache Camel', 'MuleSoft Anypoint Platform', 'WSO2 Enterprise Integrator', 'IBM MQ', 'Solace PubSub+'] },
+    { name: 'IoT and lightweight messaging brokers', description: 'Brokers for small, frequent messages from devices.', covers: ['Eclipse Mosquitto', 'EMQX', 'HiveMQ', 'NATS', 'ZeroMQ'] },
+    { name: 'Game engines', description: 'Engines that provide the tools to build whole games.', covers: ['Godot', 'GameMaker', 'GDevelop', 'Defold', 'Construct', 'CryEngine', 'O3DE', 'Stride', 'Panda3D'] },
+    { name: '2D game frameworks', description: 'Code libraries for building 2D games.', covers: ['Phaser', 'LibGDX', 'LÖVE', 'MonoGame', 'Cocos2d'] },
+    { name: 'Web 3D libraries', description: 'Libraries for drawing 3D graphics in the browser.', covers: ['Babylon.js', 'Three.js', 'PlayCanvas'] },
+    { name: 'User interface component libraries', description: 'Ready-made styled components for building interfaces.', covers: ['shadcn/ui', 'Ant Design', 'Materialize CSS', 'Bootstrap', 'Tailwind CSS'] },
+    { name: 'CSS-in-JS and scoped styles', description: 'Ways of writing styles alongside components so they stay local.', covers: ['CSS Modules', 'Styled Components', 'Emotion'] },
+    { name: 'Code formatting and style checking', description: 'Tools that keep code and styles consistent.', covers: ['Prettier', 'Biome', 'Stylelint'] },
+    { name: 'CSS processing tools', description: 'Tools that transform, prefix and shrink CSS.', covers: ['PostCSS', 'Autoprefixer', 'cssnano', 'PurgeCSS', 'Lightning CSS'] },
+    { name: 'Centralised version control', description: 'Version control with one central repository that people check out from.', covers: ['Apache Subversion', 'Perforce Helix Core', 'Unity Version Control', 'Azure DevOps'] },
   ],
   engineering: [
     {
@@ -197,6 +268,38 @@ export const BROAD_TERMS: Record<Section, BroadTerm[]> = {
       description: 'Architectures that keep business rules independent of frameworks and infrastructure.',
       covers: ['Hexagonal architecture', 'Clean Architecture', 'Onion Architecture', 'Vertical Slice Architecture'],
     },
+    { name: 'Documenting architecture', description: 'Recording and explaining how a system is designed and why.', covers: ['Architectural decision records', 'C4 model', 'Architectural views', 'Architecture trade-off analysis', 'Architectural fitness functions'] },
+    { name: 'Event-driven design', description: 'Designing systems around events and the state they record.', covers: ['Event-driven architecture', 'Event sourcing', 'CQRS', 'Event storming', 'Aggregates and domain events'] },
+    { name: 'Distributed system structure', description: 'Choosing how a system is split into deployable parts.', covers: ['Monolith and distributed architectures', 'Modular monolith', 'Microservices architecture', 'Service discovery', 'Service mesh', 'Domain versus technical partitioning'] },
+    { name: 'Flow and lean delivery', description: 'Keeping work small and visible so it moves smoothly to done.', covers: ['Working in small batches', 'Work in process limits', 'Visual management', 'Visibility of work in the value stream', 'Kanban', 'Path-to-production mapping'] },
+    { name: 'Safe release practices', description: 'Releasing often and with low risk.', covers: ['Feature flagging', 'Streamlining change approval', 'Release early, release often', 'Continuous delivery', 'Release automation'] },
+    { name: 'Collaborative coding', description: 'Working on code together and sharing ownership of it.', covers: ['Code review', 'Pair programming', 'Mob programming', 'Collective code ownership', 'Open source contribution', 'Readme-driven development'] },
+    { name: 'Cloud cost and efficiency', description: 'Running cloud systems well, cheaply and sustainably.', covers: ['Operational excellence', 'Cost optimisation', 'Performance efficiency', 'Sustainability'] },
+    { name: 'Platform and infrastructure practices', description: 'Ways of building and running the platform software runs on.', covers: ['Immutable infrastructure', 'Flexible infrastructure', 'Multicluster management', 'Hybrid cloud deployment', 'Platform engineering', 'Database change management'] },
+    { name: 'Test design techniques', description: 'Methods for choosing which test cases to write.', covers: ['Boundary value analysis', 'Equivalence partitioning', 'Property-based testing', 'Exploratory testing', 'Mutation testing'] },
+    { name: 'Automated test levels', description: 'Testing at different scales, from a unit to the whole system.', covers: ['Unit testing', 'Integration testing', 'End-to-end testing', 'Test pyramid', 'Contract testing', 'Acceptance testing'] },
+    { name: 'Visual and experience testing', description: 'Checking how software looks and feels to people.', covers: ['Visual testing', 'Snapshot testing', 'Usability testing', 'Accessibility testing', 'A/B testing'] },
+    { name: 'Quality characteristics', description: 'The qualities by which software is judged.', covers: ['Maintainability', 'Reliability', 'Portability', 'Usability', 'Compatibility', 'Functional suitability', 'Testability', 'Modularity', 'Extensibility'] },
+    { name: 'Verification and specification', description: 'Showing that software is correct against what was specified.', covers: ['Verification and validation', 'Formal specification with TLA+ and Quint', 'Static analysis', 'Software quality assurance', 'Cyclomatic complexity'] },
+    { name: 'Managing legacy and debt', description: 'Keeping an ageing codebase healthy.', covers: ['Technical debt management', 'Legacy code modernisation', 'Code smells', 'Refactoring'] },
+    { name: 'Availability and recovery', description: 'Keeping systems running and getting them back after failure.', covers: ['High availability', 'Disaster recovery', 'Load balancing', 'Capacity planning', 'Data integrity'] },
+    { name: 'Safe change and failure testing', description: 'Releasing carefully and testing how systems fail.', covers: ['Canary releases', 'Chaos engineering', 'Reliability testing', 'Release engineering'] },
+    { name: 'Secure software supply chain', description: 'Trusting the code and dependencies you build with.', covers: ['Software supply chain security', 'Secret scanning and push protection', 'Software and data integrity', 'Secure configuration'] },
+    { name: 'Secure by design', description: 'Building security in from the start.', covers: ['Secure design', 'Threat modeling', 'Pervasive security', 'Access control', 'Injection prevention'] },
+    { name: 'Detection and cryptography', description: 'Spotting attacks and protecting data with cryptography.', covers: ['Security logging and alerting', 'Cryptography', 'Post-quantum cryptography', 'Authentication and session security'] },
+    { name: 'Building and maintaining software', description: 'The knowledge areas about making software and keeping it working.', covers: ['Software construction', 'Software maintenance', 'Software engineering operations', 'Software models and methods'] },
+    { name: 'Managing software work', description: 'The knowledge areas about planning, improving and running software work.', covers: ['Software engineering management', 'Software process improvement', 'Software engineering economics', 'Professional practice', 'Requirements engineering'] },
+    { name: 'Keeping code simple', description: 'Principles that favour simple, honest code.', covers: ['KISS', 'YAGNI', 'DRY', 'Fail fast', 'Principle of least astonishment', 'Convention over configuration'] },
+    { name: 'Modular design principles', description: 'Principles for dividing code into parts that fit together.', covers: ['Separation of concerns', 'Loose coupling', 'Law of Demeter', 'Composition over inheritance', 'Dependency injection', 'Unix philosophy', 'Design by contract'] },
+    { name: 'Application structure patterns', description: 'Common ways of organising an application.', covers: ['Model-view-controller', 'Repository pattern', 'Dependency injection', 'Conway’s law'] },
+    { name: 'Ports and adapters', description: 'Connecting the core of an application to the outside world through ports.', covers: ['Primary and secondary ports', 'Adapters for each technology', 'In-memory adapters for testing', 'Hexagonal architecture', 'Interface adapters'] },
+    { name: 'Organising by feature', description: 'Structuring code around features instead of technical layers.', covers: ['Organising by feature, not layer', 'Minimising coupling between slices', 'Vertical Slice Architecture', 'Screaming architecture'] },
+    { name: 'Independent business rules', description: 'Keeping business rules free of frameworks and infrastructure.', covers: ['Dependency rule', 'Use case layer', 'Testable business rules', 'Independent domain model', 'Externalised infrastructure', 'Simple data across boundaries'] },
+    { name: 'Decomposing services', description: 'Deciding how to split a system into services.', covers: ['Decompose by business capability', 'Decompose by subdomain', 'Service per team', 'Database per service', 'Decentralised data management', 'Strangler fig pattern'] },
+    { name: 'API and edge patterns', description: 'Patterns at the boundary between services and their callers.', covers: ['API gateway pattern', 'BFF (backend for frontend)', 'API composition', 'Anti-corruption layer', 'Ambassador pattern', 'Sidecar pattern'] },
+    { name: 'Service coordination styles', description: 'Ways services work together on a larger task.', covers: ['Service choreography', 'Service orchestration', 'Broker topology', 'Mediator topology', 'Saga pattern', 'Compensating transaction'] },
+    { name: 'Service-oriented design', description: 'The principles of service-oriented architecture.', covers: ['Service-oriented architecture', 'Standardised service contracts', 'Service autonomy', 'Service composability'] },
+    { name: 'Microservice culture and platform', description: 'The ways of working and shared platform behind microservices.', covers: ['Products, not projects', 'Decentralised governance', 'Smart endpoints and dumb pipes', 'Microservice chassis', 'Service template', 'Health check API'] },
   ],
   interpersonal: [
     {
@@ -284,6 +387,18 @@ export const BROAD_TERMS: Record<Section, BroadTerm[]> = {
         'Deep specialist expertise (Specialist)',
       ],
     },
+    { name: 'Team development stages', description: 'The stages a team goes through as it forms and matures.', covers: ['Guiding a new team (forming)', 'Working through team conflict (storming)', 'Setting team norms (norming)', 'Sustaining a high-performing team (performing)', 'Closing a team well (adjourning)'] },
+    { name: 'Team autonomy and experimentation', description: 'Letting a team decide how it works and try new things.', covers: ['Team experimentation', 'Empowering teams to choose tools', 'Self-managing teams', 'Working transparently', 'Inspecting and adapting'] },
+    { name: 'Safe and learning culture', description: 'A culture where people can speak up and learn from mistakes.', covers: ['Psychological safety', 'Speaking up', 'Learning from mistakes', 'Fostering a learning culture', 'Building a high-trust, generative culture'] },
+    { name: 'Wellbeing and belonging', description: 'Making people feel supported and included at work.', covers: ['Supporting well-being', 'Equity and inclusion', 'Open-mindedness', 'Building working relationships'] },
+    { name: 'Assertiveness and influence', description: 'Saying what you need and shaping how others respond.', covers: ['Assertive communication', 'Setting and respecting boundaries', 'Influencing others', 'Tailoring a message to its audience'] },
+    { name: 'Decisions and planning', description: 'Working out what to do and how.', covers: ['Problem-solving', 'Decision-making', 'Planning', 'Complex problem solving', 'Systems analysis'] },
+    { name: 'Professional conduct', description: 'Behaving and managing your career as a professional.', covers: ['Professionalism', 'Work ethic', 'Professional attitude', 'Career management', 'Career and self-development'] },
+    { name: 'Constructive disagreement', description: 'Handling disagreement without damaging relationships.', covers: ['Nonviolent communication', 'Using I-statements', 'Perspective-taking', 'De-escalating disagreements', 'Mediation'] },
+    { name: 'Cultural and social awareness', description: 'Reading people and working across cultures.', covers: ['Cultural intelligence', 'Intercultural fluency', 'Social perceptiveness', 'Social skills', 'Empathy'] },
+    { name: 'Action-oriented team roles', description: 'The Belbin roles that drive work forward.', covers: ['Driving the team on (Shaper)', 'Turning ideas into action (Implementer)', 'Finishing carefully (Completer Finisher)'] },
+    { name: 'People-oriented team roles', description: 'The Belbin roles that hold the team together.', covers: ['Chairing and delegating (Co-ordinator)', 'Networking outside the team (Resource Investigator)', 'Smoothing conflict (Teamworker)'] },
+    { name: 'Thinking-oriented team roles', description: 'The Belbin roles that bring ideas and judgement.', covers: ['Generating ideas (Plant)', 'Analysing options impartially (Monitor Evaluator)', 'Deep specialist expertise (Specialist)'] },
   ],
   ai: [
     {
@@ -356,10 +471,28 @@ export const BROAD_TERMS: Record<Section, BroadTerm[]> = {
       description: 'Ways of working that put AI into everyday software delivery safely.',
       covers: ['AI-assisted coding', 'Agentic development', 'Vibe coding', 'Reviewing AI-generated code', 'Giving AI the right context', 'Human-in-the-loop review'],
     },
+    { name: 'Local and open models', description: 'Running or adapting models you can host yourself.', covers: ['Open-weight models', 'Small language models', 'Local coding models'] },
+    { name: 'Agentic building practices', description: 'Ways of building with AI agents safely.', covers: ['Agentic workflows', 'Building AI-powered features', 'Unattended overnight agentic builds', 'Risk-tiered human oversight', 'Spotting hallucinated packages and configuration', 'Continuous evaluation of AI behaviour'] },
+    { name: 'AI labs in China', description: 'Model builders based in China.', covers: ['DeepSeek', 'Alibaba Qwen', 'Z.ai', 'Moonshot AI', 'Tencent', 'StepFun', 'Xiaomi', 'MiniMax'] },
+    { name: 'Agent safety and sandboxing', description: 'Keeping agents contained and under user control.', covers: ['Agent sandboxing', 'Tool safety and user consent', 'Programmatic tool calling'] },
+    { name: 'Agent tooling and standards', description: 'Files, protocols and harnesses that agents build on.', covers: ['Agent guideline files', 'Agent Client Protocol', 'Agent plugin marketplace', 'Coding harness for general-purpose agents', 'Progressive context disclosure'] },
+    { name: 'Coding agent tools', description: 'Command-line and editor agents that write code.', covers: ['Claude Code', 'OpenAI Codex', 'Kilo Code', 'OpenCode', 'Hermes Agent', 'Gemini CLI', 'GitHub Copilot CLI'] },
+    { name: 'Agent frameworks and spec tools', description: 'Tools and frameworks for building and steering agents.', covers: ['OpenSpec', 'Beads', 'Deep Agents', 'Kagent', 'Computer-use agents'] },
+    { name: 'Inference providers', description: 'Companies that run models for you, often very fast.', covers: ['Cerebras', 'Groq', 'Fireworks AI', 'Baseten', 'CoreWeave', 'OpenRouter'] },
+    { name: 'Gateways and routers', description: 'Layers that route requests to different models.', covers: ['OpenRouter', 'LiteLLM', 'agentgateway', 'LibreChat'] },
+    { name: 'Benchmarks and routing', description: 'Comparing models and choosing between them.', covers: ['Comparing models with benchmarks and rankings', 'Benchmark contamination awareness', 'Model routing and selection', 'Evaluating prompt sensitivity'] },
+    { name: 'Data and model integrity threats', description: 'Threats that damage what a model learns or returns.', covers: ['Defending against data and model poisoning', 'Securing vectors and embeddings', 'Countering misinformation from AI', 'Preventing unbounded consumption'] },
+    { name: 'AI security tooling', description: 'Frameworks and tools for defending AI systems.', covers: ['Stateful guardrails', 'Toxic flow analysis for AI', 'MITRE ATLAS', 'Presidio'] },
+    { name: 'Alignment and oversight', description: 'Making sure AI behaves as intended and can be checked.', covers: ['Scalable oversight', 'Interpretability', 'Specification gaming awareness', 'Honest and calibrated AI'] },
+    { name: 'AI strategy and data readiness', description: 'Preparing an organisation and its data for AI.', covers: ['Clear and communicated AI stance', 'AI-accessible internal data', 'Healthy data ecosystems'] },
+    { name: 'Machine learning data preparation', description: 'Preparing and keeping track of the data models learn from.', covers: ['Feature engineering', 'Data labelling', 'Versioning data, models and code', 'Reproducible machine learning'] },
+    { name: 'RAG pipelines and safety', description: 'Building retrieval-augmented generation and protecting it.', covers: ['Retrieval-augmented generation', 'Guarding against RAG poisoning', 'Chunking strategies', 'Embeddings'] },
+    { name: 'Context and token management', description: 'Managing what goes into the context of a model.', covers: ['Context engineering', 'Token budgeting', 'Prompt versioning', 'Prompt optimisation', 'Prompt sensitivity testing'] },
+    { name: 'Preference and reward training', description: 'Training models from human or rule-based preferences.', covers: ['Reinforcement learning from human feedback', 'Reward modelling', 'Direct preference optimisation', 'Constitutional AI'] },
   ],
 }
 
-export function broadTermNames(section: Section): string[] {
+export function broadTermNames(section: TermKind): string[] {
   return BROAD_TERMS[section].map((t) => t.name)
 }
 

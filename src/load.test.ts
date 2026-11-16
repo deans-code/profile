@@ -1,6 +1,6 @@
 import { buildProfile, toJson } from './export'
 import { MAX_ENTRIES, MAX_FILE_BYTES, MAX_NAME_LENGTH, parseProfile, profileToState } from './load'
-import { COMMON_VALUES } from './data/values'
+import { selectableNames } from './data/skills'
 import { initialState, reducer, type Action } from './state/profile'
 
 const run = (actions: Action[]) => actions.reduce(reducer, initialState)
@@ -314,7 +314,7 @@ const ORIGINAL_VALUES = [
 describe('profiles saved before values were grouped', () => {
   it('restores values that are still built in with their spelling and the rest as custom values', () => {
     expect(ORIGINAL_VALUES).toHaveLength(60)
-    const builtIn = new Map(COMMON_VALUES.map((v) => [v.name.toLowerCase(), v.name]))
+    const builtIn = new Map(selectableNames('values').map((n) => [n.toLowerCase(), n]))
     const state = profileToState(ok(file({ values: ORIGINAL_VALUES.map((v) => v.toUpperCase()) })))
     const removed = ORIGINAL_VALUES.filter((v) => !builtIn.has(v.toLowerCase()))
     expect(removed.length).toBeGreaterThan(0)

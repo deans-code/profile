@@ -8,8 +8,8 @@ import { VALUE_DEFINITIONS } from './definitions/values'
 
 export type TermKind = 'values' | Section
 
-/** A section's catalog definitions plus one for each of its broader terms. */
-const withBroadTerms = (section: Section, catalog: Record<string, string>): Record<string, string> => ({
+/** A page's catalog definitions plus one for each of its broader terms. */
+const withBroadTerms = (section: TermKind, catalog: Record<string, string>): Record<string, string> => ({
   ...catalog,
   ...Object.fromEntries(BROAD_TERMS[section].map((t) => [t.name, broadTermDefinition(t)])),
 })
@@ -22,7 +22,7 @@ const SKILL_DEFINITIONS: Record<Section, Record<string, string>> = {
 }
 
 const DEFINITIONS: Record<TermKind, Record<string, string>> = {
-  values: VALUE_DEFINITIONS,
+  values: withBroadTerms('values', VALUE_DEFINITIONS),
   ...SKILL_DEFINITIONS,
 }
 

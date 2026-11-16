@@ -1,5 +1,4 @@
-import { SECTIONS, SECTION_LABELS, selectableSkillNames, type Section } from '../data/skills'
-import { COMMON_VALUES } from '../data/values'
+import { SECTIONS, SECTION_LABELS, selectableNames, selectableSkillNames, type Section } from '../data/skills'
 
 export type Step = 'values' | Section | 'card'
 
@@ -81,7 +80,7 @@ function findMatch(candidates: string[], text: string): string | undefined {
 }
 
 export function allValues(state: ProfileState): string[] {
-  return [...COMMON_VALUES.map((v) => v.name), ...state.customValues]
+  return [...selectableNames('values'), ...state.customValues]
 }
 
 export function allSkillNames(state: ProfileState, section: Section): string[] {

@@ -1,5 +1,4 @@
-import { SECTIONS, SECTION_LABELS, selectableSkillNames } from './data/skills'
-import { COMMON_VALUES } from './data/values'
+import { SECTIONS, SECTION_LABELS, selectableNames, selectableSkillNames } from './data/skills'
 import type { Experience, Profile } from './export'
 import { MODES, type LoadedProfile } from './state/profile'
 
@@ -145,7 +144,7 @@ export function profileToState(profile: Profile): LoadedProfile {
     return { selected, custom }
   }
 
-  const values = resolve(profile.values, COMMON_VALUES.map((v) => v.name))
+  const values = resolve(profile.values, selectableNames('values'))
   const selectedSkills = {} as LoadedProfile['selectedSkills']
   const customSkills = {} as LoadedProfile['customSkills']
   for (const section of SECTIONS) {

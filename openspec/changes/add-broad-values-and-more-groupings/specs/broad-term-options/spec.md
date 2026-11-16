@@ -18,7 +18,7 @@ The values page SHALL offer at least 20 broader values, each covering at least 3
 - **THEN** both are kept and counted, and deselecting one leaves the other selected
 
 #### Scenario: Definition
-- **WHEN** the user opens the definition of "Lifelong learning"
+- **WHEN** the user opens the definition of "Learning and self-development"
 - **THEN** it explains the term and names the values it covers, such as Curiosity
 
 #### Scenario: Load

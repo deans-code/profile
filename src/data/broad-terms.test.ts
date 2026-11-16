@@ -1,61 +1,76 @@
 import { readFileSync } from 'node:fs'
 import { BROAD_TERMS, broadTermDefinition } from './broad-terms'
-import { getDefinition } from './definitions'
-import { CATALOGS, SECTIONS, broadTermCategory, broadTermHasTie, catalogSkillNames, categoriesWithBroadTerms } from './skills'
-import { COMMON_VALUES } from './values'
+import { getDefinition, type TermKind } from './definitions'
+import { SECTIONS, broadTermCategory, broadTermHasTie, categoriesOf, categoriesWithBroadTerms } from './skills'
 
 const norm = (s: string) => s.trim().toLowerCase()
 
+const KINDS: TermKind[] = ['values', ...SECTIONS]
+
 describe('broader terms data', () => {
-  it.each(SECTIONS)('%s has at least 8 broader terms, each covering at least 3 existing options', (section) => {
+  it.each(SECTIONS)('%s has at least 8 broader terms', (section) => {
     expect(BROAD_TERMS[section].length).toBeGreaterThanOrEqual(8)
-    for (const t of BROAD_TERMS[section]) {
+  })
+
+  it('values has at least 20 broader terms', () => {
+    expect(BROAD_TERMS.values.length).toBeGreaterThanOrEqual(20)
+  })
+
+  it.each(KINDS)('%s: each term covers at least 3 existing options and has a description', (kind) => {
+    for (const t of BROAD_TERMS[kind]) {
       expect(t.covers.length, t.name).toBeGreaterThanOrEqual(3)
       expect(t.description.trim(), t.name).not.toBe('')
     }
   })
 
-  it.each(SECTIONS)('%s: every covered option exists in the same section, once per term', (section) => {
-    const known = new Set(catalogSkillNames(section).map(norm))
-    for (const t of BROAD_TERMS[section]) {
+  it.each(KINDS)('%s: every covered option exists on the same page, once per term', (kind) => {
+    const known = new Set(categoriesOf(kind).flatMap((c) => c.words).map(norm))
+    for (const t of BROAD_TERMS[kind]) {
       expect(t.covers.filter((c) => !known.has(norm(c))), t.name).toEqual([])
       expect(new Set(t.covers.map(norm)).size, t.name).toBe(t.covers.length)
     }
   })
 
-  it('has names that are unique across sections, options and values', () => {
-    const all = SECTIONS.flatMap((s) => BROAD_TERMS[s].map((t) => norm(t.name)))
+  it('has names that are unique across values, skills and terms', () => {
+    const all = KINDS.flatMap((k) => BROAD_TERMS[k].map((t) => norm(t.name)))
     expect(new Set(all).size).toBe(all.length)
-    const taken = new Set([
-      ...SECTIONS.flatMap((s) => catalogSkillNames(s).map(norm)),
-      ...COMMON_VALUES.map((v) => norm(v.name)),
-    ])
+    const taken = new Set(KINDS.flatMap((k) => categoriesOf(k).flatMap((c) => c.words.map(norm))))
     expect(all.filter((n) => taken.has(n))).toEqual([])
   })
 
-  it.each(SECTIONS)('%s: every broader term has one clear category that exists', (section) => {
-    const categories = CATALOGS[section].map((c) => c.category)
-    for (const t of BROAD_TERMS[section]) {
-      expect(categories, t.name).toContain(broadTermCategory(section, t))
-      expect(broadTermHasTie(section, t), t.name).toBe(false)
+  it.each(KINDS)('%s: every broader term has one clear category that exists', (kind) => {
+    const categories = categoriesOf(kind).map((c) => c.category)
+    for (const t of BROAD_TERMS[kind]) {
+      expect(categories, t.name).toContain(broadTermCategory(kind, t))
+      expect(broadTermHasTie(kind, t), t.name).toBe(false)
     }
-    const placed = categoriesWithBroadTerms(section).flatMap((c) => c.broad)
-    expect(placed.sort()).toEqual(BROAD_TERMS[section].map((t) => t.name).sort())
+    const placed = categoriesWithBroadTerms(kind).flatMap((c) => c.broad)
+    expect(placed.sort()).toEqual(BROAD_TERMS[kind].map((t) => t.name).sort())
   })
 
-  it('places CI/CD in Containers, infrastructure and delivery', () => {
-    const term = BROAD_TERMS.technical.find((t) => t.name === 'CI/CD')!
-    expect(broadTermCategory('technical', term)).toBe('Containers, infrastructure and delivery')
+  it.each(KINDS)('%s: every category has at least two broader terms, or one if it lists fewer than 8 options', (kind) => {
+    const thin = categoriesWithBroadTerms(kind)
+      .map((c) => ({ category: c.category, have: c.broad.length, need: c.words.length - c.broad.length < 8 ? 1 : 2 }))
+      .filter((c) => c.have < c.need)
+      .map((c) => `${c.category} (${c.have} of ${c.need})`)
+    expect(thin).toEqual([])
+  })
+
+  it('places CI/CD in Containers, infrastructure and delivery and Honesty and ethics in Personal character', () => {
+    const ci = BROAD_TERMS.technical.find((t) => t.name === 'CI/CD')!
+    expect(broadTermCategory('technical', ci)).toBe('Containers, infrastructure and delivery')
+    const honest = BROAD_TERMS.values.find((t) => t.name === 'Honesty and ethics')!
+    expect(broadTermCategory('values', honest)).toBe('Personal character')
   })
 
   it('leaves the cited catalogs untouched', () => {
-    const names = new Set(SECTIONS.flatMap((s) => BROAD_TERMS[s].map((t) => norm(t.name))))
-    for (const s of SECTIONS) for (const c of CATALOGS[s]) expect(c.skills.filter((n) => names.has(norm(n)))).toEqual([])
+    const names = new Set(KINDS.flatMap((k) => BROAD_TERMS[k].map((t) => norm(t.name))))
+    for (const k of KINDS) for (const c of categoriesOf(k)) expect(c.words.filter((n) => names.has(norm(n)))).toEqual([])
   })
 
-  it.each(SECTIONS)('%s: each definition names every covered option', (section) => {
-    for (const t of BROAD_TERMS[section]) {
-      const text = getDefinition(section, t.name) ?? ''
+  it.each(KINDS)('%s: each definition names every covered option', (kind) => {
+    for (const t of BROAD_TERMS[kind]) {
+      const text = getDefinition(kind, t.name) ?? ''
       expect(text, t.name).toBe(broadTermDefinition(t))
       for (const c of t.covers) expect(text, `${t.name} / ${c}`).toContain(c)
     }

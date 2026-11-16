@@ -386,12 +386,12 @@ describe('instructions', () => {
 })
 
 describe('uniform words and section colours', () => {
-  it('renders every value with the same class, with no size variants', () => {
+  it('renders every value with the same class, with no size variants apart from the broader values', () => {
     render(<App />)
     const chips = within(screen.getByRole('main'))
       .getAllByRole('button')
       .filter((b) => b.hasAttribute('aria-pressed'))
-    expect([...new Set(chips.map((b) => b.className))]).toEqual(['chip'])
+    expect([...new Set(chips.map((b) => b.className))].sort()).toEqual(['chip', 'chip broad'])
   })
 
   it('renders skills with the same class as values, apart from the broader terms', async () => {
