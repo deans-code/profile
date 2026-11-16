@@ -20,7 +20,7 @@ export const agileManifestoValues: SourceContribution = {
       'Maintainable work': 'Leaving code and systems in a state others can understand and change.',
     },
     'Working in a team': {
-      Teamwork: '',
+      Teamwork: 'Contributing to a group and feeling responsible for helping it succeed.',
       Trust: 'Relying on teammates to do what they say and giving them room to do it.',
       'Self-organisation': 'Letting the team decide how to organise itself and do its work.',
       Empowerment: 'Giving motivated people the support and trust to make their own decisions.',

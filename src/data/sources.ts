@@ -104,11 +104,11 @@ export const SOURCE_REGISTRY: Record<SourceId, Source> = {
     url: 'https://scrumguides.org/scrum-guide.html',
     year: 2020,
   },
-  'via-character-strengths': {
-    id: 'via-character-strengths',
-    title: 'VIA Character Strengths',
-    publisher: 'VIA Institute on Character',
-    url: 'https://www.viacharacter.org/character-strengths',
+  'strengthscope-strengths': {
+    id: 'strengthscope-strengths',
+    title: 'Strengthscope strengths',
+    publisher: 'Strengthscope Limited',
+    url: 'https://www.strengthscope.com/glossary',
     year: 2026,
   },
   'schwartz-basic-values': {
@@ -753,7 +753,7 @@ export const SOURCE_REGISTRY: Record<SourceId, Source> = {
 /** The sources shown under each tab, in display order. The Profile page has none. */
 export const TAB_SOURCES: Record<TermKind, SourceId[]> = {
   values: [
-    'via-character-strengths',
+    'strengthscope-strengths',
     'schwartz-basic-values',
     'rokeach-value-survey',
     'scrum-guide-2020',

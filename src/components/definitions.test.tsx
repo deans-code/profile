@@ -74,9 +74,9 @@ describe('definition panel', () => {
     const user = userEvent.setup()
     render(<App />)
     await user.pointer({ keys: '[MouseRight]', target: word('Respect') })
-    await user.pointer({ keys: '[MouseRight]', target: word('Kindness') })
+    await user.pointer({ keys: '[MouseRight]', target: word('Compassion') })
     expect(screen.getAllByRole('dialog')).toHaveLength(1)
-    expect(panel()).toHaveAccessibleName('Description of Kindness')
+    expect(panel()).toHaveAccessibleName('Description of Compassion')
   })
 
   it('opens on touch long-press without toggling selection', () => {
@@ -183,8 +183,8 @@ describe('long-press does not swallow later selections', () => {
       await act(async () => {
         vi.advanceTimersByTime(CLICK_SUPPRESS_MS + 10)
       })
-      fireEvent.click(word('Kindness'))
-      expect(word('Kindness')).toHaveAttribute('aria-pressed', 'true')
+      fireEvent.click(word('Compassion'))
+      expect(word('Compassion')).toHaveAttribute('aria-pressed', 'true')
       fireEvent.click(el)
       expect(el).toHaveAttribute('aria-pressed', 'true')
     } finally {

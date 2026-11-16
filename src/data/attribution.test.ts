@@ -1,5 +1,5 @@
 import { ATTRIBUTION, getAttribution, getSources } from './attribution'
-import { definedNames, type TermKind } from './definitions'
+import { definedNames, getDefinition, type TermKind } from './definitions'
 import { COMMON_VALUES } from './values'
 import { SECTIONS, catalogSkillNames } from './skills'
 import { SOURCE_REGISTRY, TAB_SOURCES, sourcesFor } from './sources'
@@ -102,5 +102,40 @@ describe('source citation integrity', () => {
         expect(n, `${path} contributes no option`).toBeGreaterThan(0)
       }
     }
+  })
+})
+
+describe('Strengthscope strengths', () => {
+  const STRENGTHS = [
+    'Courage', 'Emotional control', 'Enthusiasm', 'Optimism', 'Resilience', 'Self-confidence',
+    'Collaboration', 'Compassion', 'Developing others', 'Empathy', 'Leading', 'Persuasiveness', 'Relationship building',
+    'Common sense', 'Creativity', 'Critical thinking', 'Detail orientation', 'Strategic mindedness',
+    'Decisiveness', 'Efficiency', 'Flexibility', 'Initiative', 'Results-focus', 'Self-improvement',
+  ]
+
+  it('offers all 24 strengths as values, each cited to Strengthscope with a description', () => {
+    const names = COMMON_VALUES.map((v) => norm(v.name))
+    for (const s of STRENGTHS) {
+      expect(names, s).toContain(norm(s))
+      expect(getSources('values', s).map((x) => x.id), s).toContain('strengthscope-strengths')
+      expect(getDefinition('values', s)?.trim(), s).toBeTruthy()
+    }
+  })
+
+  it('cites Strengthscope Limited, with a link to its glossary', () => {
+    expect(SOURCE_REGISTRY['strengthscope-strengths']).toMatchObject({
+      publisher: 'Strengthscope Limited',
+      url: 'https://www.strengthscope.com/glossary',
+    })
+    expect(TAB_SOURCES.values).toContain('strengthscope-strengths')
+  })
+
+  it('no longer cites VIA', () => {
+    expect(Object.keys(SOURCE_REGISTRY)).not.toContain('via-character-strengths')
+    expect(JSON.stringify(Object.values(SOURCE_REGISTRY))).not.toMatch(/viacharacter|VIA Institute/i)
+  })
+
+  it('gives every value a description', () => {
+    expect(COMMON_VALUES.filter((v) => !getDefinition('values', v.name)?.trim()).map((v) => v.name)).toEqual([])
   })
 })

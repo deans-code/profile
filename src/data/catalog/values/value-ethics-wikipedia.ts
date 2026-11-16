@@ -24,11 +24,11 @@ export const valueEthicsValues: SourceContribution = {
     },
     'Personal character': {
       Honesty: '',
-      Humility: '',
+      Humility: 'Recognising your strengths without seeking the spotlight or credit.',
       Integrity: 'Acting consistently with your principles, in public and in private.',
     },
     'Society and the world': {
-      Fairness: '',
+      Fairness: 'Treating everyone equally and giving each person a fair chance under the same rules.',
       Tradition: '',
       Security: '',
       Equality: '',

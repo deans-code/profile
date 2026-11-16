@@ -10,7 +10,7 @@ export const outlineOfSelfValues: SourceContribution = {
   categories: {
     'Doing good work': {
       Creativity: '',
-      Perseverance: '',
+      Perseverance: 'Keeping going toward your goals despite obstacles and setbacks.',
       Responsibility: '',
       Craftsmanship: 'Taking skill and care over how something is made, not only that it works.',
       Diligence: '',

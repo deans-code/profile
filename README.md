@@ -111,7 +111,7 @@ npm run preview
 
 The Values catalog was rebuilt from published value frameworks, one at a time. These describe values rather than usage, so they are attributed the same way:
 
-- [VIA Character Strengths](https://www.viacharacter.org/character-strengths), by the VIA Institute on Character: the 24 strengths in six virtue categories. VIA allows personal, non-commercial use and reserves its rights, so only the names are used with descriptions written for this app.
+- [Strengthscope strengths](https://www.strengthscope.com/glossary), by Strengthscope Limited (London): the 24 strengths in four clusters (Emotional, Relational, Thinking, Execution). Strengthscope's terms forbid copying or creating derivatives of its content without written permission, so only the names are used with descriptions written for this app.
 - [Theory of basic human values](https://en.wikipedia.org/wiki/Theory_of_basic_human_values), Wikipedia's summary of Shalom Schwartz's theory (Schwartz 1992; Schwartz et al. 2012): the ten basic values in four groups. Schwartz's own paper could not be read (its PDF refused automated access), and the nineteen refined values are not listed on the article, so they are not used.
 - [Rokeach Value Survey](https://en.wikipedia.org/wiki/Rokeach_Value_Survey), Wikipedia's summary of Milton Rokeach, The Nature of Human Values (1973): 18 terminal and 18 instrumental values.
 - [The 2020 Scrum Guide](https://scrumguides.org/scrum-guide.html): its five values (commitment, focus, openness, respect, courage).

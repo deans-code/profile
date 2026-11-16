@@ -22,7 +22,7 @@ export const selfDeterminationValues: SourceContribution = {
       'Intrinsic motivation': 'Doing work because it interests or matters to you, not for outside reward.',
     },
     'Learning and growth': {
-      Curiosity: '',
+      Curiosity: 'Seeking out new experiences and wanting to understand how and why things work.',
       'Personal development': 'Growing as a person and building your own skills for their own sake.',
       Mastery: 'Getting deeply good at something through sustained practice.',
       'Self-actualisation': 'Becoming the fullest version of what you are able to be.',

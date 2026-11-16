@@ -212,6 +212,12 @@ describe('parseProfile', () => {
 })
 
 describe('profileToState', () => {
+  it('restores a value that only VIA offered as a custom value', () => {
+    const s = { ...initialState, ...profileToState(ok(file({ values: ['Humor'] }))) }
+    expect(s.selectedValues).toEqual(['Humor'])
+    expect(s.customValues).toEqual(['Humor'])
+  })
+
   it('restores built-ins with their spelling and others as custom entries, in the right option', () => {
     const p = ok(
       file({

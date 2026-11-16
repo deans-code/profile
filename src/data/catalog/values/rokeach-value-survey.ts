@@ -23,7 +23,7 @@ export const rokeachValueSurvey: SourceContribution = {
       Cheerfulness: 'Being lighthearted and joyful.',
     },
     'Working with others': {
-      Forgiveness: '',
+      Forgiveness: 'Letting go of resentment toward people who have wronged you and giving them a fresh start.',
       Politeness: 'Being courteous and well mannered.',
       'Broad-mindedness': 'Being open-minded and accepting of different views.',
     },
@@ -41,7 +41,7 @@ export const rokeachValueSurvey: SourceContribution = {
       Obedience: 'Being dutiful and respectful of authority and rules.',
     },
     'Personal character': {
-      Honesty: '',
+      Honesty: 'Being truthful with others and yourself, and taking responsibility for what you do.',
       Courage: 'Standing up for your beliefs and facing difficulty.',
       'Self-control': 'Restraining and disciplining your impulses.',
       'Self-respect': 'Having a sense of your own worth and standing by it.',

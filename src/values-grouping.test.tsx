@@ -89,9 +89,9 @@ describe('grouped values', () => {
     await user.pointer({ keys: '[MouseRight]', target: word('Fairness') })
     expect(screen.getByRole('dialog')).toHaveAccessibleName(/Fairness/)
     await user.keyboard('{Escape}')
-    await user.pointer({ keys: '[MouseRight]', target: word('Kindness') })
-    expect(screen.getByRole('dialog')).toHaveAccessibleName(/Kindness/)
-    expect(word('Kindness')).toHaveAttribute('aria-pressed', 'false')
+    await user.pointer({ keys: '[MouseRight]', target: word('Compassion') })
+    expect(screen.getByRole('dialog')).toHaveAccessibleName(/Compassion/)
+    expect(word('Compassion')).toHaveAttribute('aria-pressed', 'false')
   })
 })
 

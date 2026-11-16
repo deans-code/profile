@@ -90,7 +90,7 @@ describe('Load saved profile', () => {
     expect(word('Fairness')).toHaveAttribute('aria-pressed', 'true')
     expect(word('Grit')).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByText(/^6 of 10 selected/)).toBeInTheDocument()
-    await user.click(word('Kindness'))
+    await user.click(word('Compassion'))
     await user.click(next())
 
     // Technical: loaded skills selected (built-in and custom).
@@ -109,7 +109,7 @@ describe('Load saved profile', () => {
     await user.click(radio(/^Desired experience/))
     expect(word('OpenRouter')).toHaveAttribute('aria-pressed', 'true')
     await user.click(next())
-    expect(within(card()).getByText('Kindness')).toBeInTheDocument()
+    expect(within(card()).getByText('Compassion')).toBeInTheDocument()
     expect(within(card()).getByText('Go')).toBeInTheDocument()
   })
 
@@ -173,7 +173,7 @@ describe('Load saved profile', () => {
     it('asks to confirm, and Replace loads the file', async () => {
       const user = userEvent.setup()
       render(<App />)
-      await user.click(word('Kindness'))
+      await user.click(word('Compassion'))
       await upload(user, profileJson())
       const confirm = await screen.findByRole('group', { name: 'Confirm loading a profile' })
       expect(confirm).toHaveTextContent('Replace your current profile with profile.json?')
@@ -182,7 +182,7 @@ describe('Load saved profile', () => {
 
       await user.click(screen.getByRole('button', { name: 'Replace' }))
       expect(await screen.findByRole('heading', { name: 'Your profile' })).toBeInTheDocument()
-      expect(within(card()).queryByText('Kindness')).not.toBeInTheDocument()
+      expect(within(card()).queryByText('Compassion')).not.toBeInTheDocument()
       expect(within(card()).getByText('Fairness')).toBeInTheDocument()
     })
 
@@ -202,11 +202,11 @@ describe('Load saved profile', () => {
     it('Cancel leaves the profile and page unchanged', async () => {
       const user = userEvent.setup()
       render(<App />)
-      await user.click(word('Kindness'))
+      await user.click(word('Compassion'))
       await upload(user, profileJson())
       await user.click(await screen.findByRole('button', { name: 'Cancel' }))
       expect(screen.getByText(/Load cancelled/)).toBeInTheDocument()
-      expect(word('Kindness')).toHaveAttribute('aria-pressed', 'true')
+      expect(word('Compassion')).toHaveAttribute('aria-pressed', 'true')
       expect(screen.getByRole('heading', { name: /what do you value/i })).toBeInTheDocument()
     })
 
@@ -226,11 +226,11 @@ describe('Load saved profile', () => {
     await user.upload(picker(), file)
     await screen.findByRole('heading', { name: 'Your profile' })
     await user.click(screen.getByRole('button', { name: 'Edit' }))
-    await user.click(word('Kindness'))
+    await user.click(word('Compassion'))
     await user.upload(picker(), file)
     await user.click(await screen.findByRole('button', { name: 'Replace' }))
     await screen.findByRole('heading', { name: 'Your profile' })
-    expect(within(card()).queryByText('Kindness')).not.toBeInTheDocument()
+    expect(within(card()).queryByText('Compassion')).not.toBeInTheDocument()
   })
 
   describe('over-limit and incomplete files', () => {
@@ -325,11 +325,11 @@ describe('end to end: build, download, load, edit, download', () => {
     expect(strip(reloaded)).toEqual(strip(original))
 
     await user.click(screen.getByRole('button', { name: 'Edit' }))
-    await user.click(word('Kindness'))
+    await user.click(word('Compassion'))
     for (let i = 0; i < 5; i++) await user.click(next())
     await user.click(screen.getByRole('button', { name: 'Download JSON' }))
     const edited = JSON.parse(await blobs[2].text())
-    expect(edited.values).toEqual([...FIVE_VALUES, 'Grit', 'Kindness'].sort())
+    expect(edited.values).toEqual([...FIVE_VALUES, 'Grit', 'Compassion'].sort())
     expect(edited.skills.technical).toEqual(lists(['Python'], ['Rust']))
     expect(edited.skills.ai).toEqual(lists(['Claude Code'], ['OpenRouter']))
   })
