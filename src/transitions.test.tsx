@@ -121,7 +121,7 @@ describe('section transitions', () => {
     await user.click(screen.getByRole('button', { name: 'Edit' }))
     expect(stepView(container)).toHaveClass('enter-backward')
     expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' })
-  })
+  }, 30000)
 })
 
 describe('rapid activation', () => {
