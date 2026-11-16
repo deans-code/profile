@@ -1,4 +1,4 @@
-import { SECTIONS, SECTION_LABELS, catalogSkillNames, type Section } from '../data/skills'
+import { SECTIONS, SECTION_LABELS, selectableSkillNames, type Section } from '../data/skills'
 import { COMMON_VALUES } from '../data/values'
 
 export type Step = 'values' | Section | 'card'
@@ -85,7 +85,7 @@ export function allValues(state: ProfileState): string[] {
 }
 
 export function allSkillNames(state: ProfileState, section: Section): string[] {
-  return [...catalogSkillNames(section), ...state.customSkills[section]]
+  return [...selectableSkillNames(section), ...state.customSkills[section]]
 }
 
 /** Words selected on a page in the given mode (the active mode by default). The values page ignores the mode. */

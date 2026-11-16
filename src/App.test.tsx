@@ -394,13 +394,15 @@ describe('uniform words and section colours', () => {
     expect([...new Set(chips.map((b) => b.className))]).toEqual(['chip'])
   })
 
-  it('renders skills with the same class as values', async () => {
+  it('renders skills with the same class as values, apart from the broader terms', async () => {
     const user = userEvent.setup()
     render(<App />)
     await pickValues(user)
     await user.click(next())
     const skills = screen.getAllByRole('button').filter((b) => b.hasAttribute('aria-pressed'))
-    expect(new Set(skills.map((b) => b.className))).toEqual(new Set(['chip']))
+    expect(new Set(skills.map((b) => b.className))).toEqual(new Set(['chip', 'chip broad']))
+    const broad = document.querySelector('.broad-card')!
+    expect(skills.filter((b) => b.className === 'chip broad').every((b) => broad.contains(b))).toBe(true)
   })
 
   it('switches the section colour with each step and gives each step its own colour hook', async () => {

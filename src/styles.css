@@ -6,6 +6,9 @@
   --border: #c9d0db;
   --radius: 10px;
   --gap: 0.625rem;
+  /* Broader terms: a colour no section accent uses, so they stand out on every page. */
+  --broad: #a21caf;
+  --broad-tint: #fae8ff;
   color-scheme: light dark;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
@@ -54,6 +57,8 @@
     --text: #e8ecf2;
     --muted: #9aa5b8;
     --border: #3a4455;
+    --broad: #e879f9;
+    --broad-tint: #4a1d55;
   }
 
   :root:not([data-theme='light']) [data-section='values'] {
@@ -100,6 +105,8 @@
   --text: #e8ecf2;
   --muted: #9aa5b8;
   --border: #3a4455;
+  --broad: #e879f9;
+  --broad-tint: #4a1d55;
 }
 
 :root[data-theme='dark'] [data-section='values'] {
@@ -437,6 +444,36 @@ ul {
   content: '\2713\00a0';
   content: '\2713\00a0' / '';
   color: var(--accent);
+}
+
+.chip.broad {
+  background: var(--broad-tint);
+  border-color: var(--broad);
+}
+
+.chip.broad:hover {
+  border-color: var(--broad);
+  border-width: 2px;
+  padding: calc(0.375rem - 1px) calc(0.75rem - 1px);
+}
+
+.chip.broad[aria-pressed='true'] {
+  background: var(--broad-tint);
+  border-color: var(--broad);
+}
+
+.chip.broad[aria-pressed='true']::before {
+  color: var(--broad);
+}
+
+.broad-card h3 {
+  color: var(--broad);
+}
+
+.broad-caption {
+  margin: 0 0 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .chip.static {

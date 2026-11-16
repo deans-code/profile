@@ -1,4 +1,4 @@
-import { SECTIONS, SECTION_LABELS, catalogSkillNames } from './data/skills'
+import { SECTIONS, SECTION_LABELS, selectableSkillNames } from './data/skills'
 import { COMMON_VALUES } from './data/values'
 import type { Experience, Profile } from './export'
 import { MODES, type LoadedProfile } from './state/profile'
@@ -149,7 +149,7 @@ export function profileToState(profile: Profile): LoadedProfile {
   const selectedSkills = {} as LoadedProfile['selectedSkills']
   const customSkills = {} as LoadedProfile['customSkills']
   for (const section of SECTIONS) {
-    const skills = resolve(profile.skills[section], catalogSkillNames(section))
+    const skills = resolve(profile.skills[section], selectableSkillNames(section))
     selectedSkills[section] = skills.selected
     customSkills[section] = skills.custom
   }

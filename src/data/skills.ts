@@ -1,3 +1,4 @@
+import { BROAD_TERMS } from './broad-terms'
 import { AI } from './catalog/ai'
 import { ENGINEERING } from './catalog/engineering'
 import { INTERPERSONAL } from './catalog/interpersonal'
@@ -28,4 +29,9 @@ export const CATALOGS: Record<Section, SkillCategory[]> = {
 
 export function catalogSkillNames(section: Section): string[] {
   return CATALOGS[section].flatMap((c) => c.skills)
+}
+
+/** Every built-in skill name a user can select on a page: the catalog plus the page's broader terms. */
+export function selectableSkillNames(section: Section): string[] {
+  return [...BROAD_TERMS[section].map((t) => t.name), ...catalogSkillNames(section)]
 }

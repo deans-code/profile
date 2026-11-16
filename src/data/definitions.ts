@@ -1,3 +1,4 @@
+import { BROAD_TERMS, broadTermDefinition } from './broad-terms'
 import type { Section } from './skills'
 import { AI_DEFINITIONS } from './definitions/ai'
 import { ENGINEERING_DEFINITIONS } from './definitions/engineering'
@@ -7,11 +8,17 @@ import { VALUE_DEFINITIONS } from './definitions/values'
 
 export type TermKind = 'values' | Section
 
+/** A section's catalog definitions plus one for each of its broader terms. */
+const withBroadTerms = (section: Section, catalog: Record<string, string>): Record<string, string> => ({
+  ...catalog,
+  ...Object.fromEntries(BROAD_TERMS[section].map((t) => [t.name, broadTermDefinition(t)])),
+})
+
 const SKILL_DEFINITIONS: Record<Section, Record<string, string>> = {
-  technical: TECHNICAL_DEFINITIONS,
-  engineering: ENGINEERING_DEFINITIONS,
-  interpersonal: INTERPERSONAL_DEFINITIONS,
-  ai: AI_DEFINITIONS,
+  technical: withBroadTerms('technical', TECHNICAL_DEFINITIONS),
+  engineering: withBroadTerms('engineering', ENGINEERING_DEFINITIONS),
+  interpersonal: withBroadTerms('interpersonal', INTERPERSONAL_DEFINITIONS),
+  ai: withBroadTerms('ai', AI_DEFINITIONS),
 }
 
 const DEFINITIONS: Record<TermKind, Record<string, string>> = {

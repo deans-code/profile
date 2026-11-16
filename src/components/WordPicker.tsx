@@ -10,6 +10,9 @@ import TermButton from './TermButton'
 import { prefersReducedMotion } from '../useStepNavigation'
 import type { Mode } from '../state/profile'
 
+/** Heading of the card that holds the broader terms. */
+const BROAD_CARD = 'Broader terms'
+
 export interface WordCategory {
   category: string
   words: string[]
@@ -22,6 +25,8 @@ interface Props {
   hint: string
   /** One line saying what to do on this page. */
   lead: string
+  /** Broader terms shown in their own card above the categories, in a distinct colour. Omit when there are none. */
+  broadTerms?: string[]
   categories: WordCategory[]
   selected: string[]
   custom: string[]
@@ -53,6 +58,7 @@ export default function WordPicker({
   heading,
   hint,
   lead,
+  broadTerms = [],
   categories,
   selected,
   custom,
@@ -103,11 +109,15 @@ export default function WordPicker({
   const full = limit !== undefined && selected.length >= limit
   const query = filter.trim().toLowerCase()
 
-  const visible = [...categories, ...(custom.length > 0 ? [{ category: 'Custom', words: custom }] : [])]
+  const visible = [
+    ...(broadTerms.length > 0 ? [{ category: BROAD_CARD, words: broadTerms }] : []),
+    ...categories,
+    ...(custom.length > 0 ? [{ category: 'Custom', words: custom }] : []),
+  ]
     .map((c) => ({ ...c, words: c.words.filter((w) => w.toLowerCase().includes(query)) }))
     .filter((c) => c.words.length > 0)
 
-  const total = categories.reduce((n, c) => n + c.words.length, 0) + custom.length
+  const total = broadTerms.length + categories.reduce((n, c) => n + c.words.length, 0) + custom.length
   const shown = visible.reduce((n, c) => n + c.words.length, 0)
 
   return (
@@ -159,16 +169,18 @@ export default function WordPicker({
       <div className="categories">
         {visible.map((c) => {
           const isCustom = c.category === 'Custom'
+          const isBroad = c.category === BROAD_CARD
           return (
-            <div key={c.category} className={isCustom ? 'category custom-card' : 'category'} ref={isCustom ? customCard : undefined}>
+            <div key={c.category} className={isCustom ? 'category custom-card' : isBroad ? 'category broad-card' : 'category'} ref={isCustom ? customCard : undefined}>
               <h3>{c.category}</h3>
+              {isBroad && <p className="broad-caption">Each broader term covers several options listed below. Choosing one does not choose them.</p>}
               <ul className="chips">
                 {c.words.map((name) => (
                   <li key={name} className={isCustom ? 'custom-item' : undefined}>
                     <TermButton
                       kind={kind}
                       name={name}
-                      className={`chip${isCustom ? ' custom' : ''}`}
+                      className={`chip${isCustom ? ' custom' : ''}${isBroad ? ' broad' : ''}`}
                       selected={chosen.has(name)}
                       unavailable={full && !chosen.has(name)}
                       onToggle={() => onToggle(name)}

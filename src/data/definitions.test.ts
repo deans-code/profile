@@ -1,5 +1,5 @@
 import { definedNames, getDefinition, type TermKind } from './definitions'
-import { CATALOGS, SECTIONS, catalogSkillNames } from './skills'
+import { CATALOGS, SECTIONS, selectableSkillNames } from './skills'
 import { COMMON_VALUES } from './values'
 
 const norm = (s: string) => s.trim().toLowerCase()
@@ -7,10 +7,10 @@ const sentences = (text: string) => text.split(/(?<=[.!?])\s+/).filter(Boolean)
 
 const BUILT_IN: Record<TermKind, string[]> = {
   values: COMMON_VALUES.map((v) => v.name),
-  technical: catalogSkillNames('technical'),
-  engineering: catalogSkillNames('engineering'),
-  interpersonal: catalogSkillNames('interpersonal'),
-  ai: catalogSkillNames('ai'),
+  technical: selectableSkillNames('technical'),
+  engineering: selectableSkillNames('engineering'),
+  interpersonal: selectableSkillNames('interpersonal'),
+  ai: selectableSkillNames('ai'),
 }
 const KINDS = Object.keys(BUILT_IN) as TermKind[]
 
