@@ -7,6 +7,8 @@ export const motion = { reduced: true }
 beforeEach(() => {
   motion.reduced = true
   window.scrollTo = vi.fn() as unknown as typeof window.scrollTo
+  // jsdom has no layout and does not implement scrollIntoView.
+  Element.prototype.scrollIntoView = vi.fn()
   window.matchMedia = vi.fn((query: string) => ({
     matches: query.includes('prefers-reduced-motion') ? motion.reduced : false,
     media: query,

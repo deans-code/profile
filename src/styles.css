@@ -798,6 +798,10 @@ main {
   scroll-margin-top: var(--pinned-bar-height);
 }
 
+.custom-card {
+  scroll-margin-top: var(--pinned-bar-height);
+}
+
 .pinned-bar :focus {
   scroll-margin-top: 0;
 }

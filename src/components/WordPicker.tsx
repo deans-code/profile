@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import type { TermKind } from '../data/definitions'
 import { ASSISTANT_HELP } from '../data/assistant'
 import AddEntry, { AddEntryHelp } from './AddEntry'
@@ -7,6 +7,7 @@ import ModeSwitch from './ModeSwitch'
 import SelectionHelp from './SelectionHelp'
 import SelectionStatus from './SelectionStatus'
 import TermButton from './TermButton'
+import { prefersReducedMotion } from '../useStepNavigation'
 import type { Mode } from '../state/profile'
 
 export interface WordCategory {
@@ -73,6 +74,32 @@ export default function WordPicker({
   const hintId = `${filterId}-hint`
   const addHelpId = `${filterId}-add-help`
   const chosen = new Set(selected)
+
+  // Adding a new custom entry reveals the Custom card: clear a filter that would hide it, then scroll to it.
+  const pendingAdd = useRef(false)
+  const lastCustomCount = useRef(custom.length)
+  const customCard = useRef<HTMLDivElement | null>(null)
+  const [revealTick, setRevealTick] = useState(0)
+
+  useEffect(() => {
+    const grew = custom.length > lastCustomCount.current
+    lastCustomCount.current = custom.length
+    const wanted = pendingAdd.current
+    pendingAdd.current = false
+    if (!grew || !wanted) return
+    setFilter('')
+    setRevealTick((t) => t + 1)
+  })
+
+  useEffect(() => {
+    if (revealTick === 0) return
+    customCard.current?.scrollIntoView({ block: 'nearest', behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
+  }, [revealTick])
+
+  function addCustom(text: string) {
+    pendingAdd.current = true
+    onAddCustom(text)
+  }
   const full = limit !== undefined && selected.length >= limit
   const query = filter.trim().toLowerCase()
 
@@ -101,7 +128,7 @@ export default function WordPicker({
 
       <div className="pinned-bar">
         {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
-        <AddEntry label={addLabel} placeholder={addPlaceholder} helpId={addHelpId} full={full} onAdd={onAddCustom} />
+        <AddEntry label={addLabel} placeholder={addPlaceholder} helpId={addHelpId} full={full} onAdd={addCustom} />
       </div>
 
       <div className="filter-block">
@@ -133,7 +160,7 @@ export default function WordPicker({
         {visible.map((c) => {
           const isCustom = c.category === 'Custom'
           return (
-            <div key={c.category} className="category">
+            <div key={c.category} className={isCustom ? 'category custom-card' : 'category'} ref={isCustom ? customCard : undefined}>
               <h3>{c.category}</h3>
               <ul className="chips">
                 {c.words.map((name) => (
