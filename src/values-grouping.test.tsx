@@ -42,7 +42,7 @@ describe('grouped values', () => {
     await user.type(screen.getByLabelText('Filter values'), 'RES')
     const shown = main()
       .getAllByRole('button')
-      .filter((b) => b.hasAttribute('aria-pressed'))
+      .filter((b) => b.hasAttribute('aria-pressed') && !b.classList.contains('broad'))
       .map((b) => b.textContent!.replace('✓', '').trim())
     expect(shown.length).toBeGreaterThan(0)
     expect(shown.every((n) => n.toLowerCase().includes('res'))).toBe(true)

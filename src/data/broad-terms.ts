@@ -67,9 +67,9 @@ export const BROAD_TERMS: Record<TermKind, BroadTerm[]> = {
       covers: ['PostgreSQL', 'MySQL', 'MariaDB', 'Microsoft SQL Server', 'Oracle', 'SQLite', 'CockroachDB', 'IBM Db2'],
     },
     {
-      name: 'NoSQL databases',
-      description: 'Databases that store data as documents, key-value pairs, wide columns or graphs rather than tables.',
-      covers: ['MongoDB', 'Redis', 'Valkey', 'DynamoDB', 'Apache Cassandra', 'Couchbase', 'Neo4j'],
+      name: 'Document databases',
+      description: 'Databases that store data as flexible documents rather than rows.',
+      covers: ['MongoDB', 'Apache CouchDB', 'Google Cloud Firestore', 'RavenDB', 'Couchbase'],
     },
     {
       name: 'Search engines',
@@ -92,11 +92,6 @@ export const BROAD_TERMS: Record<TermKind, BroadTerm[]> = {
       covers: ['Express', 'NestJS', 'FastAPI', 'Flask', 'Django', 'Spring Boot', 'ASP.NET Core', 'Laravel', 'Ruby on Rails'],
     },
     {
-      name: 'Unit testing frameworks',
-      description: 'Frameworks for writing and running automated tests of small pieces of code.',
-      covers: ['Jest', 'Vitest', 'Mocha', 'pytest', 'JUnit', 'xUnit.net', 'NUnit', 'PHPUnit', 'RSpec'],
-    },
-    {
       name: 'Browser and end-to-end testing',
       description: 'Tools that drive a real browser to test a whole application.',
       covers: ['Playwright', 'Cypress', 'Selenium', 'BrowserStack'],
@@ -115,11 +110,6 @@ export const BROAD_TERMS: Record<TermKind, BroadTerm[]> = {
       name: 'Message brokers and streaming',
       description: 'Middleware that passes messages and events between systems.',
       covers: ['Apache Kafka', 'Apache ActiveMQ', 'Apache Pulsar', 'NATS', 'Redpanda', 'IBM MQ', 'Azure Service Bus', 'Google Cloud Pub/Sub'],
-    },
-    {
-      name: 'Identity providers and SSO',
-      description: 'Services that sign users in and manage who may access what, including single sign-on.',
-      covers: ['Auth0', 'Okta', 'Keycloak', 'Microsoft Entra ID', 'OneLogin'],
     },
     {
       name: 'Distributed version control',
@@ -239,11 +229,6 @@ export const BROAD_TERMS: Record<TermKind, BroadTerm[]> = {
       covers: ['Monitoring and observability', 'Distributed tracing', 'Log aggregation', 'Alerting on service levels', 'Proactive failure notification'],
     },
     {
-      name: 'Application security practices',
-      description: 'Designing and building software so it resists attack.',
-      covers: ['OWASP Top 10', 'Threat modeling', 'Injection prevention', 'Access control', 'Cryptography', 'Secure design', 'Secure configuration'],
-    },
-    {
       name: 'SOLID principles',
       description: 'Five object-oriented design principles for code that is easy to change.',
       covers: ['Single responsibility principle', 'Open-closed principle', 'Liskov substitution principle', 'Interface segregation principle', 'Dependency inversion principle'],
@@ -257,11 +242,6 @@ export const BROAD_TERMS: Record<TermKind, BroadTerm[]> = {
       name: 'Twelve-factor practices',
       description: 'Practices for building apps that run well as cloud services.',
       covers: ['One codebase, many deploys', 'Declared dependencies', 'Configuration in the environment', 'Attached backing services', 'Stateless processes', 'Port binding', 'Disposability', 'Dev and prod parity', 'Logs as event streams'],
-    },
-    {
-      name: 'Code quality and refactoring',
-      description: 'Keeping code readable and cheap to change over time.',
-      covers: ['Refactoring', 'Code smells', 'Technical debt management', 'Static analysis', 'Clean Code', 'Legacy code modernisation'],
     },
     {
       name: 'Decoupled application architectures',
@@ -372,21 +352,6 @@ export const BROAD_TERMS: Record<TermKind, BroadTerm[]> = {
       description: 'Noticing and managing feelings, your own and other people’s.',
       covers: ['Emotional intelligence', 'Empathy', 'Self-awareness', 'Self-regulation', 'Perceiving emotions', 'Understanding emotions', 'Managing emotions'],
     },
-    {
-      name: 'Belbin team roles',
-      description: 'Playing the nine roles that Belbin found teams need.',
-      covers: [
-        'Generating ideas (Plant)',
-        'Networking outside the team (Resource Investigator)',
-        'Chairing and delegating (Co-ordinator)',
-        'Driving the team on (Shaper)',
-        'Analysing options impartially (Monitor Evaluator)',
-        'Smoothing conflict (Teamworker)',
-        'Turning ideas into action (Implementer)',
-        'Finishing carefully (Completer Finisher)',
-        'Deep specialist expertise (Specialist)',
-      ],
-    },
     { name: 'Team development stages', description: 'The stages a team goes through as it forms and matures.', covers: ['Guiding a new team (forming)', 'Working through team conflict (storming)', 'Setting team norms (norming)', 'Sustaining a high-performing team (performing)', 'Closing a team well (adjourning)'] },
     { name: 'Team autonomy and experimentation', description: 'Letting a team decide how it works and try new things.', covers: ['Team experimentation', 'Empowering teams to choose tools', 'Self-managing teams', 'Working transparently', 'Inspecting and adapting'] },
     { name: 'Safe and learning culture', description: 'A culture where people can speak up and learn from mistakes.', covers: ['Psychological safety', 'Speaking up', 'Learning from mistakes', 'Fostering a learning culture', 'Building a high-trust, generative culture'] },
@@ -476,7 +441,6 @@ export const BROAD_TERMS: Record<TermKind, BroadTerm[]> = {
     { name: 'AI labs in China', description: 'Model builders based in China.', covers: ['DeepSeek', 'Alibaba Qwen', 'Z.ai', 'Moonshot AI', 'Tencent', 'StepFun', 'Xiaomi', 'MiniMax'] },
     { name: 'Agent safety and sandboxing', description: 'Keeping agents contained and under user control.', covers: ['Agent sandboxing', 'Tool safety and user consent', 'Programmatic tool calling'] },
     { name: 'Agent tooling and standards', description: 'Files, protocols and harnesses that agents build on.', covers: ['Agent guideline files', 'Agent Client Protocol', 'Agent plugin marketplace', 'Coding harness for general-purpose agents', 'Progressive context disclosure'] },
-    { name: 'Coding agent tools', description: 'Command-line and editor agents that write code.', covers: ['Claude Code', 'OpenAI Codex', 'Kilo Code', 'OpenCode', 'Hermes Agent', 'Gemini CLI', 'GitHub Copilot CLI'] },
     { name: 'Agent frameworks and spec tools', description: 'Tools and frameworks for building and steering agents.', covers: ['OpenSpec', 'Beads', 'Deep Agents', 'Kagent', 'Computer-use agents'] },
     { name: 'Inference providers', description: 'Companies that run models for you, often very fast.', covers: ['Cerebras', 'Groq', 'Fireworks AI', 'Baseten', 'CoreWeave', 'OpenRouter'] },
     { name: 'Gateways and routers', description: 'Layers that route requests to different models.', covers: ['OpenRouter', 'LiteLLM', 'agentgateway', 'LibreChat'] },

@@ -1,8 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { BROAD_TERMS } from './data/broad-terms'
 import type { TermKind } from './data/definitions'
-import { SECTIONS, broadTermCategory } from './data/skills'
+import { SECTIONS, groupedCategories } from './data/skills'
 import { buildProfile, toJson } from './export'
 import { parseProfile, profileToState } from './load'
 import { initialState } from './state/profile'
@@ -24,49 +23,72 @@ async function openPage(user: ReturnType<typeof userEvent.setup>, index: number)
 }
 
 describe('Broader terms in their categories', () => {
-  /** Checks the page on screen: each term is a labelled, broad chip among the leading chips of its category, with its covered options in the same card. */
-  function expectPlacement(kind: TermKind) {
+  const chipName = (c: Element) => c.firstChild?.textContent?.trim()
+
+  /** Checks the page on screen: each term heads a group in its category with the options it owns, and every option is shown once. */
+  function expectGroups(kind: TermKind) {
     expect(screen.queryByRole('heading', { name: 'Broader terms' })).toBeNull()
-    const cards = [...document.querySelectorAll<HTMLElement>('.category')].map((card) => ({
-      heading: card.querySelector('h3')!.textContent!,
-      chips: [...card.querySelectorAll<HTMLElement>('.chip')],
-    }))
-    for (const term of BROAD_TERMS[kind]) {
-      const heading = broadTermCategory(kind, term)
-      const card = cards.find((c) => c.heading === heading)!
-      const own = BROAD_TERMS[kind].filter((t) => broadTermCategory(kind, t) === heading).length
-      const leading = card.chips.slice(0, own)
-      const chip = leading.find((c) => c.firstChild?.textContent?.trim() === term.name)
-      expect(chip, `${term.name} in ${heading}`).toBeDefined()
-      expect(chip!.classList.contains('broad'), term.name).toBe(true)
-      expect(chip!.querySelector('.broad-label'), term.name).toHaveTextContent('Broad')
-      expect(leading.every((c) => c.classList.contains('broad')), heading).toBe(true)
-      const names = card.chips.map((c) => c.firstChild?.textContent?.trim())
-      expect(names, term.name).toContain(term.covers.find((c) => cards.find((x) => x.heading === heading)!.chips.some((k) => k.firstChild?.textContent?.trim() === c)))
+    expect(document.querySelector('.broad-card')).toBeNull()
+    const names = [...document.querySelectorAll('.chip')].map(chipName)
+    expect(new Set(names).size).toBe(names.length)
+    for (const category of groupedCategories(kind)) {
+      const card = [...document.querySelectorAll<HTMLElement>('.category')].find((c) => c.querySelector('h3')!.textContent === category.category)!
+      for (const g of category.groups) {
+        const group = card.querySelector<HTMLElement>(`[role="group"][aria-label="${g.term} and the options it groups"]`)
+        expect(group, `${g.term} in ${category.category}`).not.toBeNull()
+        const head = group!.querySelector('.group-head .chip')!
+        expect(chipName(head), g.term).toBe(g.term)
+        expect(head.classList.contains('broad'), g.term).toBe(true)
+        expect(head.querySelector('.broad-label'), g.term).toHaveTextContent('Broad')
+        expect(group!.querySelector('.group-caption'), g.term).toHaveTextContent('Groups these')
+        expect([...group!.querySelectorAll('ul .chip')].map(chipName), g.term).toEqual(g.options)
+      }
+      const others = [...card.querySelectorAll('.category > ul .chip')].map(chipName)
+      expect(others, category.category).toEqual(category.others)
     }
   }
 
-  it('on the values page each term is first in its own category, with its values still listed', async () => {
+  it('on the values page each term heads a group of its own values, shown once', async () => {
     render(<App />)
-    expectPlacement('values')
-    expect(categoryOf(word('Honesty and ethics')).querySelector('h3')).toHaveTextContent('Personal character')
-    expect(within(categoryOf(word('Honesty and ethics'))).getByRole('button', { name: 'Honesty' })).toBeInTheDocument()
+    expectGroups('values')
+    const group = categoryOf(word('Honesty and ethics'))
+    expect(group.querySelector('h3')).toHaveTextContent('Personal character')
+    expect(within(group.querySelector<HTMLElement>('[role="group"]')!).getByRole('button', { name: 'Honesty' })).toBeInTheDocument()
   })
 
-  it.each(SECTIONS.map((s, i) => [s, i] as const))('on the %s page each term is first in its own category, with its options still listed', async (section, index) => {
+  it.each(SECTIONS.map((s, i) => [s, i] as const))('on the %s page each term heads a group of its own options, shown once', async (section, index) => {
     const user = userEvent.setup()
     render(<App />)
     await openPage(user, index)
-    expectPlacement(section)
+    expectGroups(section)
   }, 20000)
 
-  it('shows the dashed-border note on the values and skills pages', async () => {
+  it('groups Jenkins and GitHub Actions under CI/CD, and shows an overlapping option once under the shorter term', async () => {
     const user = userEvent.setup()
     render(<App />)
+    await openPage(user, 0)
+    const ci = word('CI/CD').closest<HTMLElement>('[role="group"]')!
+    expect(within(ci).getByRole('button', { name: 'Jenkins' })).toBeInTheDocument()
+    expect(within(ci).getByRole('button', { name: 'GitHub Actions' })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: 'Rider' })).toHaveLength(1)
+    expect(word('Rider').closest('[role="group"]')).toHaveAccessibleName(/^Platform and enterprise IDEs/)
+  })
+
+  it('shows "Other options" under the groups only in cards that have both', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await openPage(user, 0)
+    const card = categoryOf(word('CI/CD'))
+    expect(card.querySelector('.others-caption')).toHaveTextContent('Other options')
+  })
+
+  it('explains that a broader term heads the group below it, on the values and skills pages', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    expect(screen.getByText(/heads the group of options below it/i)).toBeInTheDocument()
     await pickValues(user)
-    expect(screen.getByText(/dashed border are broader terms/i)).toBeInTheDocument()
     await user.click(next())
-    expect(screen.getByText(/dashed border are broader terms/i)).toBeInTheDocument()
+    expect(screen.getByText(/heads the group of options below it/i)).toBeInTheDocument()
   })
 
   it('selects a broader term without selecting the options it covers, and keeps both when both are chosen', async () => {
@@ -104,18 +126,22 @@ describe('Broader terms in their categories', () => {
     expect(word('CI/CD')).toHaveAttribute('aria-pressed', 'false')
   })
 
-  it('is filtered by name within its category and the card hides when nothing matches', async () => {
+  it('keeps a group when its option matches, with the term shown for context, and counts only matching words', async () => {
     const user = userEvent.setup()
     render(<App />)
     await openPage(user, 0)
     const filter = screen.getByLabelText('Filter skills')
+    await user.type(filter, 'jenkins')
+    const group = word('CI/CD').closest<HTMLElement>('[role="group"]')!
+    expect(within(group).getAllByRole('button').map((b) => b.textContent!.replace('✓', '').replace('Broad', '').trim())).toEqual(['CI/CD', 'Jenkins'])
+    expect(screen.getByText(/^Showing 1 of /)).toBeInTheDocument()
+    await user.clear(filter)
     await user.type(filter, 'ci/cd')
-    expect(word('CI/CD')).toBeInTheDocument()
+    expect(within(word('CI/CD').closest<HTMLElement>('[role="group"]')!).getAllByRole('button').length).toBeGreaterThanOrEqual(1)
     expect(screen.queryByRole('button', { name: 'Docker' })).toBeNull()
     await user.clear(filter)
-    await user.type(filter, 'jenkins')
-    expect(screen.queryByRole('button', { name: 'CI/CD' })).toBeNull()
-    expect(word('Jenkins')).toBeInTheDocument()
+    await user.type(filter, 'zzzz')
+    expect(screen.queryByRole('group')).toBeNull()
   })
 
   it('labels an unselected broader term and gives it no check mark; the label is not part of its name', async () => {

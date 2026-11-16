@@ -73,3 +73,38 @@ export function categoriesWithBroadTerms(kind: TermKind): { category: string; wo
     return { category: c.category, words: [...broad, ...c.words], broad }
   })
 }
+
+export interface TermGroup {
+  term: string
+  /** The options shown under the term: those it covers in its own category that no more specific term claims. */
+  options: string[]
+}
+
+export interface GroupedCategory {
+  category: string
+  groups: TermGroup[]
+  /** Options in the category that no broader term claims. */
+  others: string[]
+}
+
+/**
+ * A page's categories with each broader term heading a group of the options it covers. Each option is shown once:
+ * under the covering term with the shortest covers list (ties to the term listed first), or in `others`.
+ */
+export function groupedCategories(kind: TermKind): GroupedCategory[] {
+  return categoriesOf(kind).map((c) => {
+    const terms = BROAD_TERMS[kind].filter((t) => broadTermCategory(kind, t) === c.category)
+    const owner = new Map<string, BroadTerm>()
+    for (const t of terms) {
+      for (const name of t.covers) {
+        const current = owner.get(name)
+        if (c.words.includes(name) && (!current || t.covers.length < current.covers.length)) owner.set(name, t)
+      }
+    }
+    return {
+      category: c.category,
+      groups: terms.map((t) => ({ term: t.name, options: t.covers.filter((n) => owner.get(n) === t) })),
+      others: c.words.filter((w) => !owner.has(w)),
+    }
+  })
+}

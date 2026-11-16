@@ -10,9 +10,18 @@ import TermButton from './TermButton'
 import { prefersReducedMotion } from '../useStepNavigation'
 import type { Mode } from '../state/profile'
 
+/** A broader term and the options shown under it. */
+export interface WordGroup {
+  term: string
+  options: string[]
+}
+
 export interface WordCategory {
   category: string
+  /** Options not under any broader term. */
   words: string[]
+  /** Broader terms heading groups of options in this category. Omit when there are none. */
+  groups?: WordGroup[]
 }
 
 interface Props {
@@ -22,8 +31,6 @@ interface Props {
   hint: string
   /** One line saying what to do on this page. */
   lead: string
-  /** Names of the words in the categories that are broader terms; they get a dashed border and a label. Omit when there are none. */
-  broadTerms?: string[]
   categories: WordCategory[]
   selected: string[]
   custom: string[]
@@ -55,7 +62,6 @@ export default function WordPicker({
   heading,
   hint,
   lead,
-  broadTerms = [],
   categories,
   selected,
   custom,
@@ -77,7 +83,7 @@ export default function WordPicker({
   const hintId = `${filterId}-hint`
   const addHelpId = `${filterId}-add-help`
   const chosen = new Set(selected)
-  const broad = new Set(broadTerms)
+  const hasGroups = categories.some((c) => (c.groups?.length ?? 0) > 0)
 
   // Adding a new custom entry reveals the Custom card: clear a filter that would hide it, then scroll to it.
   const pendingAdd = useRef(false)
@@ -107,15 +113,24 @@ export default function WordPicker({
   const full = limit !== undefined && selected.length >= limit
   const query = filter.trim().toLowerCase()
 
-  const visible = [
-    ...categories,
-    ...(custom.length > 0 ? [{ category: 'Custom', words: custom }] : []),
-  ]
-    .map((c) => ({ ...c, words: c.words.filter((w) => w.toLowerCase().includes(query)) }))
-    .filter((c) => c.words.length > 0)
+  const matches = (w: string) => w.toLowerCase().includes(query)
+  const visible = [...categories, ...(custom.length > 0 ? [{ category: 'Custom', words: custom }] : [])]
+    .map((c) => ({
+      category: c.category,
+      words: c.words.filter(matches),
+      // A group shows when its term or any option matches; the term stays for context.
+      groups: ((c as WordCategory).groups ?? [])
+        .map((g) => ({ term: g.term, termMatches: matches(g.term), options: g.options.filter(matches), all: g.options.length }))
+        .filter((g) => g.termMatches || g.options.length > 0),
+    }))
+    .filter((c) => c.words.length > 0 || c.groups.length > 0)
 
-  const total = categories.reduce((n, c) => n + c.words.length, 0) + custom.length
-  const shown = visible.reduce((n, c) => n + c.words.length, 0)
+  const total =
+    categories.reduce((n, c) => n + c.words.length + (c.groups ?? []).reduce((m, g) => m + 1 + g.options.length, 0), 0) + custom.length
+  const shown = visible.reduce(
+    (n, c) => n + c.words.length + c.groups.reduce((m, g) => m + (g.termMatches ? 1 : 0) + g.options.length, 0),
+    0,
+  )
 
   return (
     <section aria-labelledby={headingId}>
@@ -138,8 +153,10 @@ export default function WordPicker({
         <AddEntry label={addLabel} placeholder={addPlaceholder} helpId={addHelpId} full={full} onAdd={addCustom} />
       </div>
 
-      {broadTerms.length > 0 && (
-        <p className="broad-note">Options with a dashed border are broader terms. Choosing one does not choose the options it covers.</p>
+      {hasGroups && (
+        <p className="broad-note">
+          Each option with a dashed border is a broader term. It heads the group of options below it, and choosing it does not choose them.
+        </p>
       )}
 
       <div className="filter-block">
@@ -170,42 +187,60 @@ export default function WordPicker({
       <div className="categories">
         {visible.map((c) => {
           const isCustom = c.category === 'Custom'
+          const chip = (name: string, isBroad: boolean) => (
+            <TermButton
+              kind={kind}
+              name={name}
+              className={`chip${isCustom ? ' custom' : ''}${isBroad ? ' broad' : ''}`}
+              selected={chosen.has(name)}
+              unavailable={full && !chosen.has(name)}
+              onToggle={() => onToggle(name)}
+            >
+              {isBroad ? (
+                <>
+                  {name} <span className="broad-label" aria-hidden="true">Broad</span>
+                </>
+              ) : undefined}
+            </TermButton>
+          )
           return (
             <div key={c.category} className={isCustom ? 'category custom-card' : 'category'} ref={isCustom ? customCard : undefined}>
               <h3>{c.category}</h3>
-              <ul className="chips">
-                {c.words.map((name) => {
-                  const isBroad = !isCustom && broad.has(name)
-                  return (
-                  <li key={name} className={isCustom ? 'custom-item' : undefined}>
-                    <TermButton
-                      kind={kind}
-                      name={name}
-                      className={`chip${isCustom ? ' custom' : ''}${isBroad ? ' broad' : ''}`}
-                      selected={chosen.has(name)}
-                      unavailable={full && !chosen.has(name)}
-                      onToggle={() => onToggle(name)}
-                    >
-                      {isBroad ? (
-                        <>
-                          {name} <span className="broad-label" aria-hidden="true">Broad</span>
-                        </>
-                      ) : undefined}
-                    </TermButton>
-                    {isCustom && (
-                      <button
-                        type="button"
-                        className="remove"
-                        aria-label={`Remove ${name}`}
-                        onClick={() => onRemoveCustom(name)}
-                      >
-                        ×
-                      </button>
-                    )}
-                  </li>
-                  )
-                })}
-              </ul>
+              {c.groups.map((g) => (
+                <div key={g.term} className="broad-group" role="group" aria-label={`${g.term} and the options it groups`}>
+                  <div className="group-head">
+                    {chip(g.term, true)}
+                    <span className="group-caption">Groups these {g.all} options:</span>
+                  </div>
+                  <ul className="chips">
+                    {g.options.map((name) => (
+                      <li key={name}>{chip(name, false)}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              {c.words.length > 0 && (
+                <>
+                  {c.groups.length > 0 && <p className="group-caption others-caption">Other options</p>}
+                  <ul className="chips">
+                    {c.words.map((name) => (
+                      <li key={name} className={isCustom ? 'custom-item' : undefined}>
+                        {chip(name, false)}
+                        {isCustom && (
+                          <button
+                            type="button"
+                            className="remove"
+                            aria-label={`Remove ${name}`}
+                            onClick={() => onRemoveCustom(name)}
+                          >
+                            ×
+                          </button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
             </div>
           )
         })}

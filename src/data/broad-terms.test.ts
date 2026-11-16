@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { BROAD_TERMS, broadTermDefinition } from './broad-terms'
 import { getDefinition, type TermKind } from './definitions'
-import { SECTIONS, broadTermCategory, broadTermHasTie, categoriesOf, categoriesWithBroadTerms } from './skills'
+import { SECTIONS, broadTermCategory, broadTermHasTie, categoriesOf, categoriesWithBroadTerms, groupedCategories } from './skills'
 
 const norm = (s: string) => s.trim().toLowerCase()
 
@@ -119,5 +119,38 @@ describe('broader term colours', () => {
     const broad = [...css.matchAll(/--broad:\s*(#[0-9a-fA-F]{6})/g)].map((m) => m[1].toLowerCase())
     expect(broad.length).toBe(3)
     for (const b of broad) expect(accents).not.toContain(b)
+  })
+})
+
+describe('grouping options under broader terms', () => {
+  it.each(KINDS)('%s: every option is shown once, and the flat words match categoriesWithBroadTerms', (kind) => {
+    const grouped = groupedCategories(kind)
+    const shown = grouped.flatMap((c) => [...c.groups.flatMap((g) => [g.term, ...g.options]), ...c.others])
+    expect(new Set(shown).size).toBe(shown.length)
+    const flat = categoriesWithBroadTerms(kind).flatMap((c) => c.words)
+    expect([...shown].sort()).toEqual([...flat].sort())
+    grouped.forEach((c, i) => {
+      const own = new Set(categoriesOf(kind)[i].words)
+      for (const g of c.groups) for (const o of g.options) expect(own.has(o), `${g.term} / ${o}`).toBe(true)
+    })
+  })
+
+  it('puts an option covered by two terms under the one with the shorter covers list', () => {
+    const rider = groupedCategories('technical').find((c) => c.category === 'Editors and IDEs')!
+    const owner = rider.groups.find((g) => g.options.includes('Rider'))!
+    expect(owner.term).toBe('Platform and enterprise IDEs')
+    expect(rider.groups.find((g) => g.term === 'JetBrains IDEs')!.options).not.toContain('Rider')
+  })
+
+  it('keeps covered options from other categories out of the group', () => {
+    const iac = BROAD_TERMS.technical.find((t) => t.name === 'Infrastructure automation tools')!
+    expect(iac.covers).toContain('HCL')
+    const group = groupedCategories('technical').flatMap((c) => c.groups).find((g) => g.term === iac.name)!
+    expect(group.options).not.toContain('HCL')
+  })
+
+  it.each(KINDS)('%s: every broader term heads at least two options', (kind) => {
+    const thin = groupedCategories(kind).flatMap((c) => c.groups).filter((g) => g.options.length < 2).map((g) => `${g.term} (${g.options.length})`)
+    expect(thin).toEqual([])
   })
 })

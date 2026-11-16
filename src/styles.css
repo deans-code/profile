@@ -470,6 +470,36 @@ ul {
   font-size: 0.9rem;
 }
 
+.broad-group {
+  margin: 0 0 0.75rem;
+  padding: 0.5rem 0.75rem 0.25rem;
+  border: 1px dashed var(--broad);
+  border-radius: var(--radius);
+}
+
+.group-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.group-head .chip {
+  width: auto;
+  min-width: 9.5rem;
+}
+
+.group-caption {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.others-caption {
+  margin-bottom: 0.5rem;
+}
+
 .chip.static {
   width: auto;
   display: inline-flex;

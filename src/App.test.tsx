@@ -401,12 +401,11 @@ describe('uniform words and section colours', () => {
     await user.click(next())
     const skills = screen.getAllByRole('button').filter((b) => b.hasAttribute('aria-pressed'))
     expect(new Set(skills.map((b) => b.className))).toEqual(new Set(['chip', 'chip broad']))
-    // Broader terms sit inside the category cards, ahead of the ordinary options.
+    // Broader terms head groups inside the category cards.
     expect(document.querySelector('.broad-card')).toBeNull()
-    for (const card of document.querySelectorAll('.category')) {
-      const classes = [...card.querySelectorAll('.chip')].map((b) => b.classList.contains('broad'))
-      expect(classes).toEqual([...classes].sort((a, b) => Number(b) - Number(a)))
-    }
+    const heads = [...document.querySelectorAll('.chip.broad')]
+    expect(heads.length).toBeGreaterThan(0)
+    expect(heads.every((b) => b.closest('.group-head'))).toBe(true)
   })
 
   it('switches the section colour with each step and gives each step its own colour hook', async () => {

@@ -1,5 +1,5 @@
 import type { Dispatch } from 'react'
-import { categoriesWithBroadTerms } from '../data/skills'
+import { groupedCategories } from '../data/skills'
 import { limitFor, MIN_VALUES, type Action, type ProfileState } from '../state/profile'
 import WordPicker from './WordPicker'
 
@@ -16,8 +16,7 @@ export default function ValuesStep({ state, dispatch }: Props) {
       heading="What do you value?"
       lead="Pick 5 to 10 values that matter most to you."
       hint="Select the values that describe you, or add your own."
-      categories={categoriesWithBroadTerms('values').map(({ category, words }) => ({ category, words }))}
-      broadTerms={categoriesWithBroadTerms('values').flatMap((c) => c.broad)}
+      categories={groupedCategories('values').map((c) => ({ category: c.category, words: c.others, groups: c.groups }))}
       selected={state.selectedValues}
       custom={state.customValues}
       limit={limitFor('values')}
