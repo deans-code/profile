@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { BROAD_TERMS } from './data/broad-terms'
-import { SECTIONS } from './data/skills'
+import { SECTIONS, broadTermCategory } from './data/skills'
 import { parseProfile, profileToState } from './load'
 import { initialState } from './state/profile'
 import { pickValues } from './test-values'
@@ -9,40 +9,52 @@ import App from './App'
 
 const next = () => within(document.querySelector<HTMLElement>('footer.nav')!).getByRole('button', { name: /^(Continue|Finish)/ })
 const word = (name: string) => screen.getByRole('button', { name })
-const card = () => document.querySelector<HTMLElement>('.broad-card')
+const categoryOf = (el: HTMLElement) => el.closest<HTMLElement>('.category')!
 
 /** Opens the skills page at the given index (0 = technical), choosing one skill on each page passed. */
 async function openPage(user: ReturnType<typeof userEvent.setup>, index: number) {
   await pickValues(user)
   await user.click(next())
   for (let i = 0; i < index; i++) {
-    await user.click(document.querySelector<HTMLElement>('.category:not(.broad-card) .chip')!)
+    await user.click(document.querySelector<HTMLElement>('.category .chip:not(.broad)')!)
     await user.click(next())
   }
 }
 
-describe('Broader terms card', () => {
-  it.each(SECTIONS.map((s, i) => [s, i] as const))('is the first card on the %s page, with its terms and the individual options still listed', async (section, index) => {
+describe('Broader terms in their categories', () => {
+  it.each(SECTIONS.map((s, i) => [s, i] as const))('on the %s page each term is first in its own category, with its options still listed', async (section, index) => {
     const user = userEvent.setup()
     render(<App />)
     await openPage(user, index)
-    const first = document.querySelector('.categories .category')!
-    expect(first).toBe(card())
-    expect(within(first as HTMLElement).getByRole('heading', { name: 'Broader terms' })).toBeInTheDocument()
-    const terms = BROAD_TERMS[section]
-    expect(within(card()!).getAllByRole('button').length).toBe(terms.length)
-    const sample = terms[0]
-    expect(within(card()!).getByRole('button', { name: sample.name })).toHaveClass('broad')
-    // The first covered option is still listed in its own category, outside the card.
-    const covered = screen.getAllByRole('button', { name: sample.covers[0] })
-    expect(covered.some((b) => !card()!.contains(b))).toBe(true)
+    expect(screen.queryByRole('heading', { name: 'Broader terms' })).toBeNull()
+    for (const term of BROAD_TERMS[section]) {
+      const button = word(term.name)
+      expect(button).toHaveClass('broad')
+      const card = categoryOf(button)
+      expect(within(card).getByRole('heading').textContent).toBe(broadTermCategory(section, term))
+      const own = BROAD_TERMS[section].filter((t) => broadTermCategory(section, t) === broadTermCategory(section, term)).length
+      const leading = within(card).getAllByRole('button').slice(0, own)
+      expect(leading).toContain(button)
+      expect(leading.every((b) => b.classList.contains('broad'))).toBe(true)
+    }
+    const sample = BROAD_TERMS[section][0]
+    expect(within(categoryOf(word(sample.name))).getByRole('button', { name: sample.covers[0] })).toBeInTheDocument()
+  })
+
+  it('shows the dashed-border note on skills pages only', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await pickValues(user)
+    expect(screen.queryByText(/dashed border are broader terms/i)).toBeNull()
+    await user.click(next())
+    expect(screen.getByText(/dashed border are broader terms/i)).toBeInTheDocument()
   })
 
   it('selects a broader term without selecting the options it covers, and keeps both when both are chosen', async () => {
     const user = userEvent.setup()
     render(<App />)
     await openPage(user, 0)
-    await user.click(within(card()!).getByRole('button', { name: 'CI/CD' }))
+    await user.click(word('CI/CD'))
     expect(word('CI/CD')).toHaveAttribute('aria-pressed', 'true')
     expect(word('Jenkins')).toHaveAttribute('aria-pressed', 'false')
     await user.click(word('Jenkins'))
@@ -73,25 +85,30 @@ describe('Broader terms card', () => {
     expect(word('CI/CD')).toHaveAttribute('aria-pressed', 'false')
   })
 
-  it('is filtered by name and hides when nothing in it matches', async () => {
+  it('is filtered by name within its category and the card hides when nothing matches', async () => {
     const user = userEvent.setup()
     render(<App />)
     await openPage(user, 0)
     const filter = screen.getByLabelText('Filter skills')
     await user.type(filter, 'ci/cd')
-    expect(within(card()!).getByRole('button', { name: 'CI/CD' })).toBeInTheDocument()
+    expect(word('CI/CD')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Docker' })).toBeNull()
     await user.clear(filter)
     await user.type(filter, 'jenkins')
-    expect(card()).toBeNull()
+    expect(screen.queryByRole('button', { name: 'CI/CD' })).toBeNull()
+    expect(word('Jenkins')).toBeInTheDocument()
   })
 
-  it('has a caption so the card does not rely on colour alone', async () => {
+  it('labels an unselected broader term and gives it no check mark; the label is not part of its name', async () => {
     const user = userEvent.setup()
     render(<App />)
     await openPage(user, 0)
-    expect(card()).toHaveTextContent(/covers several options/i)
-    await user.click(word('CI/CD'))
-    expect(word('CI/CD')).toHaveAttribute('aria-pressed', 'true')
+    const chip = word('CI/CD')
+    expect(chip.querySelector('.broad-label')).toHaveTextContent('Broad')
+    expect(chip).toHaveAttribute('aria-pressed', 'false')
+    await user.click(chip)
+    expect(chip).toHaveAttribute('aria-pressed', 'true')
+    expect(word('Jenkins')).not.toHaveClass('broad')
   })
 })
 

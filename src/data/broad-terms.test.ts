@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { BROAD_TERMS, broadTermDefinition } from './broad-terms'
 import { getDefinition } from './definitions'
-import { CATALOGS, SECTIONS, catalogSkillNames } from './skills'
+import { CATALOGS, SECTIONS, broadTermCategory, broadTermHasTie, catalogSkillNames, categoriesWithBroadTerms } from './skills'
 import { COMMON_VALUES } from './values'
 
 const norm = (s: string) => s.trim().toLowerCase()
@@ -31,6 +31,21 @@ describe('broader terms data', () => {
       ...COMMON_VALUES.map((v) => norm(v.name)),
     ])
     expect(all.filter((n) => taken.has(n))).toEqual([])
+  })
+
+  it.each(SECTIONS)('%s: every broader term has one clear category that exists', (section) => {
+    const categories = CATALOGS[section].map((c) => c.category)
+    for (const t of BROAD_TERMS[section]) {
+      expect(categories, t.name).toContain(broadTermCategory(section, t))
+      expect(broadTermHasTie(section, t), t.name).toBe(false)
+    }
+    const placed = categoriesWithBroadTerms(section).flatMap((c) => c.broad)
+    expect(placed.sort()).toEqual(BROAD_TERMS[section].map((t) => t.name).sort())
+  })
+
+  it('places CI/CD in Containers, infrastructure and delivery', () => {
+    const term = BROAD_TERMS.technical.find((t) => t.name === 'CI/CD')!
+    expect(broadTermCategory('technical', term)).toBe('Containers, infrastructure and delivery')
   })
 
   it('leaves the cited catalogs untouched', () => {
@@ -72,16 +87,16 @@ describe('broader term colours', () => {
     },
   }
 
-  it.each(Object.keys(themes))('%s: text, border and heading meet WCAG AA', (name) => {
+  it.each(Object.keys(themes))('%s: dashed border and label meet WCAG AA on the chip, page and selected tint', (name) => {
     const t = themes[name as keyof typeof themes]
     const broad = token(t.block, '--broad')
-    const tint = token(t.block, '--broad-tint')
     expect(broad).not.toBe('')
-    expect(tint).not.toBe('')
-    expect(contrast(t.text, tint)).toBeGreaterThanOrEqual(4.5)
-    expect(contrast(broad, tint)).toBeGreaterThanOrEqual(3)
     expect(contrast(broad, t.surface)).toBeGreaterThanOrEqual(4.5)
     expect(contrast(broad, t.page)).toBeGreaterThanOrEqual(4.5)
+  })
+
+  it('has no leftover tint token', () => {
+    expect(css).not.toContain('--broad-tint')
   })
 
   it('differs from every section accent', () => {

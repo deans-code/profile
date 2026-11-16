@@ -401,8 +401,12 @@ describe('uniform words and section colours', () => {
     await user.click(next())
     const skills = screen.getAllByRole('button').filter((b) => b.hasAttribute('aria-pressed'))
     expect(new Set(skills.map((b) => b.className))).toEqual(new Set(['chip', 'chip broad']))
-    const broad = document.querySelector('.broad-card')!
-    expect(skills.filter((b) => b.className === 'chip broad').every((b) => broad.contains(b))).toBe(true)
+    // Broader terms sit inside the category cards, ahead of the ordinary options.
+    expect(document.querySelector('.broad-card')).toBeNull()
+    for (const card of document.querySelectorAll('.category')) {
+      const classes = [...card.querySelectorAll('.chip')].map((b) => b.classList.contains('broad'))
+      expect(classes).toEqual([...classes].sort((a, b) => Number(b) - Number(a)))
+    }
   })
 
   it('switches the section colour with each step and gives each step its own colour hook', async () => {
@@ -477,7 +481,7 @@ describe('end to end with many skills', () => {
         .filter((b) => b.hasAttribute('aria-pressed'))
         .slice(0, count)
       for (const b of buttons) await user.click(b)
-      return buttons.map((b) => b.textContent!.replace('✓', '').trim())
+      return buttons.map((b) => b.textContent!.replace('✓', '').replace(/ Broad$/, '').trim())
     }
     const technical = await pickSome(14)
     await user.click(next())

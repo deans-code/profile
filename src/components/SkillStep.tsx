@@ -1,6 +1,5 @@
 import type { Dispatch } from 'react'
-import { broadTermNames } from '../data/broad-terms'
-import { CATALOGS, SECTION_LABELS, type Section } from '../data/skills'
+import { SECTION_LABELS, categoriesWithBroadTerms, type Section } from '../data/skills'
 import { limitFor, selectionCount, type Action, type ProfileState } from '../state/profile'
 import WordPicker from './WordPicker'
 
@@ -19,8 +18,8 @@ export default function SkillStep({ section, state, dispatch }: Props) {
       heading={`${label} skills`}
       lead="Pick the skills that apply, add your own, and switch between previous and desired experience."
       hint="Select the skills that apply, or add your own."
-      broadTerms={broadTermNames(section)}
-      categories={CATALOGS[section].map((c) => ({ category: c.category, words: c.skills }))}
+      categories={categoriesWithBroadTerms(section).map(({ category, words }) => ({ category, words }))}
+      broadTerms={categoriesWithBroadTerms(section).flatMap((c) => c.broad)}
       selected={state.selectedSkills[section][state.mode]}
       custom={state.customSkills[section]}
       mode={state.mode}

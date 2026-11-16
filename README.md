@@ -97,7 +97,7 @@ npm run preview
 - Technical development, engineering and interpersonal skill catalogs, grouped by category into cards, with filtering and custom skills. The technical catalog is guided by published developer surveys (see [Sources](#sources)), which are also listed at the bottom of every page.
 - A range of 5 to 10 selected values, with a running count. Skills have no limit.
 - A short description for every built-in value and skill (custom entries have none).
-- A "Broader terms" card at the top of each skills page (for example CI/CD, Relational databases or Coaching and mentoring skills), shown in a distinct colour. Each term covers several of the options below it; choosing a term does not choose them. These groupings are this app's own, not taken from a published list, so they carry no source citation.
+- Broader terms on each skills page (for example CI/CD, Relational databases or Coaching and mentoring skills), placed first inside the category card that holds most of the options they cover, with a dashed border and a "Broad" label. Each term covers several of the options listed with it; choosing a term does not choose them. These groupings are this app's own, not taken from a published list, so they carry no source citation.
 - Adding a custom value or skill scrolls to the Custom card so the new entry is visible (instantly if you prefer reduced motion), and clears a filter that would hide it.
 - Loading of a saved JSON profile, validated before it replaces the current profile.
 - A distinct colour for each section, with accessible contrast in light and dark themes.

@@ -10,9 +10,6 @@ import TermButton from './TermButton'
 import { prefersReducedMotion } from '../useStepNavigation'
 import type { Mode } from '../state/profile'
 
-/** Heading of the card that holds the broader terms. */
-const BROAD_CARD = 'Broader terms'
-
 export interface WordCategory {
   category: string
   words: string[]
@@ -25,7 +22,7 @@ interface Props {
   hint: string
   /** One line saying what to do on this page. */
   lead: string
-  /** Broader terms shown in their own card above the categories, in a distinct colour. Omit when there are none. */
+  /** Names of the words in the categories that are broader terms; they get a dashed border and a label. Omit when there are none. */
   broadTerms?: string[]
   categories: WordCategory[]
   selected: string[]
@@ -80,6 +77,7 @@ export default function WordPicker({
   const hintId = `${filterId}-hint`
   const addHelpId = `${filterId}-add-help`
   const chosen = new Set(selected)
+  const broad = new Set(broadTerms)
 
   // Adding a new custom entry reveals the Custom card: clear a filter that would hide it, then scroll to it.
   const pendingAdd = useRef(false)
@@ -110,14 +108,13 @@ export default function WordPicker({
   const query = filter.trim().toLowerCase()
 
   const visible = [
-    ...(broadTerms.length > 0 ? [{ category: BROAD_CARD, words: broadTerms }] : []),
     ...categories,
     ...(custom.length > 0 ? [{ category: 'Custom', words: custom }] : []),
   ]
     .map((c) => ({ ...c, words: c.words.filter((w) => w.toLowerCase().includes(query)) }))
     .filter((c) => c.words.length > 0)
 
-  const total = broadTerms.length + categories.reduce((n, c) => n + c.words.length, 0) + custom.length
+  const total = categories.reduce((n, c) => n + c.words.length, 0) + custom.length
   const shown = visible.reduce((n, c) => n + c.words.length, 0)
 
   return (
@@ -140,6 +137,10 @@ export default function WordPicker({
         {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
         <AddEntry label={addLabel} placeholder={addPlaceholder} helpId={addHelpId} full={full} onAdd={addCustom} />
       </div>
+
+      {broadTerms.length > 0 && (
+        <p className="broad-note">Options with a dashed border are broader terms. Choosing one does not choose the options it covers.</p>
+      )}
 
       <div className="filter-block">
         <label htmlFor={filterId} className="filter-label">
@@ -169,13 +170,13 @@ export default function WordPicker({
       <div className="categories">
         {visible.map((c) => {
           const isCustom = c.category === 'Custom'
-          const isBroad = c.category === BROAD_CARD
           return (
-            <div key={c.category} className={isCustom ? 'category custom-card' : isBroad ? 'category broad-card' : 'category'} ref={isCustom ? customCard : undefined}>
+            <div key={c.category} className={isCustom ? 'category custom-card' : 'category'} ref={isCustom ? customCard : undefined}>
               <h3>{c.category}</h3>
-              {isBroad && <p className="broad-caption">Each broader term covers several options listed below. Choosing one does not choose them.</p>}
               <ul className="chips">
-                {c.words.map((name) => (
+                {c.words.map((name) => {
+                  const isBroad = !isCustom && broad.has(name)
+                  return (
                   <li key={name} className={isCustom ? 'custom-item' : undefined}>
                     <TermButton
                       kind={kind}
@@ -184,7 +185,13 @@ export default function WordPicker({
                       selected={chosen.has(name)}
                       unavailable={full && !chosen.has(name)}
                       onToggle={() => onToggle(name)}
-                    />
+                    >
+                      {isBroad ? (
+                        <>
+                          {name} <span className="broad-label" aria-hidden="true">Broad</span>
+                        </>
+                      ) : undefined}
+                    </TermButton>
                     {isCustom && (
                       <button
                         type="button"
@@ -196,7 +203,8 @@ export default function WordPicker({
                       </button>
                     )}
                   </li>
-                ))}
+                  )
+                })}
               </ul>
             </div>
           )
