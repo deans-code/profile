@@ -137,7 +137,8 @@ describe('rapid activation', () => {
       fireEvent.click(next())
       expect(heading(/technical development skills/i)).toBeInTheDocument()
 
-      // Selecting still works during the animation.
+      // Selecting still works during the animation (the new page's cards start collapsed).
+      fireEvent.click(screen.getByRole('button', { name: 'Show all' }))
       fireEvent.click(chip('Python'))
       expect(chip('Python')).toHaveAttribute('aria-pressed', 'true')
 

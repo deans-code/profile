@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState, type RefObject } from 'react'
 import type { TermKind } from '../data/definitions'
 import { ASSISTANT_HELP } from '../data/assistant'
 import AddEntry, { AddEntryHelp } from './AddEntry'
@@ -9,6 +9,36 @@ import SelectionStatus from './SelectionStatus'
 import TermButton from './TermButton'
 import { prefersReducedMotion } from '../useStepNavigation'
 import type { Mode } from '../state/profile'
+
+const COLUMN_REM = 24
+const COLUMN_GAP_REM = 1
+
+/** How many columns of cards fit in the element's width; one when the width cannot be measured. */
+function useColumnCount(ref: RefObject<HTMLElement | null>): number {
+  const [count, setCount] = useState(1)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const measure = () => {
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
+      const fit = Math.floor((el.clientWidth + COLUMN_GAP_REM * rem) / ((COLUMN_REM + COLUMN_GAP_REM) * rem))
+      setCount(Math.max(1, fit))
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [ref])
+  return count
+}
+
+/** Splits items into `parts` runs of consecutive items, so reading order stays the category order. */
+function chunk<T>(items: T[], parts: number): T[][] {
+  const size = Math.max(1, Math.ceil(items.length / parts))
+  const out: T[][] = []
+  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size))
+  return out
+}
 
 /** A broader term and the options shown under it. */
 export interface WordGroup {
@@ -79,12 +109,16 @@ export default function WordPicker({
   onRemoveCustom,
 }: Props) {
   const [filter, setFilter] = useState('')
-  // Categories the user has collapsed. A filter with text shows matching cards open without changing this.
-  const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
+  // Categories the user has opened; every card starts collapsed. A filter with text shows matching cards open without changing this.
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
+  const [bulkStatus, setBulkStatus] = useState('')
   const filterId = useId()
   const hintId = `${filterId}-hint`
   const addHelpId = `${filterId}-add-help`
   const chosen = new Set(selected)
+  // Cards are dealt into fixed columns by position, so opening one card only moves the cards below it in its column.
+  const categoriesEl = useRef<HTMLDivElement | null>(null)
+  const columnCount = useColumnCount(categoriesEl)
   const hasGroups = categories.some((c) => (c.groups?.length ?? 0) > 0)
 
   // Adding a new custom entry reveals the Custom card: clear a filter that would hide it, then scroll to it.
@@ -100,12 +134,7 @@ export default function WordPicker({
     pendingAdd.current = false
     if (!grew || !wanted) return
     setFilter('')
-    setCollapsed((prev) => {
-      if (!prev.has('Custom')) return prev
-      const next = new Set(prev)
-      next.delete('Custom')
-      return next
-    })
+    setExpanded((prev) => (prev.has('Custom') ? prev : new Set(prev).add('Custom')))
     setRevealTick((t) => t + 1)
   })
 
@@ -119,11 +148,20 @@ export default function WordPicker({
     onAddCustom(text)
   }
   function toggleCard(category: string) {
-    setCollapsed((prev) => {
+    setBulkStatus('')
+    setExpanded((prev) => {
       const next = new Set(prev)
       if (!next.delete(category)) next.add(category)
       return next
     })
+  }
+  function showAll() {
+    setExpanded(new Set([...categories.map((c) => c.category), ...(custom.length > 0 ? ['Custom'] : [])]))
+    setBulkStatus('All sections shown')
+  }
+  function collapseAll() {
+    setExpanded(new Set())
+    setBulkStatus('All sections collapsed')
   }
   const full = limit !== undefined && selected.length >= limit
   const query = filter.trim().toLowerCase()
@@ -197,10 +235,22 @@ export default function WordPicker({
         )}
       </div>
 
+      <div className="bulk-bar">
+        <button type="button" className="bulk-button" onClick={showAll}>
+          Show all
+        </button>
+        <button type="button" className="bulk-button" onClick={collapseAll}>
+          Collapse all
+        </button>
+        <span className="bulk-status" aria-live="polite">
+          {bulkStatus}
+        </span>
+      </div>
+
       {visible.length === 0 && <p className="hint">No {noun} match your filter.</p>}
 
-      <div className="categories">
-        {visible.map((c) => {
+      <div className="categories" ref={categoriesEl}>
+        {chunk(visible.map((c) => {
           const isCustom = c.category === 'Custom'
           const chip = (name: string, isBroad: boolean) => (
             <TermButton
@@ -218,7 +268,7 @@ export default function WordPicker({
               ) : undefined}
             </TermButton>
           )
-          const isOpen = !collapsed.has(c.category) || query !== ''
+          const isOpen = expanded.has(c.category) || query !== ''
           const regionId = `${filterId}-${c.category.replace(/\W+/g, '-')}`
           const names = [...c.words, ...c.groups.flatMap((g) => [g.term, ...g.options])]
           const pickedHere = names.filter((n) => chosen.has(n)).length
@@ -277,7 +327,11 @@ export default function WordPicker({
               </div>
             </div>
           )
-        })}
+        }), columnCount).map((column, i) => (
+          <div key={i} className="category-column">
+            {column}
+          </div>
+        ))}
       </div>
 
       <SelectionStatus count={selected.length} limit={limit} min={min} />
