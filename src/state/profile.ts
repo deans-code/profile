@@ -1,3 +1,5 @@
+import { selectExclusive } from '../data/broad-terms'
+import type { TermKind } from '../data/definitions'
 import { SECTIONS, SECTION_LABELS, selectableNames, selectableSkillNames, type Section } from '../data/skills'
 
 export type Step = 'values' | Section | 'card'
@@ -172,13 +174,16 @@ export function loadLanding(profile: LoadedProfile): { step: Step; notice: strin
 }
 
 const without = (list: string[], name: string) => list.filter((n) => n !== name)
-const toggle = (list: string[], name: string) => (list.includes(name) ? without(list, name) : [...list, name])
 
 /** Removes a name from both modes' lists. */
 const withoutBoth = (lists: PerMode<string[]>, name: string): PerMode<string[]> => ({
   experience: without(lists.experience, name),
   desired: without(lists.desired, name),
 })
+
+/** Toggle a name; choosing one applies the broader-term exclusivity rule. */
+const pick = (list: string[], name: string, kind: TermKind) =>
+  list.includes(name) ? without(list, name) : selectExclusive(kind, list, name)
 
 const withMode = <T>(lists: PerMode<T>, mode: Mode, value: T): PerMode<T> => ({ ...lists, [mode]: value })
 
@@ -191,7 +196,7 @@ export function reducer(state: ProfileState, action: Action): ProfileState {
     case 'toggleValue': {
       const selected = state.selectedValues
       if (!selected.includes(action.name) && isFull(state, 'values')) return state
-      return { ...state, selectedValues: toggle(selected, action.name) }
+      return { ...state, selectedValues: pick(selected, action.name, 'values') }
     }
 
     case 'addCustomValue': {
@@ -202,7 +207,7 @@ export function reducer(state: ProfileState, action: Action): ProfileState {
       if (existing) {
         return selected.includes(existing) || isFull(state, 'values')
           ? state
-          : { ...state, selectedValues: [...selected, existing] }
+          : { ...state, selectedValues: selectExclusive('values', selected, existing) }
       }
       if (isFull(state, 'values')) return state
       return {
@@ -227,7 +232,7 @@ export function reducer(state: ProfileState, action: Action): ProfileState {
         ...state,
         selectedSkills: {
           ...state.selectedSkills,
-          [section]: withMode(state.selectedSkills[section], mode, toggle(selected, name)),
+          [section]: withMode(state.selectedSkills[section], mode, pick(selected, name, section)),
         },
       }
     }
@@ -240,7 +245,7 @@ export function reducer(state: ProfileState, action: Action): ProfileState {
       const existing = findMatch(allSkillNames(state, section), text)
       const withSelected = (name: string): ProfileState['selectedSkills'] => ({
         ...state.selectedSkills,
-        [section]: withMode(state.selectedSkills[section], mode, [...selected, name]),
+        [section]: withMode(state.selectedSkills[section], mode, selectExclusive(section, selected, name)),
       })
       if (existing) {
         return selected.includes(existing) || isFull(state, section)

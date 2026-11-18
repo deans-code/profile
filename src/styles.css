@@ -444,7 +444,7 @@ ul {
 }
 
 .chip.broad {
-  border: 1px dashed var(--broad);
+  border: 2px solid var(--broad);
 }
 
 .chip.broad[aria-pressed='true'] {
@@ -455,7 +455,7 @@ ul {
   display: inline-block;
   margin-left: 0.25rem;
   padding: 0 0.3rem;
-  border: 1px dashed var(--broad);
+  border: 1px solid var(--broad);
   border-radius: 4px;
   color: var(--broad);
   font-size: 0.75rem;
@@ -473,7 +473,7 @@ ul {
 .broad-group {
   margin: 0 0 0.75rem;
   padding: 0.5rem 0.75rem 0.25rem;
-  border: 1px dashed var(--broad);
+  border: 2px solid var(--broad);
   border-radius: var(--radius);
 }
 
@@ -573,6 +573,43 @@ ul {
   border-top: 4px solid var(--accent);
   border-radius: var(--radius);
   padding: 0.75rem 1rem 0.25rem;
+}
+
+.category h3 {
+  margin: 0 0 0.5rem;
+}
+
+.category-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.25rem 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.category-chevron {
+  flex: none;
+  width: 1rem;
+  color: var(--accent);
+}
+
+.category-name {
+  flex: 1;
+}
+
+.category-count {
+  flex: none;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 /* Instructions */

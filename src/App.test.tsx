@@ -477,7 +477,7 @@ describe('end to end with many skills', () => {
     const pickSome = async (count: number) => {
       const buttons = within(screen.getByRole('main'))
         .getAllByRole('button')
-        .filter((b) => b.hasAttribute('aria-pressed'))
+        .filter((b) => b.hasAttribute('aria-pressed') && !b.classList.contains('broad'))
         .slice(0, count)
       for (const b of buttons) await user.click(b)
       return buttons.map((b) => b.textContent!.replace('✓', '').replace(/ Broad$/, '').trim())

@@ -110,7 +110,7 @@ describe('selection limit UI', () => {
     await user.click(next())
     const skills = within(screen.getByRole('main'))
       .getAllByRole('button')
-      .filter((b) => b.hasAttribute('aria-pressed'))
+      .filter((b) => b.hasAttribute('aria-pressed') && !b.classList.contains('broad'))
     expect(screen.getByText('0 selected')).toBeInTheDocument()
     for (const b of skills.slice(0, 12)) await user.click(b)
     const status = screen.getByText('12 selected')

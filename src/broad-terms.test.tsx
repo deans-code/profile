@@ -32,7 +32,7 @@ describe('Broader terms in their categories', () => {
     const names = [...document.querySelectorAll('.chip')].map(chipName)
     expect(new Set(names).size).toBe(names.length)
     for (const category of groupedCategories(kind)) {
-      const card = [...document.querySelectorAll<HTMLElement>('.category')].find((c) => c.querySelector('h3')!.textContent === category.category)!
+      const card = [...document.querySelectorAll<HTMLElement>('.category')].find((c) => c.querySelector('.category-name')!.textContent === category.category)!
       for (const g of category.groups) {
         const group = card.querySelector<HTMLElement>(`[role="group"][aria-label="${g.term} and the options it groups"]`)
         expect(group, `${g.term} in ${category.category}`).not.toBeNull()
@@ -43,7 +43,7 @@ describe('Broader terms in their categories', () => {
         expect(group!.querySelector('.group-caption'), g.term).toHaveTextContent('Groups these')
         expect([...group!.querySelectorAll('ul .chip')].map(chipName), g.term).toEqual(g.options)
       }
-      const others = [...card.querySelectorAll('.category > ul .chip')].map(chipName)
+      const others = [...card.querySelectorAll('.category > div > ul .chip')].map(chipName)
       expect(others, category.category).toEqual(category.others)
     }
   }
@@ -85,13 +85,13 @@ describe('Broader terms in their categories', () => {
   it('explains that a broader term heads the group below it, on the values and skills pages', async () => {
     const user = userEvent.setup()
     render(<App />)
-    expect(screen.getByText(/heads the group of options below it/i)).toBeInTheDocument()
+    expect(screen.getByText(/deselects those options, and choosing one of them deselects it/i)).toBeInTheDocument()
     await pickValues(user)
     await user.click(next())
-    expect(screen.getByText(/heads the group of options below it/i)).toBeInTheDocument()
+    expect(screen.getByText(/deselects those options, and choosing one of them deselects it/i)).toBeInTheDocument()
   })
 
-  it('selects a broader term without selecting the options it covers, and keeps both when both are chosen', async () => {
+  it('selects a broader term in place of the options it covers, and the reverse', async () => {
     const user = userEvent.setup()
     render(<App />)
     await openPage(user, 0)
@@ -99,8 +99,26 @@ describe('Broader terms in their categories', () => {
     expect(word('CI/CD')).toHaveAttribute('aria-pressed', 'true')
     expect(word('Jenkins')).toHaveAttribute('aria-pressed', 'false')
     await user.click(word('Jenkins'))
-    await user.click(word('CI/CD'))
+    await user.click(word('GitHub Actions'))
     expect(word('CI/CD')).toHaveAttribute('aria-pressed', 'false')
+    expect(word('Jenkins')).toHaveAttribute('aria-pressed', 'true')
+    await user.click(word('CI/CD'))
+    expect(word('CI/CD')).toHaveAttribute('aria-pressed', 'true')
+    expect(word('Jenkins')).toHaveAttribute('aria-pressed', 'false')
+    expect(word('GitHub Actions')).toHaveAttribute('aria-pressed', 'false')
+    await user.click(word('CI/CD'))
+    expect(word('Jenkins')).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('leaves the other experience option alone', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await openPage(user, 0)
+    await user.click(screen.getByRole('radio', { name: /desired/i }))
+    await user.click(word('Jenkins'))
+    await user.click(screen.getByRole('radio', { name: /previous/i }))
+    await user.click(word('CI/CD'))
+    await user.click(screen.getByRole('radio', { name: /desired/i }))
     expect(word('Jenkins')).toHaveAttribute('aria-pressed', 'true')
   })
 
@@ -160,23 +178,25 @@ describe('Broader terms in their categories', () => {
 describe('Broader values', () => {
   const FIVE = ['Fairness', 'Honesty', 'Integrity', 'Curiosity', 'Accountability']
 
-  it('are independent of the values they cover and both are kept', async () => {
+  it('replace the values they cover, and the reverse', async () => {
     const user = userEvent.setup()
     render(<App />)
     await user.click(word('Honesty and ethics'))
     expect(word('Honesty and ethics')).toHaveAttribute('aria-pressed', 'true')
     expect(word('Honesty')).toHaveAttribute('aria-pressed', 'false')
     await user.click(word('Honesty'))
-    await user.click(word('Honesty and ethics'))
     expect(word('Honesty and ethics')).toHaveAttribute('aria-pressed', 'false')
     expect(word('Honesty')).toHaveAttribute('aria-pressed', 'true')
+    await user.click(word('Honesty and ethics'))
+    expect(word('Honesty and ethics')).toHaveAttribute('aria-pressed', 'true')
+    expect(word('Honesty')).toHaveAttribute('aria-pressed', 'false')
   })
 
   it('count toward the limit of 10 values and block further choices', async () => {
     const user = userEvent.setup()
     render(<App />)
     await user.click(word('Honesty and ethics'))
-    for (const name of ['Fairness', 'Integrity', 'Curiosity', 'Accountability', 'Courage', 'Respect', 'Trust', 'Empathy', 'Humility']) await user.click(word(name))
+    for (const name of ['Fairness', 'Curiosity', 'Creativity', 'Accountability', 'Courage', 'Respect', 'Trust', 'Empathy', 'Loyalty']) await user.click(word(name))
     expect(screen.getByText(/^10 of 10 selected/)).toBeInTheDocument()
     expect(word('Focus')).toHaveAttribute('aria-disabled', 'true')
     await user.click(word('Honesty and ethics'))

@@ -424,3 +424,32 @@ describe('loadProfile', () => {
     expect(loadLanding(complete)).toEqual({ step: 'card', notice: null })
   })
 })
+
+describe('broader terms and the options they cover', () => {
+  const pick = (name: string): Action => ({ type: 'toggleSkill', section: 'technical', name })
+  const sel = (s: ProfileState) => s.selectedSkills.technical.experience
+
+  it('selecting a term drops covered options, even from another category, and the reverse', () => {
+    let s = run([pick('Jenkins'), pick('GitHub Actions'), pick('CI/CD')])
+    expect(sel(s)).toEqual(['CI/CD'])
+    s = run([pick('Jenkins')], s)
+    expect(sel(s)).toEqual(['Jenkins'])
+  })
+
+  it('selecting an option drops every term covering it', () => {
+    const s = run([pick('CI/CD'), pick('Jenkins')])
+    expect(sel(s)).not.toContain('CI/CD')
+  })
+
+  it('only changes the current experience option', () => {
+    const s = run([desired, pick('Jenkins'), { type: 'setMode', mode: 'experience' }, pick('CI/CD')])
+    expect(s.selectedSkills.technical.desired).toEqual(['Jenkins'])
+  })
+
+  it('values: a broader value replaces its values and still obeys the limit', () => {
+    let s = run([{ type: 'toggleValue', name: 'Honesty' }, { type: 'toggleValue', name: 'Honesty and ethics' }])
+    expect(s.selectedValues).toEqual(['Honesty and ethics'])
+    s = { ...initialState, selectedValues: FIVE_VALUES.concat(['Loyalty', 'Focus', 'Creativity', 'Compassion', 'Trust']).slice(0, MAX_VALUES) }
+    expect(run([{ type: 'toggleValue', name: 'Honesty and ethics' }], s)).toBe(s)
+  })
+})

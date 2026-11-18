@@ -3,7 +3,7 @@ import type { TermKind } from './definitions'
 /**
  * A broader term groups several existing options, so a user can say "CI/CD" without naming every tool.
  * These are this app's own groupings, not drawn from a published list, so they carry no source citation.
- * Selecting one never selects the options it covers; those stay in their own categories.
+ * Selecting one deselects the options it covers (and the reverse); those stay listed in their own categories.
  */
 export interface BroadTerm {
   name: string
@@ -462,5 +462,21 @@ export function broadTermNames(section: TermKind): string[] {
 
 /** The definition shown for a broader term: its description and the options it covers, in two sentences. */
 export function broadTermDefinition(term: BroadTerm): string {
-  return `${term.description} A broader term that does not select the options it covers, which are listed under their own headings: ${term.covers.join(', ')}.`
+  return `${term.description} Choosing it deselects the options it covers, and choosing one of them deselects it; it covers: ${term.covers.join(', ')}.`
+}
+
+/** The options a broader term covers, or an empty list when the name is not a broader term. */
+export function coveredBy(kind: TermKind, term: string): string[] {
+  return BROAD_TERMS[kind].find((t) => t.name === term)?.covers ?? []
+}
+
+/** The broader terms that cover an option. */
+export function termsCovering(kind: TermKind, option: string): string[] {
+  return BROAD_TERMS[kind].filter((t) => t.covers.includes(option)).map((t) => t.name)
+}
+
+/** The selection after choosing `name`: a broader term drops the options it covers, an option drops the terms covering it. */
+export function selectExclusive(kind: TermKind, selected: string[], name: string): string[] {
+  const drop = new Set([...coveredBy(kind, name), ...termsCovering(kind, name)])
+  return [...selected.filter((n) => !drop.has(n)), name]
 }

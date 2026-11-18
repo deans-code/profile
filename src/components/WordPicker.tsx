@@ -79,6 +79,8 @@ export default function WordPicker({
   onRemoveCustom,
 }: Props) {
   const [filter, setFilter] = useState('')
+  // Categories the user has collapsed. A filter with text shows matching cards open without changing this.
+  const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
   const filterId = useId()
   const hintId = `${filterId}-hint`
   const addHelpId = `${filterId}-add-help`
@@ -98,6 +100,12 @@ export default function WordPicker({
     pendingAdd.current = false
     if (!grew || !wanted) return
     setFilter('')
+    setCollapsed((prev) => {
+      if (!prev.has('Custom')) return prev
+      const next = new Set(prev)
+      next.delete('Custom')
+      return next
+    })
     setRevealTick((t) => t + 1)
   })
 
@@ -109,6 +117,13 @@ export default function WordPicker({
   function addCustom(text: string) {
     pendingAdd.current = true
     onAddCustom(text)
+  }
+  function toggleCard(category: string) {
+    setCollapsed((prev) => {
+      const next = new Set(prev)
+      if (!next.delete(category)) next.add(category)
+      return next
+    })
   }
   const full = limit !== undefined && selected.length >= limit
   const query = filter.trim().toLowerCase()
@@ -155,7 +170,7 @@ export default function WordPicker({
 
       {hasGroups && (
         <p className="broad-note">
-          Each option with a dashed border is a broader term. It heads the group of options below it, and choosing it does not choose them.
+          Each option marked "Broad" is a broader term. It heads the boxed group of options below it. Choosing it deselects those options, and choosing one of them deselects it.
         </p>
       )}
 
@@ -203,9 +218,27 @@ export default function WordPicker({
               ) : undefined}
             </TermButton>
           )
+          const isOpen = !collapsed.has(c.category) || query !== ''
+          const regionId = `${filterId}-${c.category.replace(/\W+/g, '-')}`
+          const names = [...c.words, ...c.groups.flatMap((g) => [g.term, ...g.options])]
+          const pickedHere = names.filter((n) => chosen.has(n)).length
           return (
             <div key={c.category} className={isCustom ? 'category custom-card' : 'category'} ref={isCustom ? customCard : undefined}>
-              <h3>{c.category}</h3>
+              <h3>
+                <button
+                  type="button"
+                  className="category-toggle"
+                  aria-label={`${c.category} category${!isOpen && pickedHere > 0 ? `, ${pickedHere} selected` : ''}`}
+                  aria-expanded={isOpen}
+                  aria-controls={regionId}
+                  onClick={() => toggleCard(c.category)}
+                >
+                  <span className="category-chevron" aria-hidden="true">{isOpen ? '▾' : '▸'}</span>
+                  <span className="category-name">{c.category}</span>
+                  {!isOpen && pickedHere > 0 && <span className="category-count">{pickedHere} selected</span>}
+                </button>
+              </h3>
+              <div id={regionId} hidden={!isOpen}>
               {c.groups.map((g) => (
                 <div key={g.term} className="broad-group" role="group" aria-label={`${g.term} and the options it groups`}>
                   <div className="group-head">
@@ -241,6 +274,7 @@ export default function WordPicker({
                   </ul>
                 </>
               )}
+              </div>
             </div>
           )
         })}
