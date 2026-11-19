@@ -97,11 +97,12 @@ describe('grouped values', () => {
 })
 
 describe('filter box guidance', () => {
-  it('has a visible label and guidance linked to the input', () => {
+  it('has an accessible label, no visible heading, and guidance in Help linked to the input', () => {
     render(<App />)
     const input = screen.getByLabelText('Filter values')
-    expect(screen.getByText('Filter values', { selector: 'label' })).toBeVisible()
-    const hint = screen.getByText(/Type part of a word to show only the values that match/)
+    expect(screen.getByText('Filter values', { selector: 'label' })).toHaveClass('visually-hidden')
+    const hint = screen.getByText(/Type part of a word in the filter box to show only the values that match/)
+    expect(hint.closest('details.page-help')).not.toBeNull()
     expect(hint).toHaveTextContent('Your selections are kept.')
     expect(input).toHaveAttribute('aria-describedby', hint.id)
     expect(input).toHaveAttribute('placeholder', 'Type to filter…')
@@ -126,7 +127,7 @@ describe('filter box guidance', () => {
     await pickValues(user)
     await user.click(screen.getByRole('button', { name: /^Continue/ }))
     expect(screen.getByLabelText('Filter skills')).toHaveAccessibleDescription(
-      /Type part of a word to show only the technical development skills that match/,
+      /Type part of a word in the filter box to show only the technical development skills that match/,
     )
   })
 })

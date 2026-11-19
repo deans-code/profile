@@ -58,7 +58,6 @@ interface Props {
   kind: TermKind
   headingId: string
   heading: string
-  hint: string
   /** One line saying what to do on this page. */
   lead: string
   categories: WordCategory[]
@@ -90,7 +89,6 @@ export default function WordPicker({
   kind,
   headingId,
   heading,
-  hint,
   lead,
   categories,
   selected,
@@ -189,24 +187,62 @@ export default function WordPicker({
     <section aria-labelledby={headingId}>
       <h2 id={headingId}>{heading}</h2>
       <p className="lead">{lead}</p>
-      <p className="hint">{hint}</p>
-      {mode && (
-        <p className="experience-intro">
-          Your profile is built from two kinds of experience: what you have <strong>already done</strong> (previous
-          experience) and what you <strong>want to do</strong> (desired experience). Fill in both, switching with the
-          options below.
-        </p>
-      )}
       <details className="page-help">
         <summary>Help</summary>
         {ASSISTANT_HELP[kind] && <AssistantLink {...ASSISTANT_HELP[kind]} />}
         <SelectionHelp limit={limit} min={min} unit={kind === 'values' ? 'values' : 'skills'} mode={mode} />
+        {mode && (
+          <p className="experience-intro">
+            Your profile is built from two kinds of experience: what you have <strong>already done</strong> (previous
+            experience) and what you <strong>want to do</strong> (desired experience). Fill in both, switching with the
+            options above.
+          </p>
+        )}
+        <AddEntryHelp id={addHelpId} noun={kind === 'values' ? 'value' : 'skill'} />
+        <p id={hintId} className="filter-hint">
+          Type part of a word in the filter box to show only the {noun} that match. Your selections are kept.
+        </p>
       </details>
-      <AddEntryHelp id={addHelpId} noun={kind === 'values' ? 'value' : 'skill'} />
 
-      <div className="pinned-bar">
-        {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
-        <AddEntry label={addLabel} placeholder={addPlaceholder} helpId={addHelpId} full={full} onAdd={addCustom} />
+      <div className="pinned-bar tools-row">
+        <div className="tools-main">
+          {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
+          <AddEntry label={addLabel} placeholder={addPlaceholder} helpId={addHelpId} full={full} onAdd={addCustom} />
+        </div>
+        <div className="tools-extra">
+          <div className="filter-block">
+            <label htmlFor={filterId} className="visually-hidden">
+              {filterLabel}
+            </label>
+            <input
+              id={filterId}
+              type="search"
+              className="filter"
+              placeholder="Type to filter…"
+              aria-describedby={hintId}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            />
+          </div>
+          <div className="bulk-bar">
+            <button type="button" className="bulk-button" onClick={showAll}>
+              Show all
+            </button>
+            <button type="button" className="bulk-button" onClick={collapseAll}>
+              Collapse all
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="tools-status">
+        {query && (
+          <p className="filter-count" aria-live="polite">
+            Showing {shown} of {total} {noun}.
+          </p>
+        )}
+        <span className="bulk-status" aria-live="polite">
+          {bulkStatus}
+        </span>
       </div>
 
       {hasGroups && (
@@ -214,41 +250,6 @@ export default function WordPicker({
           Each option marked "Broad" is a broader term. It heads the boxed group of options below it. Choosing it deselects those options, and choosing one of them deselects it.
         </p>
       )}
-
-      <div className="filter-block">
-        <label htmlFor={filterId} className="filter-label">
-          {filterLabel}
-        </label>
-        <p id={hintId} className="filter-hint">
-          Type part of a word to show only the {noun} that match. Your selections are kept.
-        </p>
-        <input
-          id={filterId}
-          type="search"
-          className="filter"
-          placeholder="Type to filter…"
-          aria-describedby={hintId}
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        />
-        {query && (
-          <p className="filter-count" aria-live="polite">
-            Showing {shown} of {total} {noun}.
-          </p>
-        )}
-      </div>
-
-      <div className="bulk-bar">
-        <button type="button" className="bulk-button" onClick={showAll}>
-          Show all
-        </button>
-        <button type="button" className="bulk-button" onClick={collapseAll}>
-          Collapse all
-        </button>
-        <span className="bulk-status" aria-live="polite">
-          {bulkStatus}
-        </span>
-      </div>
 
       {visible.length === 0 && <p className="hint">No {noun} match your filter.</p>}
 

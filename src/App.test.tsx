@@ -515,6 +515,6 @@ describe('collapsible guidance', () => {
     await user.click(within(page).getByText('Help'))
     expect(page.open).toBe(true)
     expect(document.querySelector('.add-help')).not.toBeNull()
-    expect(page.contains(document.querySelector('.add-help'))).toBe(false)
+    expect(page.contains(document.querySelector('.add-help'))).toBe(true)
   })
 })

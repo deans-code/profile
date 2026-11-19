@@ -1242,3 +1242,85 @@ main {
     padding-right: 0.25rem;
   }
 }
+
+/* Tools row: options, add, filter and bulk buttons on one line */
+.tools-row {
+  align-items: center;
+}
+
+.tools-main,
+.tools-extra {
+  display: contents;
+}
+
+.tools-row .filter-block {
+  margin: 0;
+  flex: 1 1 10rem;
+  min-width: 0;
+}
+
+.tools-row .filter {
+  width: 100%;
+  max-width: none;
+  min-height: 2.75rem;
+}
+
+.tools-row .bulk-bar {
+  margin: 0;
+  flex-wrap: nowrap;
+}
+
+.tools-row .add-entry {
+  flex: 1 1 14rem;
+}
+
+.tools-status {
+  margin: -0.25rem 0 0.75rem;
+}
+
+.tools-status:empty,
+.tools-status > :empty {
+  display: none;
+}
+
+.tools-status p {
+  margin: 0 0 0.25rem;
+}
+
+.experience-intro,
+.page-help .filter-hint,
+.page-help .add-help {
+  margin: 0.5rem 0;
+  max-width: 48rem;
+}
+
+/* Narrow screens: only the options and Add stay pinned; filter and bulk buttons scroll away. */
+@media (max-width: 40rem) {
+  .tools-row {
+    display: contents;
+  }
+
+  .tools-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    margin: 0.25rem 0 0.5rem;
+    padding: 0.25rem 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tools-extra {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+  }
+
+  .tools-extra .filter-block {
+    flex: 1 1 100%;
+  }
+}
