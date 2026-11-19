@@ -45,7 +45,14 @@ export function useStepNavigation(
   useEffect(() => {
     if (previous.current === state.step) return
     previous.current = state.step
-    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
+    // Wide screens keep the side bar in view, so the top of the page is the top of the main panel;
+    // when the panels stack, scroll past the side bar to the main panel instead.
+    const stacked = typeof window.matchMedia === 'function' && !window.matchMedia('(min-width: 60rem)').matches
+    const mainTop = contentRef.current?.getBoundingClientRect().top ?? 0
+    window.scrollTo({
+      top: stacked ? Math.max(0, window.scrollY + mainTop) : 0,
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+    })
     const heading = contentRef.current?.querySelector('h2')
     if (heading instanceof HTMLElement) {
       heading.tabIndex = -1

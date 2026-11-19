@@ -1166,3 +1166,79 @@ main {
 .privacy-help li {
   margin: 0.25rem 0;
 }
+
+/* Side bar and main panel */
+.app-main {
+  min-width: 0;
+}
+
+.sidebar .header-tools {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Panels open inline below the button row so the scrolling side bar never clips them. */
+.sidebar .a11y {
+  display: contents;
+}
+
+.sidebar .a11y-panel {
+  position: static;
+  order: 3;
+  flex: 1 1 100%;
+  min-width: 0;
+  margin-top: 0;
+  box-shadow: none;
+}
+
+.sidebar .load {
+  display: contents;
+}
+
+.sidebar .load > :not(button):not(input) {
+  order: 3;
+  flex: 1 1 100%;
+}
+
+.sidebar .header-tools button {
+  white-space: nowrap;
+  padding-inline: 0.75rem;
+}
+
+.sidebar .stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sidebar .stepper li {
+  flex: none;
+  width: 100%;
+}
+
+.sidebar .stepper button {
+  width: 100%;
+  min-height: 2.75rem;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+@media (min-width: 60rem) {
+  .app {
+    display: grid;
+    grid-template-columns: minmax(21rem, 24rem) minmax(0, 1fr);
+    gap: 0 2rem;
+    align-items: start;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    padding-right: 0.25rem;
+  }
+}

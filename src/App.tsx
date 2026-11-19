@@ -58,15 +58,13 @@ export default function App() {
     <div className="app-root" data-section={state.step}>
       <DefinitionProvider resetKey={state.step}>
         <div className="app">
-          <header>
+          <aside className="sidebar" aria-label="Profile Builder">
+            <div className="header-tools">
+              <AccessibilityOptions />
+              <LoadProfile hasProgress={hasProgress} onLoad={loadProfile} />
+            </div>
             <div className="intro-block">
-              <div className="header-row">
-                <h1>Profile Builder</h1>
-                <div className="header-tools">
-                  <AccessibilityOptions />
-                  <LoadProfile hasProgress={hasProgress} onLoad={loadProfile} />
-                </div>
-              </div>
+              <h1>Profile Builder</h1>
               <p className="intro">
                 Build a personal profile of what you value, what you can do, what you want to learn and where you want to
                 grow.
@@ -140,8 +138,9 @@ export default function App() {
                 </ol>
               </nav>
             </div>
-          </header>
+          </aside>
 
+          <div className="app-main">
           <main ref={contentRef}>
             <div key={state.step} className={`step-view enter-${motion}`}>
               {state.step === 'values' && <ValuesStep state={state} dispatch={dispatch} />}
@@ -188,6 +187,7 @@ export default function App() {
               </ul>
             </section>
           )}
+          </div>
         </div>
       </DefinitionProvider>
     </div>

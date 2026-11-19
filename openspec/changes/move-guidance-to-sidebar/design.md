@@ -16,12 +16,12 @@
 
 ## Decisions
 
-- **CSS grid on `.app`** with columns `minmax(16rem, 22rem) minmax(0, 1fr)` at `min-width: 60rem`; the side bar is `<aside aria-label="Profile Builder">` and wraps the old intro and nav blocks. Alternative (flex) rejected: grid with `minmax(0, 1fr)` stops main content overflowing.
+- **CSS grid on `.app`** with columns `minmax(21rem, 24rem) minmax(0, 1fr)` at `min-width: 60rem`; the side bar is `<aside aria-label="Profile Builder">` and wraps the old intro and nav blocks. Alternative (flex) rejected: grid with `minmax(0, 1fr)` stops main content overflowing.
 - **Footer and Sources move inside a main-panel wrapper** (`main` plus the Back/Continue bar and Sources) so they sit in the right column. The wrapper is a plain `div`; `<main>` keeps its ref, scroll target and landmark role.
 - **Sticky via `position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto`** so a tall side bar (expanded details, open Accessibility panel) remains reachable. Sticky is disabled below 60rem.
 - **Stepper becomes vertical in the side bar** (one step per row, 44px targets kept); the horizontal layout is replaced, not duplicated.
 - **Title in the side bar stays the page `h1`**; DOM order is side bar then main, matching the spec's tab order.
-- **Accessibility and Load profile** stack vertically in the side bar; their panels expand inline.
+- **Accessibility and Load profile** sit in a single row at the top of the side bar; their panels open inline below the row so the scrolling side bar never clips them.
 - **Assumption:** "navigation" means the step navigation; the Back/Continue footer is part of the work flow and stays in the main panel. Side bar width and the 60rem breakpoint are reasonable defaults, adjustable during apply.
 
 ## Risks / Trade-offs
