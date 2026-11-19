@@ -1,4 +1,4 @@
-import { buildProfile, escapeMarkdown, toJson, toMarkdown } from './export'
+import { buildProfile, toJson } from './export'
 import { initialState, reducer, type Action } from './state/profile'
 
 const run = (actions: Action[]) => actions.reduce(reducer, initialState)
@@ -49,46 +49,5 @@ describe('toJson', () => {
   it('includes custom entries and survives special characters', () => {
     expect(json.skills.technical.experience).toContain('C# & café')
     expect(json.values).toContain('Craft "quality" *always*')
-  })
-})
-
-describe('toMarkdown', () => {
-  const md = toMarkdown(profile)
-
-  it('has a title, values section and one section per page', () => {
-    expect(md).toContain('# Profile')
-    expect(md).toContain('## Values')
-    expect(md).toContain('## Technical development')
-    expect(md).toContain('## Engineering')
-    expect(md).toContain('## Interpersonal')
-    expect(md).toContain('## AI engineering')
-  })
-
-  it('lists values once, without option headings', () => {
-    const values = md.slice(md.indexOf('## Values'), md.indexOf('## Technical development'))
-    expect(values).toContain('- Curiosity')
-    expect(values).toContain('- Fairness')
-    expect(values).not.toContain('###')
-  })
-
-  it('lists previous and desired experience for skills, omitting empty lists, with no scores', () => {
-    expect(md).toContain('### Previous experience')
-    expect(md).toContain('### Desired experience')
-    expect(md).toContain('- Python')
-    expect(md).not.toContain('/10')
-    const ai = md.slice(md.indexOf('## AI engineering'))
-    expect(ai).toContain('### Desired experience')
-    expect(ai).not.toContain('### Previous experience')
-  })
-
-  it('escapes Markdown syntax in user text and keeps non-ASCII', () => {
-    expect(md).toContain('Craft "quality" \\*always\\*')
-    expect(md).toContain('C\\# \\& café')
-  })
-})
-
-describe('escapeMarkdown', () => {
-  it('escapes syntax characters and flattens newlines', () => {
-    expect(escapeMarkdown('# [x](y) `z` <b>\nnext')).toBe('\\# \\[x\\]\\(y\\) \\`z\\` \\<b\\> next')
   })
 })

@@ -1,5 +1,5 @@
 import { SECTIONS, SECTION_LABELS } from '../data/skills'
-import { buildProfile, downloadFile, toJson, toMarkdown, type Experience } from '../export'
+import { buildProfile, downloadFile, toJson, type Experience } from '../export'
 import { MODES, MODE_LABELS, type ProfileState } from '../state/profile'
 
 interface Props {
@@ -59,9 +59,6 @@ export default function ProfileCard({ state, onEdit }: Props) {
       <div className="actions">
         <button type="button" onClick={() => downloadFile('profile.json', toJson(profile), 'application/json')}>
           Download JSON
-        </button>
-        <button type="button" onClick={() => downloadFile('profile.md', toMarkdown(profile), 'text/markdown')}>
-          Download Markdown
         </button>
         <button type="button" className="secondary" onClick={onEdit}>
           Edit

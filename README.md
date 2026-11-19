@@ -4,7 +4,7 @@
 
 A tool to help capture an individual's profile: what they value, and what hands-on, engineering, interpersonal and AI engineering experience they have and want.
 
-Users pick 5 to 10 values from grouped, common choices, build skill lists from curated catalogs, record both previous and desired experience, and finish with a profile card that can be downloaded as JSON or Markdown.
+Users pick 5 to 10 values from grouped, common choices, build skill lists from curated catalogs, record both previous and desired experience, and finish with a profile card that can be downloaded as JSON.
 
 The software runs entirely in the browser. No data leaves the user's device, unless the user chooses to follow the optional ChatGPT link (see below), which sends only a generic prompt.
 
@@ -15,7 +15,7 @@ The software runs entirely in the browser. No data leaves the user's device, unl
 - [x] Record previous experience and desired experience separately on every skill page.
 - [x] Provide an AI engineering page covering approaches, frameworks, tools, providers, open-weight models and local hardware.
 - [x] Remove scoring.
-- [x] Present a profile card with downloads as JSON and Markdown.
+- [x] Present a profile card with a JSON download.
 - [x] Provide a description for every built-in value and skill, opened by right-click (with keyboard and touch alternatives).
 - [x] Use a wide, uniform layout with a distinct colour per section and animated changes between sections.
 - [x] Select 5 to 10 values; skills are unlimited.
@@ -105,7 +105,7 @@ npm run preview
 - Two options on every skill page, **Previous experience** and **Desired experience**, each with its own selections and count. Every page opens on Previous experience. Values have a single list. The two options, with the add-your-own box beside them, stay pinned at the top of the screen as you scroll a skill page, on desktop and on phones, so both options and the add box are always in view. The values page pins the add-your-own box the same way.
 - Guided steps that require at least one value and at least one skill in each section (in either option) before the profile.
 - Profile card showing previous and desired words for every skill page, and one list of values, without scores.
-- Download of the profile as JSON or Markdown, generated locally.
+- Download of the profile as JSON, generated locally.
 
 ## :bookmark: Sources
 
@@ -297,7 +297,7 @@ Because the catalogs were rebuilt, many options from earlier versions are no lon
 1. Select the values that describe you, or add your own, then continue.
 2. Select skills in each of the technical development, engineering, interpersonal and AI engineering sections. Use the filter to find skills, or add your own.
 3. On each skill page, choose **Previous experience** (what you have done) or **Desired experience** (what you want to do) at the top, and select words for each. A word can be in both.
-4. Review your profile card, then use **Download JSON** or **Download Markdown**. Use **Edit** to go back and make changes.
+4. Review your profile card, then use **Download JSON**. Use **Edit** to go back and make changes.
 
 ### Selection limit
 
@@ -325,7 +325,6 @@ Use **Load saved profile** (top right, on any page) and choose a JSON file previ
 - A saved profile with more than 10 values (for example, one edited by hand or saved when the limit was lower) is loaded in full. The values page opens, and you must deselect down to 10 before you can continue. A profile with fewer than 5 values also opens the values page, asking for more. A value that is no longer offered, such as one from the removed wellbeing group, loads as a custom value. Any number of skills loads normally.
 - Profiles saved when values had two options load with both lists merged into one.
 - Profiles saved before experience options existed (with scores) still load: their words become previous experience, the scores are ignored and the AI engineering page starts empty.
-- Markdown downloads cannot be loaded.
 
 The JSON format is `values: [...]` (a list of names) and `skills.<technical|engineering|interpersonal|ai>: { experience, desired }`, each a list of names.
 
@@ -376,7 +375,7 @@ The build output is host-agnostic. For Netlify or similar, use `npm run build` a
 - **Section colours** are CSS custom properties set per `data-section`, with tests that check their contrast in both themes.
 - **Limits and loading**: limits are per page (`LIMITS`, currently values only) and enforced in the reducer, and `src/load.ts` is the validated inverse of the JSON export. A loaded profile replaces the state in one `loadProfile` action.
 - **Section changes** go through `useStepNavigation`, which scrolls to the top, sets the animation direction, moves focus to the new heading and ignores repeat requests while the change settles.
-- **Export as pure functions** (`src/export.ts`), producing the JSON and Markdown (with Markdown escaping of user text) before a local download.
+- **Export as pure functions** (`src/export.ts`), producing the JSON before a local download.
 
 Planning artifacts for the change are in `openspec/`.
 

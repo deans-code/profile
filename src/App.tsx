@@ -67,7 +67,13 @@ export default function App() {
                   <LoadProfile hasProgress={hasProgress} onLoad={loadProfile} />
                 </div>
               </div>
-              <p className="intro">Build a personal profile of what you value and what you can do.</p>
+              <p className="intro">
+                Build a personal profile of what you value, what you can do, what you want to learn and where you want to
+                grow.
+              </p>
+              <p className="privacy-line">
+                Runs entirely in your browser. Nothing you choose is collected or sent anywhere, and no cookies are used.
+              </p>
               <details className="route-help">
                 <summary>How this works</summary>
                 <ol className="how-it-works" aria-label="How it works">
@@ -82,6 +88,23 @@ export default function App() {
                     <strong>Download your profile</strong> at the end.
                   </li>
                 </ol>
+              </details>
+              <details className="route-help privacy-help">
+                <summary>Privacy</summary>
+                <ul>
+                  <li>Your choices are kept only in memory on your device. They are gone when you close or reload the page.</li>
+                  <li>No cookies are set, and there is no tracking or analytics.</li>
+                  <li>The only thing saved on your device is your theme and text size choice. It never includes your profile.</li>
+                  <li>Downloading your profile and loading a saved one both happen on your device. Nothing is uploaded.</li>
+                  <li>
+                    The site is delivered by a hosting provider, which may keep ordinary server logs of page requests. This
+                    app cannot see or control those logs, and they do not contain your choices.
+                  </li>
+                  <li>
+                    Links to other sites leave this app. The optional ChatGPT link sends only a fixed prompt and never
+                    anything you have selected.
+                  </li>
+                </ul>
               </details>
             </div>
             <div className="nav-block">

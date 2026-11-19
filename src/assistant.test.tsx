@@ -27,7 +27,7 @@ describe('ChatGPT link', () => {
     const l = link()!
     expect(l).toBeInTheDocument()
     const box = screen.getByRole('complementary', { name: 'Discover more values with ChatGPT' })
-    expect(box).toHaveTextContent(/work with ChatGPT to discover more values/i)
+    expect(box).toHaveTextContent(/ChatGPT can ask you questions.*uncover your values/i)
     const help = screen.getByRole('complementary', { name: 'How to use this step' })
     expect(box.compareDocumentPosition(help) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
@@ -46,7 +46,9 @@ describe('ChatGPT link', () => {
     expect(prompt).toMatch(/personal profile/i)
     expect(prompt).toMatch(/discovering my core values/i)
     expect(prompt).toMatch(/principles and qualities that matter most/i)
-    expect(prompt).toMatch(/Please suggest/i)
+    expect(prompt).toMatch(/interview me/i)
+    expect(prompt).toMatch(/one short question at a time/i)
+    expect(prompt).not.toMatch(/15|Please suggest/i)
   })
 
   it('appears on the interpersonal page with its own prompt', async () => {
@@ -55,12 +57,13 @@ describe('ChatGPT link', () => {
     await goTo(user, 'interpersonal')
     expect(screen.getByRole('heading', { name: /interpersonal skills/i })).toBeInTheDocument()
     const box = screen.getByRole('complementary', { name: 'Discover more interpersonal skills with ChatGPT' })
-    expect(box).toHaveTextContent(/work with ChatGPT to discover more interpersonal skills/i)
+    expect(box).toHaveTextContent(/ChatGPT can ask you questions.*uncover your interpersonal skills/i)
     const prompt = new URL(link()!.getAttribute('href')!).searchParams.get('q')!
     expect(prompt).toBe(ASSISTANT_HELP.interpersonal!.prompt)
     expect(prompt).toMatch(/professional profile/i)
     expect(prompt).toMatch(/interpersonal skills/i)
-    expect(prompt).toMatch(/Please suggest/i)
+    expect(prompt).toMatch(/one short question at a time/i)
+    expect(prompt).not.toMatch(/15|Please suggest/i)
   })
 
   it('does not appear on the technical development or engineering pages', async () => {

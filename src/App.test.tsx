@@ -305,7 +305,7 @@ describe('profile card and downloads', () => {
     expect(within(engineering).queryByText('Desired experience')).not.toBeInTheDocument()
   })
 
-  it('downloads JSON and Markdown with both options and no scores', async () => {
+  it('downloads JSON with both options and no scores', async () => {
     const user = await toCard()
     const created: Blob[] = []
     URL.createObjectURL = vi.fn((b: Blob | MediaSource) => {
@@ -319,17 +319,13 @@ describe('profile card and downloads', () => {
     })
 
     await user.click(screen.getByRole('button', { name: 'Download JSON' }))
-    await user.click(screen.getByRole('button', { name: 'Download Markdown' }))
+    expect(screen.queryByRole('button', { name: /markdown/i })).not.toBeInTheDocument()
 
-    expect(names).toEqual(['profile.json', 'profile.md'])
+    expect(names).toEqual(['profile.json'])
     const json = JSON.parse(await created[0].text())
     expect(json.values).toEqual([...FIVE_VALUES].sort())
     expect(json.skills.technical).toEqual({ experience: ['Python'], desired: ['Rust'] })
     expect(json.skills.ai).toEqual({ experience: ['Claude Code'], desired: ['OpenRouter'] })
-    const md = await created[1].text()
-    expect(md).toContain('## AI engineering')
-    expect(md).toContain('- Python')
-    expect(md).not.toMatch(/\/10|score/i)
     click.mockRestore()
   })
 })
@@ -498,14 +494,11 @@ describe('end to end with many skills', () => {
     }
 
     await user.click(screen.getByRole('button', { name: 'Download JSON' }))
-    await user.click(screen.getByRole('button', { name: 'Download Markdown' }))
     const json = JSON.parse(await blobs[0].text())
     expect(json.skills.technical.experience).toHaveLength(14)
     expect(json.skills.engineering.experience).toHaveLength(12)
     expect(json.skills.interpersonal.experience).toHaveLength(6)
     expect(json.skills.ai.experience).toHaveLength(10)
-    const markdown = await blobs[1].text()
-    expect(markdown.match(/^- /gm)).toHaveLength(5 + 14 + 12 + 6 + 10)
   })
 })
 
