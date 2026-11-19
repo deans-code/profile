@@ -46,12 +46,12 @@ The system SHALL let the user add custom skills to each skill page, under a "Cus
 - **WHEN** the entry is empty or matches an existing skill on that page ignoring case and whitespace
 - **THEN** no duplicate is added; an existing match is selected instead
 
-### Requirement: Each skill page requires a selection
-The system SHALL require at least one selected skill, in either experience option, on each skill page before the user can reach the profile.
+### Requirement: Skill pages do not require a selection
+The system SHALL NOT require any selected skill on a skill page. The user MAY reach the profile with no skills selected, in either experience option, on any or all of the four skill pages.
 
 #### Scenario: Profile gated
-- **WHEN** any of the four skill pages has no selected skills in either option
-- **THEN** the user cannot reach the profile and is told which pages are missing selections
+- **WHEN** any of the four skill pages has no selected skills in either option and the values are valid
+- **THEN** the user can still reach the profile and is not told that selections are missing
 
 #### Scenario: Selections preserved on navigation
 - **WHEN** the user navigates back to an earlier step

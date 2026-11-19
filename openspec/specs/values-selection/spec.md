@@ -58,7 +58,7 @@ The values page SHALL have one selection and SHALL NOT offer the Previous experi
 - **THEN** no experience option switch is shown, and the instructions do not mention an "other option"
 
 ### Requirement: Limit of five values
-The user SHALL select between 5 and 10 values, including custom values, with the feedback described by the selection-limits capability. The instructions on the values page SHALL say to select 5 to 10 values.
+The user SHALL select between 5 and 10 values, including custom values, with the feedback described by the selection-limits capability. The instructions on the values page SHALL NOT repeat the range; the page's status line shows the count against the limit.
 
 #### Scenario: Limit reached
 - **WHEN** the user has selected 10 values
@@ -70,7 +70,7 @@ The user SHALL select between 5 and 10 values, including custom values, with the
 
 #### Scenario: Instructions state the range
 - **WHEN** the user reads the instructions on the values page
-- **THEN** they say to select 5 to 10 values
+- **THEN** they contain no "Select 5 to 10 values" sentence, and the status line reads "n of 10 selected"
 
 ### Requirement: Over-limit selections block progress
 If more than 10 values are selected (for example after loading a file), the user SHALL NOT be able to move to a later page until the selection is within the limit, and the message SHALL say how many values to deselect.

@@ -3,7 +3,9 @@
 ## Purpose
 
 Lets users return to a profile they previously downloaded, in the current format or an earlier one, restore it in the builder, and continue editing it.
+
 ## Requirements
+
 ### Requirement: Load a saved profile
 The system SHALL provide a "Load saved profile" control, available from every page, that lets the user choose a JSON profile file previously downloaded from the app and restores its values and its previous and desired skills.
 
@@ -77,7 +79,7 @@ Loading SHALL replace the current profile. If the user has made any selection in
 - **THEN** the current profile and page are unchanged
 
 ### Requirement: Over-limit and incomplete files
-A file with more than 10 values SHALL be loaded in full and then constrained as in the selection-limits capability. A file with fewer than 5 values SHALL be loaded in full and open the values page with a message saying how many more to choose. A value that is no longer built in SHALL load as a custom value. A file that cannot satisfy the completion rules to reach the profile card SHALL open on the first page that needs attention, with a message saying what to do.
+A file with more than 10 values SHALL be loaded in full and then constrained as in the selection-limits capability. A file with fewer than 5 values SHALL be loaded in full and open the values page with a message saying how many more to choose. A value that is no longer built in SHALL load as a custom value. A file that cannot satisfy the completion rules to reach the profile card SHALL open on the first page that needs attention, with a message saying what to do. Empty skill pages SHALL NOT count as needing attention.
 
 #### Scenario: Over-limit file
 - **WHEN** the file has 12 values
@@ -92,8 +94,8 @@ A file with more than 10 values SHALL be loaded in full and then constrained as 
 - **THEN** it loads without error as a custom value
 
 #### Scenario: Incomplete file
-- **WHEN** the loaded file has no AI engineering selections in either option
-- **THEN** the AI engineering page opens with a message asking for at least one selection
+- **WHEN** the loaded file has no AI engineering selections in either option and its values are valid
+- **THEN** the profile card opens with no message about missing skills
 
 ### Requirement: Local processing and feedback
 The file SHALL be read only in the browser and never uploaded. After a load the system SHALL announce the result (success with the file name, or the error) to assistive technology, and SHALL allow choosing the same file again.
@@ -101,4 +103,3 @@ The file SHALL be read only in the browser and never uploaded. After a load the 
 #### Scenario: Same file twice
 - **WHEN** the user loads a file, edits, and loads the same file again
 - **THEN** the second load is processed
-

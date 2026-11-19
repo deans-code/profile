@@ -23,17 +23,6 @@ The control SHALL be presented as a visually distinct panel with a heading namin
 - **WHEN** a selection page is displayed
 - **THEN** the control has a heading and a panel treatment that sets it apart from the filter and the category cards
 
-### Requirement: Short instruction beside the control
-The app SHALL provide a short instruction saying the control is for words that are not in the lists, to type a word and press Add or Enter, and that the word will appear under Custom and be selected. The instruction SHALL be in the page's Help area and SHALL be associated with the input for assistive technology, so it is announced when the input is focused even while Help is collapsed.
-
-#### Scenario: Instruction present
-- **WHEN** the user expands Help on a selection page
-- **THEN** the instruction text is shown
-
-#### Scenario: Announced with the input
-- **WHEN** a screen reader user focuses the add-your-own input while Help is collapsed
-- **THEN** the input's accessible description contains the instruction
-
 ### Requirement: Limit reason beside the control
 When the page has a selection limit that is reached, the control SHALL stay visible with Add disabled and SHALL show the reason ("Limit reached: deselect a word to add another") beside the control as well as in the page status line.
 
