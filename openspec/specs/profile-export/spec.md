@@ -24,23 +24,16 @@ The JSON download SHALL be a valid file containing an `exportedAt` ISO-8601 time
 - **WHEN** the user clicks Download JSON
 - **THEN** the file has `values` as an array of strings and, for each of the four skill pages, `skills.<page>.experience` and `skills.<page>.desired`, each an array of strings, and no property named score
 
-### Requirement: Markdown contents
-The Markdown download SHALL have a title, a Values section listing the values once with no option headings, and one section for each skill page with a "Previous experience" list and a "Desired experience" list, omitting empty lists, with no scores.
-
-#### Scenario: Markdown headings
-- **WHEN** the user clicks Download Markdown
-- **THEN** the Values section is a single list, and each skill page has its heading followed by the applicable "Previous experience" and "Desired experience" lists
-
 ### Requirement: Exports are local and faithful
-Downloads SHALL be generated on the user's device without sending profile data to any server, and SHALL contain the same selections shown on the card, including custom entries.
+The JSON download SHALL be generated on the user's device without sending profile data to any server, and SHALL contain the same selections shown on the card, including custom entries. The profile card SHALL offer Download JSON and Edit only, with no Markdown option.
 
 #### Scenario: Custom entries exported
 - **WHEN** the profile includes a custom value and a custom skill
-- **THEN** both appear in the JSON and Markdown downloads
+- **THEN** both appear in the JSON download
 
 #### Scenario: Special characters
 - **WHEN** a custom entry contains quotes, Markdown symbols or non-ASCII characters
-- **THEN** the JSON remains valid and the Markdown renders the text literally
+- **THEN** the JSON remains valid and the text is preserved exactly
 
 ### Requirement: Round trip
 A downloaded JSON file SHALL be loadable by the app and restore the same selections.

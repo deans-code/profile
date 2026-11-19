@@ -39,8 +39,8 @@ The limit of 5 values SHALL remain independent of skill selections, including fo
 - **THEN** the values page opens and asks the user to deselect 3 values, and the skills are loaded in full
 
 ### Requirement: Many skills on the profile
-The profile card and the downloads SHALL include every selected skill however many are selected.
+The profile card and the JSON download SHALL include every selected skill however many are selected.
 
 #### Scenario: Many skills exported
 - **WHEN** 30 skills are selected across the skill pages
-- **THEN** the profile card shows all 30 and the JSON and Markdown downloads contain all 30
+- **THEN** the profile card shows all 30 and the JSON download contains all 30
