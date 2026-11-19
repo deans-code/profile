@@ -6,15 +6,15 @@ TBD - created by archiving change highlight-add-your-own-at-top. Update Purpose 
 ## Requirements
 
 ### Requirement: Add control at the top of every selection page
-On the values page and on every skill page, the add-your-own control SHALL appear above the filter and above the category cards, after the page guidance and (on skill pages) the experience options, so it is visible without scrolling past the word lists.
+On the values page and on every skill page, the add-your-own control SHALL appear in the page's tools row, above the category cards, after the page guidance, so it is visible without scrolling past the word lists. On skill pages it SHALL follow the experience options in that row.
 
 #### Scenario: Values page
 - **WHEN** the user opens the values page
-- **THEN** the add-your-own control appears before the filter and before the first category card
+- **THEN** the add-your-own control appears in the tools row before the first category card
 
 #### Scenario: Skill page
 - **WHEN** the user opens any skill page
-- **THEN** the add-your-own control appears before the filter and before the first category card, and after the Previous experience / Desired experience options
+- **THEN** the add-your-own control appears in the tools row before the first category card, and after the Previous experience / Desired experience options
 
 ### Requirement: Highlighted as an option
 The control SHALL be presented as a visually distinct panel with a heading naming what can be added ("Add your own value" or "Add your own skill"), an emphasised input, and a primary-styled Add button, using the page's accent colour and keeping text contrast at WCAG AA in light and dark themes.
@@ -24,11 +24,15 @@ The control SHALL be presented as a visually distinct panel with a heading namin
 - **THEN** the control has a heading and a panel treatment that sets it apart from the filter and the category cards
 
 ### Requirement: Short instruction beside the control
-Next to the control the app SHALL show a short instruction saying it is for words that are not in the lists, to type a word and press Add or Enter, and that the word will appear under Custom and be selected.
+The app SHALL provide a short instruction saying the control is for words that are not in the lists, to type a word and press Add or Enter, and that the word will appear under Custom and be selected. The instruction SHALL be in the page's Help area and SHALL be associated with the input for assistive technology, so it is announced when the input is focused even while Help is collapsed.
 
 #### Scenario: Instruction present
-- **WHEN** a selection page is displayed
-- **THEN** the instruction text is visible beside or directly under the input and is associated with the input for assistive technology
+- **WHEN** the user expands Help on a selection page
+- **THEN** the instruction text is shown
+
+#### Scenario: Announced with the input
+- **WHEN** a screen reader user focuses the add-your-own input while Help is collapsed
+- **THEN** the input's accessible description contains the instruction
 
 ### Requirement: Limit reason beside the control
 When the page has a selection limit that is reached, the control SHALL stay visible with Add disabled and SHALL show the reason ("Limit reached: deselect a word to add another") beside the control as well as in the page status line.

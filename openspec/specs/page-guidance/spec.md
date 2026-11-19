@@ -5,12 +5,12 @@ Tells users what the tool is for, where they are in the sequence, and why each s
 
 ## Requirements
 
-### Requirement: Introduction above the steps
-The app SHALL show an introduction at the top of every page, above the step navigation, stating that the tool builds a personal profile of values and skills. The outline of the route (values, then four skill pages, then the profile) SHALL be inside a collapsible instructions control that is collapsed by default. The control SHALL expose its expanded/collapsed state, be operable by keyboard and touch, and collapsed instructions SHALL NOT be focusable.
+### Requirement: Introduction in the side bar
+The app SHALL show an introduction at the top of the side bar on every page, above the step navigation, stating that the tool builds a personal profile of values and skills. The outline of the route (values, then four skill pages, then the profile) SHALL be inside a collapsible instructions control that is collapsed by default. The control SHALL expose its expanded/collapsed state, be operable by keyboard and touch, and collapsed instructions SHALL NOT be focusable.
 
 #### Scenario: Introduction visible
 - **WHEN** the user opens the app or moves to any step
-- **THEN** the introduction is visible above the step navigation, and the route instructions are hidden until the user expands them
+- **THEN** the introduction is visible at the top of the side bar above the step navigation, and the route instructions are hidden until the user expands them
 
 #### Scenario: Expand instructions
 - **WHEN** the user activates the instructions control
@@ -36,11 +36,15 @@ The step navigation SHALL present the steps as a numbered sequence with a visibl
 - **THEN** that step opens, and the Back and Continue controls remain available
 
 ### Requirement: Experience intro on skill pages
-Above the Previous experience / Desired experience options on every skill page, the app SHALL show a short intro stating that the profile is built from previous experience and desired experience, and that both can be filled in. The values page SHALL NOT show it.
+In the Help area of every skill page, the app SHALL show a short intro stating that the profile is built from previous experience and desired experience, and that both can be filled in. The values page SHALL NOT show it. The page SHALL NOT repeat the page lead as a separate "Select the skills that apply" line.
 
 #### Scenario: Intro placement
-- **WHEN** the user opens any skill page
-- **THEN** the intro appears above the two options, and does not appear on the values page or the profile
+- **WHEN** the user expands Help on any skill page
+- **THEN** the intro is shown, and it does not appear on the values page or the profile
+
+#### Scenario: No duplicate line
+- **WHEN** the user opens any selection page
+- **THEN** only the page lead is shown under the heading, with no further "Select the … or add your own" line
 
 ### Requirement: Page lead
 Below the heading of every step page the app SHALL show a one-line lead stating what to do on that page, in plain language.
@@ -53,12 +57,12 @@ Below the heading of every step page the app SHALL show a one-line lead stating 
 - **WHEN** the user opens any skill page
 - **THEN** a line under the heading says to pick the skills that apply, add their own, and switch between previous and desired experience
 
-### Requirement: Intro and navigation visually separated
-The header SHALL present the introduction (title, purpose and instructions control) and the step navigation (step status, progress and step buttons) as two visually distinct areas, separated by a visible divider or differing background, so the navigation reads as its own block.
+### Requirement: Intro and navigation as separate side bar sections
+The side bar SHALL present the introduction (title, purpose and instructions control) and the step navigation (step status, progress and step buttons) as two visually distinct sections, separated by a visible divider or differing background, so the navigation reads as its own block.
 
 #### Scenario: Two areas
 - **WHEN** the user views any page
-- **THEN** the step navigation is visually set apart from the introduction, and its order and behavior are unchanged
+- **THEN** the step navigation is visually set apart from the introduction within the side bar, and its order and behavior are unchanged
 
 ### Requirement: Purpose line covers learning and ambition
 The introduction's purpose line SHALL say that the profile captures what the user values and can do, what they want to learn, and where they want to grow (their ambition). It SHALL be visible without expanding anything.

@@ -98,7 +98,7 @@ A saved profile containing a word that is no longer built in SHALL still load, k
 - **THEN** it loads without error and "Comfort" appears as a custom value
 
 ### Requirement: Add your own stays in view
-On the values page the add-your-own text box and its Add button SHALL be pinned at the top of the viewport while the user scrolls, with an opaque background, on desktop and mobile widths. When the selection limit is reached the Add button SHALL be disabled with the limit message shown in the pinned bar, and the typed text SHALL be kept.
+On the values page the tools row, holding the add-your-own text box and its Add button, the filter box and the Show all and Collapse all buttons, SHALL be pinned at the top of the viewport while the user scrolls, with an opaque background, on desktop widths. On narrow screens the add-your-own box and Add button SHALL stay pinned. When the selection limit is reached the Add button SHALL be disabled with the limit message shown in the pinned bar, and the typed text SHALL be kept.
 
 #### Scenario: Pinned while scrolling
 - **WHEN** the user scrolls down the values page

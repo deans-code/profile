@@ -43,7 +43,7 @@ While the filter has text, every card with matches SHALL be shown expanded, and 
 - **THEN** the Custom card is expanded and shows the new entry
 
 ### Requirement: Collapse all and show all
-Pages with category cards SHALL provide a "Collapse all" button and a "Show all" button above the cards. "Show all" SHALL expand every card, including the Custom card when present, and "Collapse all" SHALL collapse every card. Neither SHALL change any selection. The result SHALL be announced in a polite live region.
+Pages with category cards SHALL provide a "Collapse all" button and a "Show all" button in the page's tools row, above the cards. "Show all" SHALL expand every card, including the Custom card when present, and "Collapse all" SHALL collapse every card. Neither SHALL change any selection. The result SHALL be announced in a polite live region.
 
 #### Scenario: Show all
 - **WHEN** the user activates "Show all"

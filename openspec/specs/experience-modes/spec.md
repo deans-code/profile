@@ -3,7 +3,9 @@
 ## Purpose
 
 Lets users record both what they have already done and what they want to do, on every skill page. Values are chosen once and have no options.
+
 ## Requirements
+
 ### Requirement: Two experience options on every skill page
 Each skill page (technical development, engineering, interpersonal and AI engineering) SHALL offer exactly two options: "Previous experience" and "Desired experience". The values page does not offer them. Exactly one SHALL be active, visibly indicated and exposed to assistive technology as the selected option.
 
@@ -44,14 +46,14 @@ The instructions on each skill page SHALL state which option is active and that 
 - **THEN** they name the active option and say the other option has its own selections
 
 ### Requirement: Options are introduced
-Each skill page SHALL introduce the two options with text above them, as defined by the page-guidance capability, so users know the profile records both what they have done and what they want to do.
+Each skill page SHALL introduce the two options in its Help area, as defined by the page-guidance capability, so users know the profile records both what they have done and what they want to do.
 
 #### Scenario: Intro precedes options
-- **WHEN** the user reads a skill page from the top
-- **THEN** the experience intro is read before the Previous experience and Desired experience options
+- **WHEN** the user expands Help on a skill page
+- **THEN** the experience intro is shown, above the options in reading order, explaining the Previous experience and Desired experience options
 
 ### Requirement: Options stay in view while scrolling
-On each skill page the "Previous experience" and "Desired experience" options, with their counts, SHALL stay pinned at the top of the viewport while the user scrolls the page, on desktop and mobile widths, so both are always visible. The add-your-own text box and its Add button SHALL be pinned in the same bar, beside the options on desktop and directly below them on narrow screens. The pinned bar SHALL be opaque so content does not show through, SHALL remain operable by pointer, touch and keyboard, and SHALL NOT cover the footer navigation, the description panel or a word that has keyboard focus.
+On each skill page the tools row SHALL hold, in order, the "Previous experience" and "Desired experience" options with their counts, the add-your-own text box and its Add button, the filter box, and the Show all and Collapse all buttons. The row SHALL stay pinned at the top of the viewport while the user scrolls, on desktop widths. On narrow screens the options and the add-your-own controls SHALL stay pinned, and the filter and bulk buttons MAY scroll with the page. The pinned area SHALL be opaque, SHALL remain operable by pointer, touch and keyboard, and SHALL NOT cover the footer navigation, the description panel or a word that has keyboard focus.
 
 #### Scenario: Pinned while scrolling
 - **WHEN** the user scrolls down a skill page past the original position of the options
@@ -59,7 +61,7 @@ On each skill page the "Previous experience" and "Desired experience" options, w
 
 #### Scenario: Side by side on desktop
 - **WHEN** the page is viewed at 1280 px wide
-- **THEN** the options and the add-your-own controls sit on one row in the pinned bar
+- **THEN** the options, add-your-own controls, filter box and Show all / Collapse all buttons sit on one row
 
 #### Scenario: Add while pinned
 - **WHEN** the user is far down a skill page with "Desired experience" active, types "Zig" into the pinned box and presses Enter
@@ -79,5 +81,4 @@ On each skill page the "Previous experience" and "Desired experience" options, w
 
 #### Scenario: Explanation stays available
 - **WHEN** the user focuses the pinned add-your-own box
-- **THEN** it has an accessible label and is described by the explanation of what Add does, which appears above the bar in the normal page flow
-
+- **THEN** it has an accessible label and is described by the explanation of what Add does, which is in the Help area
