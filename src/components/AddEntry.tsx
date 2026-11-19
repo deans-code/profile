@@ -11,10 +11,10 @@ interface Props {
 }
 
 /** Explains what Add does. Shown in the normal page flow, above the pinned bar, so the bar stays short. */
-export function AddEntryHelp({ id }: { id: string }) {
+export function AddEntryHelp({ id, noun }: { id: string; noun: string }) {
   return (
     <p id={id} className="add-help">
-      Not in the lists? Type it and press Add or Enter. It will appear under Custom, selected.
+      Want to add a {noun} not here? Type it and press Add or Enter. It will appear under Custom, selected.
     </p>
   )
 }

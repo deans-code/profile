@@ -59,57 +59,64 @@ export default function App() {
       <DefinitionProvider resetKey={state.step}>
         <div className="app">
           <header>
-            <div className="header-row">
-              <h1>Profile Builder</h1>
-              <div className="header-tools">
-                <AccessibilityOptions />
-                <LoadProfile hasProgress={hasProgress} onLoad={loadProfile} />
+            <div className="intro-block">
+              <div className="header-row">
+                <h1>Profile Builder</h1>
+                <div className="header-tools">
+                  <AccessibilityOptions />
+                  <LoadProfile hasProgress={hasProgress} onLoad={loadProfile} />
+                </div>
               </div>
+              <p className="intro">Build a personal profile of what you value and what you can do.</p>
+              <details className="route-help">
+                <summary>How this works</summary>
+                <ol className="how-it-works" aria-label="How it works">
+                  <li>
+                    <strong>Choose 5 to 10 values</strong> that matter most to you.
+                  </li>
+                  <li>
+                    <strong>Pick skills on four pages</strong>: technical development, engineering, interpersonal and AI
+                    engineering, for both previous and desired experience.
+                  </li>
+                  <li>
+                    <strong>Download your profile</strong> at the end.
+                  </li>
+                </ol>
+              </details>
             </div>
-            <p className="intro">Build a personal profile of what you value and what you can do.</p>
-            <ol className="how-it-works" aria-label="How it works">
-              <li>
-                <strong>Choose 5 to 10 values</strong> that matter most to you.
-              </li>
-              <li>
-                <strong>Pick skills on four pages</strong>: technical development, engineering, interpersonal and AI
-                engineering, for both previous and desired experience.
-              </li>
-              <li>
-                <strong>Download your profile</strong> at the end.
-              </li>
-            </ol>
-            <p className="step-status" aria-live="polite">
-              Step {index + 1} of {STEPS.length}: <strong>{STEP_LABELS[state.step]}</strong>
-              {next && <span className="step-next"> · Next: {STEP_LABELS[next]}</span>}
-            </p>
-            <progress className="step-progress" aria-label="Steps complete" max={STEPS.length} value={completeCount} />
-            <nav aria-label="Steps">
-              <ol className="stepper">
-                {STEPS.map((step, i) => {
-                  const blocked = stepBlockedReason(state, step) !== null
-                  const showDone = isDone(step) && step !== state.step
-                  return (
-                    <li key={step}>
-                      <button
-                        type="button"
-                        data-section={step}
-                        data-complete={showDone ? 'true' : undefined}
-                        disabled={blocked}
-                        aria-current={step === state.step ? 'step' : undefined}
-                        onClick={() => navigate(step)}
-                      >
-                        <span className="step-badge" aria-hidden="true">
-                          {showDone ? '✓' : i + 1}
-                        </span>
-                        <span className="step-name">{STEP_LABELS[step]}</span>
-                        {showDone && <span className="visually-hidden"> (complete)</span>}
-                      </button>
-                    </li>
-                  )
-                })}
-              </ol>
-            </nav>
+            <div className="nav-block">
+              <p className="step-status" aria-live="polite">
+                Step {index + 1} of {STEPS.length}: <strong>{STEP_LABELS[state.step]}</strong>
+                {next && <span className="step-next"> · Next: {STEP_LABELS[next]}</span>}
+              </p>
+              <progress className="step-progress" aria-label="Steps complete" max={STEPS.length} value={completeCount} />
+              <nav aria-label="Steps">
+                <ol className="stepper">
+                  {STEPS.map((step, i) => {
+                    const blocked = stepBlockedReason(state, step) !== null
+                    const showDone = isDone(step) && step !== state.step
+                    return (
+                      <li key={step}>
+                        <button
+                          type="button"
+                          data-section={step}
+                          data-complete={showDone ? 'true' : undefined}
+                          disabled={blocked}
+                          aria-current={step === state.step ? 'step' : undefined}
+                          onClick={() => navigate(step)}
+                        >
+                          <span className="step-badge" aria-hidden="true">
+                            {showDone ? '✓' : i + 1}
+                          </span>
+                          <span className="step-name">{STEP_LABELS[step]}</span>
+                          {showDone && <span className="visually-hidden"> (complete)</span>}
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ol>
+              </nav>
+            </div>
           </header>
 
           <main ref={contentRef}>

@@ -159,7 +159,7 @@ describe('Broader terms in their categories', () => {
     expect(screen.queryByRole('button', { name: 'Docker' })).toBeNull()
     await user.clear(filter)
     await user.type(filter, 'zzzz')
-    expect(screen.queryByRole('group')).toBeNull()
+    expect(screen.queryAllByRole('group').filter((g) => g.tagName !== 'DETAILS')).toEqual([])
   })
 
   it('labels an unselected broader term and gives it no check mark; the label is not part of its name', async () => {

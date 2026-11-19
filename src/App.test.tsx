@@ -508,3 +508,20 @@ describe('end to end with many skills', () => {
     expect(markdown.match(/^- /gm)).toHaveLength(5 + 14 + 12 + 6 + 10)
   })
 })
+
+describe('collapsible guidance', () => {
+  it('starts with the route instructions and page help collapsed, and toggles them', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    const route = document.querySelector<HTMLDetailsElement>('details.route-help')!
+    const page = document.querySelector<HTMLDetailsElement>('details.page-help')!
+    expect(route.open).toBe(false)
+    expect(page.open).toBe(false)
+    await user.click(within(route).getByText('How this works'))
+    expect(route.open).toBe(true)
+    await user.click(within(page).getByText('Help'))
+    expect(page.open).toBe(true)
+    expect(document.querySelector('.add-help')).not.toBeNull()
+    expect(page.contains(document.querySelector('.add-help'))).toBe(false)
+  })
+})

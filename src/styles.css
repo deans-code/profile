@@ -1119,3 +1119,33 @@ main {
   color: var(--accent);
   overflow-wrap: anywhere;
 }
+
+/* Header: intro and navigation as two areas; collapsible instructions and page help */
+.intro-block {
+  padding-bottom: 0.75rem;
+}
+
+.nav-block {
+  background: var(--tint);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem 0.25rem;
+  margin-top: 0.75rem;
+}
+
+.route-help,
+.page-help {
+  margin: 0.5rem 0;
+}
+
+.route-help > summary,
+.page-help > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--accent);
+  width: fit-content;
+}
+
+.page-help[open] > summary {
+  margin-bottom: 0.5rem;
+}

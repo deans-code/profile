@@ -190,7 +190,6 @@ export default function WordPicker({
       <h2 id={headingId}>{heading}</h2>
       <p className="lead">{lead}</p>
       <p className="hint">{hint}</p>
-      {ASSISTANT_HELP[kind] && <AssistantLink {...ASSISTANT_HELP[kind]} />}
       {mode && (
         <p className="experience-intro">
           Your profile is built from two kinds of experience: what you have <strong>already done</strong> (previous
@@ -198,8 +197,12 @@ export default function WordPicker({
           options below.
         </p>
       )}
-      <SelectionHelp limit={limit} min={min} unit={kind === 'values' ? 'values' : 'skills'} mode={mode} />
-      <AddEntryHelp id={addHelpId} />
+      <details className="page-help">
+        <summary>Help</summary>
+        {ASSISTANT_HELP[kind] && <AssistantLink {...ASSISTANT_HELP[kind]} />}
+        <SelectionHelp limit={limit} min={min} unit={kind === 'values' ? 'values' : 'skills'} mode={mode} />
+      </details>
+      <AddEntryHelp id={addHelpId} noun={kind === 'values' ? 'value' : 'skill'} />
 
       <div className="pinned-bar">
         {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
