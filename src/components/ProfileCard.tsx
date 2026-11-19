@@ -8,9 +8,11 @@ interface Props {
 }
 
 function Group({ title, lists }: { title: string; lists: Experience }) {
+  const empty = MODES.every((mode) => lists[mode].length === 0)
   return (
     <div className="card-group">
       <h3>{title}</h3>
+      {empty && <p className="card-empty">Nothing chosen</p>}
       {MODES.map(
         (mode) =>
           lists[mode].length > 0 && (

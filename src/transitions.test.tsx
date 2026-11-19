@@ -67,8 +67,8 @@ describe('section transitions', () => {
     await user.click(next())
     await user.click(next())
     await user.click(next())
-    // Nothing is selected on the later pages, so the profile stays blocked.
-    expect(next()).toBeDisabled()
+    // Nothing is selected on the later pages, but skill pages are optional so the profile is available.
+    expect(next()).toBeEnabled()
     await user.click(screen.getByRole('button', { name: /^Back/ }))
     await user.click(screen.getByRole('button', { name: /^Back/ }))
     await user.click(screen.getByRole('button', { name: /^Back/ }))

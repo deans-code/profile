@@ -100,7 +100,7 @@ describe('skill steps', () => {
     expect(chip('Go')).toHaveAttribute('aria-pressed', 'true')
   })
 
-  it('gates the profile until all pages have selections, names the missing ones, and keeps selections on back', async () => {
+  it('lets the profile be reached with empty skill pages, and keeps selections on back', async () => {
     const user = await toTechnical()
     await user.click(chip('Python'))
     await user.click(next())
@@ -108,8 +108,8 @@ describe('skill steps', () => {
     expect(screen.getByRole('heading', { name: /interpersonal skills/i })).toBeInTheDocument()
     await user.click(next())
     expect(screen.getByRole('heading', { name: /ai engineering skills/i })).toBeInTheDocument()
-    expect(next()).toBeDisabled()
-    expect(screen.getByRole('status')).toHaveTextContent(/engineering, interpersonal, ai engineering/)
+    expect(next()).toBeEnabled()
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
 
     for (let i = 0; i < 3; i++) await user.click(screen.getByRole('button', { name: /^Back/ }))
     expect(chip('Python')).toHaveAttribute('aria-pressed', 'true')
@@ -333,25 +333,25 @@ describe('profile card and downloads', () => {
 describe('instructions', () => {
   const help = () => screen.getByRole('complementary', { name: 'How to use this step' })
 
-  it('leads with the desktop controls, then the page line, then one secondary line, with no option wording on values', async () => {
+  it('leads with the desktop controls, then one secondary line, with no option wording or limit sentence on values', async () => {
     render(<App />)
     const lines = within(help()).getAllByText(/./, { selector: 'p' })
-    expect(lines).toHaveLength(3)
+    expect(lines).toHaveLength(2)
     expect(lines[0]).toHaveTextContent(
       'Click a word to select or deselect it. Right-click a word to read its description.',
     )
-    expect(lines[1]).toHaveTextContent('Select 5 to 10 values.')
-    expect(lines[2]).toHaveClass('help-alt')
-    expect(lines[2]).toHaveTextContent(
+    expect(lines[1]).toHaveClass('help-alt')
+    expect(lines[1]).toHaveTextContent(
       'Mouse: right-click a word. Keyboard: focus a word and press ? or Shift+F10. Touch: press and hold.',
     )
     expect(help()).not.toHaveTextContent(/definition|previous|desired|other option/i)
   })
 
-  it('states the values limit on the values page only; skill pages say as many as apply', async () => {
+  it('has no limit sentence in the instructions on any page; the status line carries the limit', async () => {
     const user = userEvent.setup()
     render(<App />)
-    expect(help()).toHaveTextContent(/5 to 10 values/i)
+    expect(help()).not.toHaveTextContent(/5 to 10 values/i)
+    expect(screen.getByText(/of 10 selected/)).toBeInTheDocument()
     await pickValues(user)
     for (const [section, word] of [
       ['technical', 'Python'],
@@ -365,7 +365,7 @@ describe('instructions', () => {
           name: new RegExp(section === 'technical' ? 'technical development' : section === 'ai' ? 'ai engineering' : section, 'i'),
         }),
       ).toBeInTheDocument()
-      expect(help()).toHaveTextContent(/select as many skills as apply/i)
+      expect(help()).not.toHaveTextContent(/as many skills as apply/i)
       expect(help()).not.toHaveTextContent(/limit|up to \d+|of \d+/i)
       expect(help()).toHaveTextContent(/right-click/i)
       expect(help()).toHaveTextContent(/choosing Previous experience/)
@@ -514,7 +514,6 @@ describe('collapsible guidance', () => {
     expect(route.open).toBe(true)
     await user.click(within(page).getByText('Help'))
     expect(page.open).toBe(true)
-    expect(document.querySelector('.add-help')).not.toBeNull()
-    expect(page.contains(document.querySelector('.add-help'))).toBe(true)
+    expect(page.querySelector('.help-block')).not.toBeNull()
   })
 })

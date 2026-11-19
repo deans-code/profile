@@ -97,14 +97,11 @@ describe('grouped values', () => {
 })
 
 describe('filter box guidance', () => {
-  it('has an accessible label, no visible heading, and guidance in Help linked to the input', () => {
+  it('has an accessible label and no visible heading or hint', () => {
     render(<App />)
     const input = screen.getByLabelText('Filter values')
     expect(screen.getByText('Filter values', { selector: 'label' })).toHaveClass('visually-hidden')
-    const hint = screen.getByText(/Type part of a word in the filter box to show only the values that match/)
-    expect(hint.closest('details.page-help')).not.toBeNull()
-    expect(hint).toHaveTextContent('Your selections are kept.')
-    expect(input).toHaveAttribute('aria-describedby', hint.id)
+    expect(document.body).not.toHaveTextContent(/Type part of a word/)
     expect(input).toHaveAttribute('placeholder', 'Type to filter…')
   })
 
@@ -121,13 +118,12 @@ describe('filter box guidance', () => {
     expect(screen.queryByText(/^Showing /)).not.toBeInTheDocument()
   })
 
-  it('also guides on skill pages', async () => {
+  it('also has an accessible label on skill pages', async () => {
     const user = userEvent.setup()
     render(<App />)
     await pickValues(user)
     await user.click(screen.getByRole('button', { name: /^Continue/ }))
-    expect(screen.getByLabelText('Filter skills')).toHaveAccessibleDescription(
-      /Type part of a word in the filter box to show only the technical development skills that match/,
-    )
+    expect(screen.getByLabelText('Filter skills')).toBeInTheDocument()
+    expect(document.body).not.toHaveTextContent(/Type part of a word/)
   })
 })

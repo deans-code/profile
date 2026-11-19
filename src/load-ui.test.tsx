@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { FIVE_VALUES, pickValues } from './test-values'
 import userEvent from '@testing-library/user-event'
 import App from './App'
@@ -69,11 +69,9 @@ describe('Load saved profile', () => {
     const user = userEvent.setup()
     render(<App />)
     await upload(user, legacyJson())
-    // The AI engineering page is empty, so the app asks for a selection there.
-    expect((await screen.findAllByText(/Choose at least one skill on each of these pages first: ai engineering/)).length).toBeGreaterThan(0)
-    expect(screen.getByRole('heading', { name: /ai engineering skills/i })).toBeInTheDocument()
-    await user.click(word('Claude Code'))
-    await user.click(next())
+    // The AI engineering page is empty, which is allowed, so the profile card opens.
+    await screen.findByRole('heading', { name: 'Your profile' })
+    expect(screen.queryByText(/Choose at least one skill/)).not.toBeInTheDocument()
     expect(within(card()).getByText('Python')).toBeInTheDocument()
     expect(card()).not.toHaveTextContent(/\/10|9/)
     expect(within(card()).queryByText('Desired experience')).not.toBeInTheDocument()
@@ -262,7 +260,7 @@ describe('Load saved profile', () => {
       expect(next()).toBeDisabled()
     })
 
-    it('opens the first page that needs attention for an incomplete file', async () => {
+    it('opens the profile card for a file with empty skill pages', async () => {
       const user = userEvent.setup()
       render(<App />)
       await upload(
@@ -276,8 +274,9 @@ describe('Load saved profile', () => {
           },
         }),
       )
-      expect(await screen.findByText(/Choose at least one skill on each of these pages first: engineering, interpersonal/)).toBeInTheDocument()
-      await waitFor(() => expect(screen.getByRole('heading', { name: /engineering skills/i })).toBeInTheDocument())
+      await screen.findByRole('heading', { name: 'Your profile' })
+      expect(screen.queryByText(/Choose at least one skill/)).not.toBeInTheDocument()
+      expect(screen.getAllByText('Nothing chosen')).toHaveLength(2)
     })
   })
 })

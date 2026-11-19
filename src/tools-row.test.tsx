@@ -34,17 +34,14 @@ describe('tools row', () => {
 })
 
 describe('explanatory text in Help', () => {
-  it('moves the add instruction, filter hint and experience intro into Help, and drops the duplicate line', async () => {
+  it('keeps the experience intro in Help and drops the add instruction, filter hint and duplicate line', async () => {
     const user = await toSkills()
     const help = document.querySelector<HTMLDetailsElement>('details.page-help')!
     expect(help.open).toBe(false)
-    expect(help).toHaveTextContent(/Want to add a skill not here\?/)
-    expect(help).toHaveTextContent(/Type part of a word in the filter box/)
+    expect(document.body).not.toHaveTextContent(/Want to add a skill not here/)
+    expect(document.body).not.toHaveTextContent(/Type part of a word/)
     expect(help).toHaveTextContent(/two kinds of experience/)
     expect(document.body).not.toHaveTextContent(/Select the skills that apply, or add your own/)
-    expect(screen.getByLabelText('Add your own technical development skill')).toHaveAccessibleDescription(
-      /Type it and press Add or Enter/,
-    )
     await user.click(within(help).getByText('Help'))
     expect(help.open).toBe(true)
   })

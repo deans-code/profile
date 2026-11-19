@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState, type RefObject } from 'react'
 import type { TermKind } from '../data/definitions'
 import { ASSISTANT_HELP } from '../data/assistant'
-import AddEntry, { AddEntryHelp } from './AddEntry'
+import AddEntry from './AddEntry'
 import AssistantLink from './AssistantLink'
 import ModeSwitch from './ModeSwitch'
 import SelectionHelp from './SelectionHelp'
@@ -111,8 +111,6 @@ export default function WordPicker({
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
   const [bulkStatus, setBulkStatus] = useState('')
   const filterId = useId()
-  const hintId = `${filterId}-hint`
-  const addHelpId = `${filterId}-add-help`
   const chosen = new Set(selected)
   // Cards are dealt into fixed columns by position, so opening one card only moves the cards below it in its column.
   const categoriesEl = useRef<HTMLDivElement | null>(null)
@@ -190,24 +188,20 @@ export default function WordPicker({
       <details className="page-help">
         <summary>Help</summary>
         {ASSISTANT_HELP[kind] && <AssistantLink {...ASSISTANT_HELP[kind]} />}
-        <SelectionHelp limit={limit} min={min} unit={kind === 'values' ? 'values' : 'skills'} mode={mode} />
+        <SelectionHelp mode={mode} />
         {mode && (
-          <p className="experience-intro">
+          <p className="experience-intro help-block">
             Your profile is built from two kinds of experience: what you have <strong>already done</strong> (previous
             experience) and what you <strong>want to do</strong> (desired experience). Fill in both, switching with the
             options above.
           </p>
         )}
-        <AddEntryHelp id={addHelpId} noun={kind === 'values' ? 'value' : 'skill'} />
-        <p id={hintId} className="filter-hint">
-          Type part of a word in the filter box to show only the {noun} that match. Your selections are kept.
-        </p>
       </details>
 
       <div className="pinned-bar tools-row">
         <div className="tools-main">
           {mode && counts && onModeChange && <ModeSwitch mode={mode} counts={counts} onChange={onModeChange} />}
-          <AddEntry label={addLabel} placeholder={addPlaceholder} helpId={addHelpId} full={full} onAdd={addCustom} />
+          <AddEntry label={addLabel} placeholder={addPlaceholder} full={full} onAdd={addCustom} />
         </div>
         <div className="tools-extra">
           <div className="filter-block">
@@ -219,7 +213,6 @@ export default function WordPicker({
               type="search"
               className="filter"
               placeholder="Type to filter…"
-              aria-describedby={hintId}
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             />

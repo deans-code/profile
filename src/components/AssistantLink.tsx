@@ -2,7 +2,7 @@ import { chatGptUrl, type AssistantHelp } from '../data/assistant'
 
 export default function AssistantLink({ noun, prompt }: AssistantHelp) {
   return (
-    <aside className="assistant" aria-label={`Discover more ${noun} with ChatGPT`}>
+    <aside className="assistant help-block" aria-label={`Discover more ${noun} with ChatGPT`}>
       <p>
         Not sure which {noun} fit you? ChatGPT can ask you questions, one at a time, to help you uncover your {noun}.{' '}
         <a href={chatGptUrl(prompt)} target="_blank" rel="noopener noreferrer">

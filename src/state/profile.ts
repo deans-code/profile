@@ -44,10 +44,12 @@ export interface ProfileState {
   customValues: string[]
   selectedSkills: Record<Section, PerMode<string[]>>
   customSkills: Record<Section, string[]>
+  /** Index in STEPS of the furthest step the user has reached; steps behind it count as passed over. */
+  furthest: number
 }
 
 /** What a loaded profile supplies: everything except where the user is. */
-export type LoadedProfile = Omit<ProfileState, 'step' | 'mode'>
+export type LoadedProfile = Omit<ProfileState, 'step' | 'mode' | 'furthest'>
 
 const perMode = <T>(make: () => T): PerMode<T> => ({ experience: make(), desired: make() })
 
@@ -61,6 +63,7 @@ export const initialState: ProfileState = {
   customValues: [],
   selectedSkills: perSection(() => perMode<string[]>(() => [])),
   customSkills: perSection<string[]>(() => []),
+  furthest: 0,
 }
 
 export type Action =
@@ -114,17 +117,23 @@ export function underBy(state: ProfileState): number {
   return Math.max(0, MIN_VALUES - state.selectedValues.length)
 }
 
-/** The values page is complete with 5 to 10 selected; a skill page when at least one word is selected in either mode. */
+/** The values page is complete with 5 to 10 selected; a skill page has words selected in either mode. */
 export function pageComplete(state: ProfileState, page: Page): boolean {
   if (page === 'values') return state.selectedValues.length >= MIN_VALUES && state.selectedValues.length <= MAX_VALUES
   return MODES.some((m) => selectionCount(state, page, m) > 0)
 }
 
-const pageLabel = (page: Page) => (page === 'values' ? 'values' : SECTION_LABELS[page].toLowerCase())
-
-export function missingSections(state: ProfileState): Section[] {
-  return SECTIONS.filter((s) => !pageComplete(state, s))
+/**
+ * Whether the step navigation shows a step as complete. A skill page needs no selection, so it also counts
+ * once the user has moved past it.
+ */
+export function stepDone(state: ProfileState, step: Step): boolean {
+  if (step === 'card') return state.step === 'card'
+  if (pageComplete(state, step)) return true
+  return step !== 'values' && STEPS.indexOf(step) < state.furthest
 }
+
+const pageLabel = (page: Page) => (page === 'values' ? 'values' : SECTION_LABELS[page].toLowerCase())
 
 /** The first page (before the given step index) and mode that is over its limit, if any. */
 function firstOver(state: ProfileState, before: number): { page: Page; mode: Mode; over: number } | undefined {
@@ -149,12 +158,6 @@ export function stepBlockedReason(state: ProfileState, step: Step): string | nul
   }
   const under = underBy(state)
   if (under > 0) return `Choose at least ${under} more ${under === 1 ? 'value' : 'values'} (${MIN_VALUES} to ${MAX_VALUES}) to unlock the next step.`
-  if (step === 'card') {
-    const missing = missingSections(state)
-    if (missing.length > 0) {
-      return `Choose at least one skill on each of these pages first: ${missing.map((s) => SECTION_LABELS[s].toLowerCase()).join(', ')}.`
-    }
-  }
   return null
 }
 
@@ -163,13 +166,10 @@ export function stepBlockedReason(state: ProfileState, step: Step): string | nul
  * first page that needs attention, with a message saying what to do.
  */
 export function loadLanding(profile: LoadedProfile): { step: Step; notice: string | null } {
-  const state: ProfileState = { ...profile, step: 'values', mode: 'experience' }
+  const state: ProfileState = { ...profile, step: 'values', mode: 'experience', furthest: 0 }
   const notice = stepBlockedReason(state, 'card')
   if (!notice) return { step: 'card', notice: null }
-  const page =
-    firstOver(state, STEPS.length)?.page ??
-    (!pageComplete(state, 'values') ? 'values' : SECTIONS.find((s) => !pageComplete(state, s))) ??
-    'values'
+  const page = firstOver(state, STEPS.length)?.page ?? 'values'
   return { step: page, notice }
 }
 
@@ -273,10 +273,20 @@ export function reducer(state: ProfileState, action: Action): ProfileState {
     }
 
     case 'loadProfile':
-      return { ...action.profile, mode: 'experience', step: loadLanding(action.profile).step }
+      {
+        const step = loadLanding(action.profile).step
+        return { ...action.profile, mode: 'experience', step, furthest: STEPS.indexOf(step) }
+      }
 
     case 'goTo':
       // Every page opens on previous experience.
-      return stepBlockedReason(state, action.step) ? state : { ...state, step: action.step, mode: 'experience' }
+      return stepBlockedReason(state, action.step)
+        ? state
+        : {
+            ...state,
+            step: action.step,
+            mode: 'experience',
+            furthest: Math.max(state.furthest, STEPS.indexOf(action.step)),
+          }
   }
 }

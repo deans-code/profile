@@ -6,7 +6,7 @@ import {
   STEPS,
   initialState,
   loadLanding,
-  pageComplete,
+  stepDone,
   reducer,
   stepBlockedReason,
   type Step,
@@ -39,7 +39,7 @@ export default function App() {
   const contentRef = useRef<HTMLElement>(null)
   const { navigate, motion, setMotionFor } = useStepNavigation(state, dispatch, contentRef)
 
-  const isDone = (step: Step) => (step === 'card' ? state.step === 'card' : pageComplete(state, step))
+  const isDone = (step: Step) => stepDone(state, step)
   const completeCount = STEPS.filter(isDone).length
 
   const hasProgress =

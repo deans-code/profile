@@ -4,23 +4,12 @@ interface Props {
   label: string
   placeholder: string
   onAdd: (text: string) => void
-  /** Id of the paragraph (see AddEntryHelp) that explains what Add does. */
-  helpId: string
   /** When true the Add button is disabled and typed text is kept. */
   full?: boolean
 }
 
-/** Explains what Add does. Shown in the normal page flow, above the pinned bar, so the bar stays short. */
-export function AddEntryHelp({ id, noun }: { id: string; noun: string }) {
-  return (
-    <p id={id} className="add-help">
-      Want to add a {noun} not here? Type it and press Add or Enter. It will appear under Custom, selected.
-    </p>
-  )
-}
-
 /** A compact form for adding a word that is not in the lists, pinned at the top of a selection page. */
-export default function AddEntry({ label, placeholder, onAdd, helpId, full = false }: Props) {
+export default function AddEntry({ label, placeholder, onAdd, full = false }: Props) {
   const [text, setText] = useState('')
   const id = useId()
 
@@ -42,7 +31,6 @@ export default function AddEntry({ label, placeholder, onAdd, helpId, full = fal
           type="text"
           value={text}
           placeholder={placeholder}
-          aria-describedby={helpId}
           onChange={(e) => setText(e.target.value)}
         />
         <button type="submit" disabled={!text.trim() || full}>

@@ -9,6 +9,7 @@ import {
   loadLanding,
   overBy,
   pageComplete,
+  stepDone,
   reducer,
   selectedFor,
   stepBlockedReason,
@@ -202,16 +203,33 @@ describe('step gating', () => {
     expect(stepBlockedReason(s, 'card')).toBeNull()
   })
 
-  it('blocks the profile until every section has a selection and names the missing ones', () => {
-    expect(stepBlockedReason(oneSection, 'card')).toMatch(/engineering, interpersonal, ai engineering/)
-    expect(run([{ type: 'goTo', step: 'card' }], oneSection).step).toBe('values')
+  it('lets the profile be reached with empty skill pages once the values are valid', () => {
+    expect(stepBlockedReason(oneSection, 'card')).toBeNull()
+    expect(run([{ type: 'goTo', step: 'card' }], oneSection).step).toBe('card')
     expect(run([{ type: 'goTo', step: 'card' }], complete).step).toBe('card')
   })
 
-  it('blocks the profile when only the AI engineering page is empty', () => {
+  it('does not block the profile when only the AI engineering page is empty', () => {
     expect(stepBlockedReason(complete, 'card')).toBeNull()
     const empty = run([{ type: 'toggleSkill', section: 'ai', name: 'Claude Code' }], complete)
-    expect(stepBlockedReason(empty, 'card')).toMatch(/ai engineering/)
+    expect(stepBlockedReason(empty, 'card')).toBeNull()
+  })
+
+  it('still blocks later steps with too few values', () => {
+    const four = run(FIVE_VALUES.slice(0, 4).map((name) => ({ type: 'toggleValue', name }) as Action))
+    expect(stepBlockedReason(four, 'technical')).toMatch(/at least 1 more value/)
+    expect(stepBlockedReason(four, 'card')).toMatch(/at least 1 more value/)
+  })
+
+  it('shows an empty skill step as complete only after the user has moved past it', () => {
+    const five = FIVE_VALUES.map((name) => ({ type: 'toggleValue', name }) as Action)
+    const atTechnical = run([...five, { type: 'goTo', step: 'technical' }])
+    expect(stepDone(atTechnical, 'technical')).toBe(false)
+    const atEngineering = run([{ type: 'goTo', step: 'engineering' }], atTechnical)
+    expect(stepDone(atEngineering, 'technical')).toBe(true)
+    expect(stepDone(atEngineering, 'engineering')).toBe(false)
+    const back = run([{ type: 'goTo', step: 'technical' }], atEngineering)
+    expect(stepDone(back, 'technical')).toBe(true)
   })
 
   it('retains selections when navigating back', () => {
@@ -403,21 +421,23 @@ describe('loadProfile', () => {
     ).toHaveLength(30)
   })
 
-  it('opens the values page when there are no values, and the first empty section otherwise', () => {
+  it('opens the values page when there are no values', () => {
     expect(
       reducer(initialState, { type: 'loadProfile', profile: { ...complete, selectedValues: [] } }).step,
     ).toBe('values')
-    const noEngineering = { ...complete, selectedSkills: { ...complete.selectedSkills, engineering: exp([]) } }
-    const landing = loadLanding(noEngineering)
-    expect(landing.step).toBe('engineering')
-    expect(landing.notice).toMatch(/engineering/)
   })
 
-  it('opens the AI engineering page when it has no selection in either option', () => {
+  it('opens the profile card when skill pages are empty', () => {
+    const noEngineering = { ...complete, selectedSkills: { ...complete.selectedSkills, engineering: exp([]) } }
+    expect(loadLanding(noEngineering)).toEqual({ step: 'card', notice: null })
     const noAi = { ...complete, selectedSkills: { ...complete.selectedSkills, ai: exp([]) } }
-    const landing = loadLanding(noAi)
-    expect(landing.step).toBe('ai')
-    expect(landing.notice).toMatch(/ai engineering/)
+    expect(loadLanding(noAi)).toEqual({ step: 'card', notice: null })
+    const none = reducer(initialState, {
+      type: 'loadProfile',
+      profile: { ...initialState, selectedValues: FIVE_VALUES },
+    })
+    expect(none.step).toBe('card')
+    expect(stepDone(none, 'technical')).toBe(true)
   })
 
   it('has no notice when the profile is complete', () => {

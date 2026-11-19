@@ -31,14 +31,12 @@ describe('add your own at the top', () => {
     expect(before(input, document.querySelector('.category')!)).toBe(true)
   })
 
-  it('shows an instruction linked to the input, and adds a word with Enter', async () => {
+  it('has no add-your-own instruction text, and adds a word with Enter', async () => {
     const user = userEvent.setup()
     render(<App />)
     const input = screen.getByLabelText('Add your own value')
-    expect(input).toHaveAccessibleDescription(/Type it and press Add or Enter.*Custom/)
-    expect(document.querySelector('.pinned-bar')).not.toHaveTextContent(/Want to add a value not here/)
+    expect(document.body).not.toHaveTextContent(/Want to add a value not here/)
     expect(document.body).not.toHaveTextContent(/Not in the lists/)
-    expect(before(screen.getByText(/Want to add a value not here\?/), input)).toBe(true)
     await user.type(input, 'Grit{Enter}')
     expect(screen.getByRole('button', { name: 'Grit' })).toHaveAttribute('aria-pressed', 'true')
     expect(input).toHaveValue('')
@@ -58,11 +56,11 @@ describe('add your own at the top', () => {
     expect(screen.queryByText(/Limit reached: deselect a word to add another/)).not.toBeInTheDocument()
   })
 
-  it('says skill on a skill page', async () => {
+  it('has no add-your-own instruction text on a skill page either', async () => {
     const user = userEvent.setup()
     render(<App />)
     await pickValues(user)
     await user.click(next())
-    expect(screen.getByText(/Want to add a skill not here\?/)).toBeInTheDocument()
+    expect(document.body).not.toHaveTextContent(/Want to add a skill not here/)
   })
 })

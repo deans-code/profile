@@ -41,7 +41,7 @@ describe('selection limit UI', () => {
     expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument()
     expect(screen.queryByRole('radio')).not.toBeInTheDocument()
     const help = screen.getByRole('complementary', { name: 'How to use this step' })
-    expect(help).toHaveTextContent('Select 5 to 10 values.')
+    expect(help).not.toHaveTextContent(/Select 5 to 10 values/)
     expect(help).not.toHaveTextContent(/previous|desired|other option/i)
   })
 

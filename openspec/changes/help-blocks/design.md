@@ -2,7 +2,7 @@
 
 ## Context
 
-Page help is a `<details className="page-help">` in `WordPicker.tsx` containing, in order: `AssistantLink` (an `<aside className="assistant">` with a dashed border), `SelectionHelp` (an `<aside className="help">` already tinted), the experience-intro `<p>`, `AddEntryHelp` (`<p className="add-help">`) and the filter hint `<p className="filter-hint">`. The side bar has `<details className="route-help">` for "How this works" and "Privacy" in `App.tsx`. Each section sets `--accent`, `--tint` and the page defines `--surface`, `--border`. See proposal.md for motivation.
+Page help is a `<details className="page-help">` in `WordPicker.tsx` containing, in order: `AssistantLink` (an `<aside className="assistant">` with a dashed border), `SelectionHelp` (an `<aside className="help">` already tinted) and the experience-intro `<p>`; before this change it also held the add-your-own instruction and the filter hint. The side bar has `<details className="route-help">` for "How this works" and "Privacy" in `App.tsx`. Each section sets `--accent`, `--tint` and the page defines `--surface`, `--border`. See proposal.md for motivation.
 
 ## Goals / Non-Goals
 
@@ -17,13 +17,15 @@ Page help is a `<details className="page-help">` in `WordPicker.tsx` containing,
 
 - **Area block** = the `<details>` element itself: `background: var(--tint); border: 1px solid var(--accent); border-radius: var(--radius); padding: 0.25rem 0.75rem`, with the summary inside, so a collapsed Help reads as a bar. Apply to `.page-help` and `.route-help`.
 - **Inner blocks** share one rule, `.help-block { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: var(--radius); padding: 0.5rem 1rem; margin: 0.5rem 0; }`. `--surface` (white in light, dark grey in dark) contrasts with `--tint` in both themes, and the thicker accent left edge ties each block to the section.
-- **Apply `.help-block` by adding the class** to the existing elements: `assistant` and `help` asides, the experience intro, `add-help` and `filter-hint` paragraphs. The existing `.help` tint/border and `.assistant` dashed border rules are removed or overridden so the block style is consistent, and their element tags (`aside` with `aria-label`) are kept for accessibility.
+- **Apply `.help-block` by adding the class** to the existing elements: the `assistant` and `help` asides and the experience intro. The existing `.help` tint/border and `.assistant` dashed border rules are removed or overridden so the block style is consistent, and their element tags (`aside` with `aria-label`) are kept for accessibility.
+- **Remove, don't move, the redundant text:** the limit paragraph in `SelectionHelp` (so its limit, min and unit props go), `AddEntryHelp` and the add input's `aria-describedby`, and the filter hint and the filter's `aria-describedby`. The add and filter inputs keep their labels. The values limit remains visible in the status line.
+- **Expand arrow:** a CSS `::after` on the page-help and route-help summaries (`▾`, placed directly after the label, rotated 180° while `[open]`), with the browser's default marker hidden. It is decorative so it is not announced; `<details>` already exposes expanded state. The rotation transition is disabled under `prefers-reduced-motion`.
 - **Sidebar areas have one topic each**, so they get the area block only. The Privacy bullets stay a list inside it; splitting them into inner blocks was rejected as noise.
 - **Assumption:** "help areas" means the page Help areas and the side bar's How this works and Privacy; the sources list and Add form are not help areas.
 
 ## Risks / Trade-offs
 
-- [Five stacked inner blocks make the expanded Help long] → Tight padding and margins; the area is collapsed by default.
+- [Removing the instruction text removes the `aria-describedby` description on the add and filter inputs] → Both keep visible labels and a visible Add button; accepted by the request.
 - [`--surface` inner blocks inside a `--tint` block may look too similar in some dark sections] → Check all four skill sections, values and the side bar in both themes in the browser; the border colours keep them separate.
 - [A bordered `details` changes the summary's hit area] → Keep the summary at least 44px tall and verify keyboard focus outlines are visible.
 
