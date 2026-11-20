@@ -1320,9 +1320,7 @@ main {
 }
 
 .help-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--accent);
+  background: color-mix(in srgb, var(--surface) 55%, var(--tint));
   border-radius: var(--radius);
   padding: 0.5rem 1rem;
   margin: 0.5rem 0;

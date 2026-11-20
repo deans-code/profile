@@ -330,7 +330,7 @@ The JSON format is `values: [...]` (a list of names) and `skills.<technical|engi
 
 ### Descriptions
 
-Click a word to select or deselect it. To see what it means:
+To see what a word means:
 
 | Input | Action |
 |-------|--------|

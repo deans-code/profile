@@ -338,11 +338,11 @@ describe('instructions', () => {
     const lines = within(help()).getAllByText(/./, { selector: 'p' })
     expect(lines).toHaveLength(2)
     expect(lines[0]).toHaveTextContent(
-      'Click a word to select or deselect it. Right-click a word to read its description.',
+      'Right-click a word to read its description.',
     )
     expect(lines[1]).toHaveClass('help-alt')
     expect(lines[1]).toHaveTextContent(
-      'Mouse: right-click a word. Keyboard: focus a word and press ? or Shift+F10. Touch: press and hold.',
+      'Keyboard: focus a word and press ? or Shift+F10. Touch: press and hold.',
     )
     expect(help()).not.toHaveTextContent(/definition|previous|desired|other option/i)
   })

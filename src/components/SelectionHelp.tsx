@@ -9,8 +9,7 @@ export default function SelectionHelp({ mode }: Props) {
   return (
     <aside className="help help-block" aria-label="How to use this step">
       <p>
-        <strong>Click</strong> a word to select or deselect it. <strong>Right-click</strong> a word to read its
-        description.
+        <strong>Right-click</strong> a word to read its description.
       </p>
       {mode && (
         <p>
@@ -19,8 +18,8 @@ export default function SelectionHelp({ mode }: Props) {
         </p>
       )}
       <p className="help-alt">
-        <strong>Mouse:</strong> <strong>right-click</strong> a word. <strong>Keyboard:</strong> focus a word and press{' '}
-        <kbd>?</kbd> or <kbd>Shift</kbd>+<kbd>F10</kbd>. <strong>Touch:</strong> press and hold.
+        <strong>Keyboard:</strong> focus a word and press <kbd>?</kbd> or <kbd>Shift</kbd>+<kbd>F10</kbd>.{' '}
+        <strong>Touch:</strong> press and hold.
       </p>
     </aside>
   )
